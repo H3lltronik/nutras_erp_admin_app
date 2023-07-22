@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
 }
@@ -8,4 +12,8 @@ body {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.ant-popover-inner {
+  padding: 0 !important;
 }
