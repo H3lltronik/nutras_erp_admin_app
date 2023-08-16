@@ -8,7 +8,8 @@ import {
 import type { MenuProps } from "antd";
 import { Layout, Menu, Typography } from "antd";
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import logo from "../assets/nutras-logo.png";
 import { DefaultHeader } from "./DefaultHeader";
 
@@ -91,7 +92,9 @@ export const DefaultLayout: React.FC<HeaderProps> = (props) => {
           navContent={navContent}
           title={headerTitle ?? "NUTRAS"}
         />
-        <Outlet />
+        {/* <Outlet /> */}
+        <ToastContainer />
+        {props.children}
         <Footer style={{ textAlign: "center" }} />
       </Layout>
     </Layout>
