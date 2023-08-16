@@ -25,13 +25,19 @@ export const Users: React.FC = () => {
     console.log("userFormData", userFormData);
   };
 
+  const breadcrumb: ItemType[] = [
+    {
+      title: "Seguridad",
+    },
+    {
+      title: "Usuarios",
+    },
+  ];
+
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }}>
-          <Breadcrumb.Item>Seguridad</Breadcrumb.Item>
-          <Breadcrumb.Item>Usuarios</Breadcrumb.Item>
-        </Breadcrumb>
+        <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
         <div
           className=""
           style={{
