@@ -21,8 +21,8 @@ export const Users: React.FC = () => {
     <>
       <Content style={{ margin: "0 16px" }}>
         <Breadcrumb style={{ margin: "16px 0" }}>
-          <Breadcrumb.Item>Orden de trabajoa</Breadcrumb.Item>
-          <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+          <Breadcrumb.Item>Seguridad</Breadcrumb.Item>
+          <Breadcrumb.Item>Usuarios</Breadcrumb.Item>
         </Breadcrumb>
         <div
           className=""
