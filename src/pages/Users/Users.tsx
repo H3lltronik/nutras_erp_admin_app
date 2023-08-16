@@ -1,11 +1,14 @@
 import { Breadcrumb, Layout, Typography, theme } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { UserAPI } from "../../api";
+import UserForm, { UserFormHandle } from "../../components/Forms/User/UserForm";
 
 const { Text } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 
 export const Users: React.FC = () => {
+  const userFormRef = useRef<UserFormHandle | null>(null);
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -16,6 +19,11 @@ export const Users: React.FC = () => {
       console.log(res);
     })();
   }, []);
+
+  const submitForm = async () => {
+    const userFormData = await userFormRef.current?.getFormData();
+    console.log("userFormData", userFormData);
+  };
 
   return (
     <>
@@ -31,7 +39,15 @@ export const Users: React.FC = () => {
             minHeight: 360,
             background: colorBgContainer,
           }}>
-          <h1>xd</h1>
+          <section className="max-w-[1500px]">
+            <UserForm ref={userFormRef} />
+
+            <button
+              className="bg-gray-500 py-1 px-2 rounded-lg text-white"
+              onClick={submitForm}>
+              Submit form
+            </button>
+          </section>
         </div>
       </Content>
     </>

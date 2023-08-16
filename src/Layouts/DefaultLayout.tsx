@@ -1,8 +1,10 @@
 import { Layout, Typography } from "antd";
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../assets/nutras-logo.png";
+import useAuth from "../hooks/useAuth";
 import { DefaultHeader } from "./DefaultHeader";
 import { AdminMenu } from "./Menu";
 
@@ -18,6 +20,15 @@ interface HeaderProps {
 export const DefaultLayout: React.FC<HeaderProps> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const { navContent, headerTitle } = props;
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
