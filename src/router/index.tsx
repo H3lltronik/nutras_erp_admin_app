@@ -7,6 +7,8 @@ import { Test } from "../pages/Test/Test";
 import { TestHeader } from "../pages/Test/TestHeader";
 import { Users } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/UsersHeader";
+import { Products } from "../pages/Products";
+import { ProductsHeader } from "../pages/Products/ProductsHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
         <Users />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <Products />
       </DefaultLayout>
     ),
   },
