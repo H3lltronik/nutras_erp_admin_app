@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import useAuth from "../useAuth";
 import { Endpoint, EndpointResponse, endpoints } from "./queryKeys";
 
-const useAdminAPI = <T extends Endpoint>(
+const useAdminQuery = <T extends Endpoint>(
   endpoint: T
 ): UseQueryResult<EndpointResponse<T>, unknown> => {
   // Adjust the generic types based on your API response and error type
@@ -17,4 +17,4 @@ const useAdminAPI = <T extends Endpoint>(
   return useQuery([queryKey], apiCall, { enabled: !loading });
 };
 
-export default useAdminAPI;
+export default useAdminQuery;

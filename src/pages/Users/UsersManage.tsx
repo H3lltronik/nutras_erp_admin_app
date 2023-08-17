@@ -1,8 +1,8 @@
 import { Breadcrumb, Layout, Typography, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import React, { useEffect, useRef } from "react";
-import { UserAPI } from "../../api";
+import React, { useRef } from "react";
 import UserForm, { UserFormHandle } from "../../components/Forms/User/UserForm";
+import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
 
 const { Text } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
@@ -14,17 +14,7 @@ export const UsersManage: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  useEffect(() => {
-    (async () => {
-      const res = await UserAPI.getUsers();
-      console.log(res);
-    })();
-  }, []);
-
-  const submitForm = async () => {
-    const userFormData = await userFormRef.current?.getFormData();
-    console.log("userFormData", userFormData);
-  };
+  const { mutateAsync } = useAdminMutation("createUser");
 
   const breadcrumb: ItemType[] = [
     {
@@ -34,6 +24,14 @@ export const UsersManage: React.FC = () => {
       title: "Usuarios",
     },
   ];
+
+  const submitForm = async () => {
+    const userFormData =
+      (await userFormRef.current?.getFormData()) as CreateUserRequest;
+    console.log("userFormData", userFormData);
+
+    await mutateAsync(userFormData);
+  };
 
   return (
     <>

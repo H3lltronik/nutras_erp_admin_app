@@ -1,3 +1,3 @@
-import useAdminAPI from "./useAdminAPI/useAdminAPI";
+import useAdminQuery from "./useAdminAPI/useAdminQuery";
 
-export { useAdminAPI };
+export { useAdminQuery as useAdminAPI };
