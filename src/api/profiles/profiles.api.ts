@@ -5,8 +5,8 @@ class BaseProfilesAPI extends BaseAPI {
       return this.post<void, U>('', data);
     }
 
-    async getProfiles(params?: QueryParams): Promise<unknown> {
-        return this.get<unknown>('', params);
+    async getProfiles(params?: QueryParams): Promise<GetProfilesResponse> {
+        return this.get<GetProfilesResponse>('', params);
     }
   
     async getProfile(userId: string, params?: QueryParams): Promise<unknown> {

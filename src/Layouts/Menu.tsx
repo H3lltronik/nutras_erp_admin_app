@@ -29,8 +29,8 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Seguridad", "1", null, [
-    getItem("Usuarios", "/admin/users", <PieChartOutlined />),
-    getItem("Perfiles", "/test", <ProfileOutlined />),
+    getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
+    getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
   ]),
   // Uncomment and modify as needed
   // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [

@@ -7,7 +7,7 @@ import UserForm, { UserFormHandle } from "../../components/Forms/User/UserForm";
 const { Text } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 
-export const Users: React.FC = () => {
+export const UsersManage: React.FC = () => {
   const userFormRef = useRef<UserFormHandle | null>(null);
 
   const {

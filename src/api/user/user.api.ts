@@ -5,8 +5,8 @@ class BaseUserAPI extends BaseAPI {
       return this.post<void, U>('', data);
     }
 
-    async getUsers(params?: QueryParams): Promise<unknown> {
-        return this.get<unknown>('', params);
+    async getUsers(params?: QueryParams): Promise<GetUserResponse> {
+        return this.get<GetUserResponse>('', params);
     }
   
     async getUser(userId: string, params?: QueryParams): Promise<unknown> {
