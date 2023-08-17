@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { showToast } from '../../lib/notify';
+import { AUTH_TOKEN_LOCAL_KEY } from '../constants';
 
 class BaseAPI implements IRESTfulAPI {
   protected instance: AxiosInstance;
@@ -11,6 +13,7 @@ class BaseAPI implements IRESTfulAPI {
     // Attach an interceptor to check for token validity on each request
     this.instance.interceptors.request.use((config) => {
       const token = this.getToken();
+      console.log("Redirecting to login page ACA", token)
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       } else {
@@ -34,21 +37,22 @@ class BaseAPI implements IRESTfulAPI {
   }
 
   storeToken(token: string): void {
-    localStorage.setItem('api_token', token);
+    localStorage.setItem(AUTH_TOKEN_LOCAL_KEY, token);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('api_token');
+    return localStorage.getItem(AUTH_TOKEN_LOCAL_KEY);
   }
 
   removeToken(): void {
-    localStorage.removeItem('api_token');
+    localStorage.removeItem(AUTH_TOKEN_LOCAL_KEY);
   }
 
   redirectToLogin(): void {
     // Depending on your setup, this can redirect to a login page
     console.log("Redirecting to login page")
-    // window.location.href = '/login';
+    window.location.href = '/';
+    showToast('error', 'error');
   }
 
   async get<T, P = object>(url: string, params?: QueryParams<P>): Promise<T> {
