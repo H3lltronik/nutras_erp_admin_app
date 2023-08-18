@@ -8,8 +8,12 @@ import { ProfilesHeader } from "../pages/Profiles/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/UsersHeader";
 import { UsersList } from "../pages/Users/UsersList";
-import { Products } from "../pages/Products";
+import { ProductsManage } from "../pages/Products/ProductsManage";
+import { ProductsList } from "../pages/Products/ProductsList";
 import { ProductsHeader } from "../pages/Products/ProductsHeader";
+import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage";
+import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
+import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -47,10 +51,34 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/admin/measurement-types",
+    element: (
+      <DefaultLayout navContent={<MeasurementsHeader />} headerTitle="Unidades de medida">
+        <MeasurementsList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/measurement-types/manage",
+    element: (
+      <DefaultLayout navContent={<MeasurementsHeader />} headerTitle="Unidades de medida">
+        <MeasurementsManage />
+      </DefaultLayout>
+    ),
+  },
+  {
     path: "/admin/products",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <Products />
+        <ProductsList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/manage",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <ProductsManage />
       </DefaultLayout>
     ),
   },

@@ -4,7 +4,7 @@ import { Menu } from "antd";
 import React, { useEffect, useState } from "react"; // Import useEffect
 import { useLocation, useNavigate } from "react-router-dom";
 
-export const ProductsHeader: React.FC = () => {
+export const MeasurementsHeader: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,19 +17,19 @@ export const ProductsHeader: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Listado de productos",
-      key: "/admin/products",
+      label: "Listado de unidades de medidas",
+      key: "/admin/measurement-types",
       icon: <OrderedListOutlined />,
       onClick: () => {
-        navigate("/admin/products");
+        navigate("/admin/measurement-types");
       },
     },
     {
-      label: "Crear producto",
-      key: "/admin/products/manage",
+      label: "Crear unidad de medida",
+      key: "/admin/measurement-types/manage",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/products/manage");
+        navigate("/admin/measurement-types/manage");
       },
     },
   ];
