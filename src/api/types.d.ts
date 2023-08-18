@@ -10,6 +10,15 @@ interface Profile {
   name: string;
   roles?: (string)[] | null;
 }
+interface Product {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: null;
+  id: string;
+  code: string;
+  type: string;
+  description: string;
+}
 interface Measurement {
   createdAt: string;
   updatedAt: string;
@@ -33,6 +42,8 @@ type GetUserResponse = MeResponse[]
 
 type GetProfileResponse = Profile
 type GetProfilesResponse = Profile[]
+type GetProductResponse = Product
+type GetProductsResponse = Product[]
 type GetMeasurementResponse = Measurement
 type GetMeasurementsResponse = Measurement[]
 
@@ -59,13 +70,18 @@ interface CreateUserRequest {
 }
 
 type ProfileCreatedResponse = Profile
+type ProductCreatedResponse = Product
 type MeasurementCreatedResponse = Measurement
 
 interface CreateProfileRequest {
   name: string;
   roles: string;
 }
-
+interface CreateProductRequest {
+  code: string;
+  type: string;
+  description: string;
+}
 interface CreateMeasurementRequest {
   name: string;
 }

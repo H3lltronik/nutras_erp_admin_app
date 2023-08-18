@@ -1,5 +1,6 @@
-import { Form, Input } from "antd";
+import { Form, Input, Select } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
+import useAdminQuery from "../../../hooks/useAdminAPI/useAdminQuery";
 
 const onFinish = (values: any) => {
   console.log("Success:", values);
@@ -22,6 +23,8 @@ export type ProductFormHandle = {
 
 const ProductForm = forwardRef((props, ref) => {
   const [form] = Form.useForm();
+  const { data: measurementsData, isLoading: loadingMeasurements } =
+    useAdminQuery("measurements");
 
   useImperativeHandle(
     ref,
@@ -71,6 +74,21 @@ const ProductForm = forwardRef((props, ref) => {
           { required: true, message: "Please input your product description!" },
         ]}>
         <Input />
+      </Form.Item>
+      <Form.Item<FieldType>
+        label="Unidad de medida"
+        name="unit"
+        rules={[{ required: true, message: "Please select a measurement unit!" }]}>
+        <Select
+          placeholder="Select a measurement unit"
+          allowClear
+          loading={loadingMeasurements}>
+          {measurementsData?.map((measurement) => (
+            <option key={measurement.id} value={measurement.id}>
+              {measurement.name}
+            </option>
+          ))}
+        </Select>
       </Form.Item>
     </Form>
   );
