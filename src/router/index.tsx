@@ -8,6 +8,8 @@ import { ProfilesHeader } from "../pages/Profiles/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/UsersHeader";
 import { UsersList } from "../pages/Users/UsersList";
+import { Products } from "../pages/Products";
+import { ProductsHeader } from "../pages/Products/ProductsHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -38,6 +40,22 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/users/manage",
+    element: (
+      <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
+        <UsersManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <Products />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/test",
     element: (
       <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
         <UsersManage />

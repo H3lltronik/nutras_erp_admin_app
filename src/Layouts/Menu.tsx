@@ -1,4 +1,4 @@
-import { PieChartOutlined, ProfileOutlined } from "@ant-design/icons";
+import { BarcodeOutlined, PieChartOutlined, ProfileOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import React from "react";
@@ -32,6 +32,14 @@ const items: MenuItem[] = [
     getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
     getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
   ]),
+  getItem("Administración", "2", null, [
+    getItem("Prodcutos", "/admin/products", <BarcodeOutlined />),
+  ]),
+  // Uncomment and modify as needed
+  // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [
+  //   getItem("Inventario", "5", "/admin/almacen/inventario"),
+  //   getItem("Movimientos", "6", "/admin/almacen/movimientos"),
+  // ]),
 ];
 
 // Utility function to check if the current path matches the regex pattern
