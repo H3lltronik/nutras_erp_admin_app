@@ -33,7 +33,7 @@ interface IAuthAPI {
     logout: () => Promise<void>;
     forgotPassword: (data: ForgotPasswordArgs) => Promise<void>;
     resetPassword: (data: ResetPasswordArgs) => Promise<void>;
-    me: () => Promise<User>;
+    me: () => Promise<MeResponse>;
 }
 
 class BaseAuthAPI implements IAuthAPI  {
@@ -60,13 +60,14 @@ class BaseAuthAPI implements IAuthAPI  {
       }
     }
 
-    async me (): Promise<User> {
+    async me (): Promise<MeResponse> {
       const token = localStorage.getItem(AUTH_TOKEN_LOCAL_KEY);
+      console.log("me", this.meUrl, token)
 
       if (!token) 
         throw new Error("No token found");
 
-      const result = await axios.post<User>(this.meUrl, {}, {
+      const result = await axios.post<MeResponse>(this.meUrl, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -75,8 +76,12 @@ class BaseAuthAPI implements IAuthAPI  {
       return result.data
     }
 
-    logout(): Promise<void> {
-        throw new Error("Method not implemented.");
+    async logout(): Promise<void> {
+      localStorage.removeItem(AUTH_TOKEN_LOCAL_KEY);
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+      return Promise.resolve();
     }
 
     forgotPassword(data: ForgotPasswordArgs): Promise<void> {

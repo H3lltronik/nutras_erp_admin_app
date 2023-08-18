@@ -4,7 +4,7 @@ import { Menu } from "antd";
 import React, { useEffect, useState } from "react"; // Import useEffect
 import { useLocation, useNavigate } from "react-router-dom";
 
-export const UsersHeader: React.FC = () => {
+export const ProfilesHeader: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,19 +17,19 @@ export const UsersHeader: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Listado de usuarios",
-      key: "/admin/users",
+      label: "Listado de perfiles",
+      key: "/admin/profiles",
       icon: <OrderedListOutlined />,
       onClick: () => {
-        navigate("/admin/users");
+        navigate("/admin/profiles");
       },
     },
     {
-      label: "Crear usuario",
-      key: "/admin/users/manage",
+      label: "Crear perfil",
+      key: "/admin/profiles/manage",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/users/manage");
+        navigate("/admin/profiles/manage");
       },
     },
   ];

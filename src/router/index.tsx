@@ -3,10 +3,11 @@ import { DefaultLayout } from "../Layouts/DefaultLayout";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
 import Login from "../pages/Login/Login";
-import { Test } from "../pages/Test/Test";
-import { TestHeader } from "../pages/Test/TestHeader";
-import { Users } from "../pages/Users";
+import { ProfilesList, ProfilesManage } from "../pages/Profiles";
+import { ProfilesHeader } from "../pages/Profiles/ProfilesHeader";
+import { UsersManage } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/UsersHeader";
+import { UsersList } from "../pages/Users/UsersList";
 import { Products } from "../pages/Products";
 import { ProductsHeader } from "../pages/Products/ProductsHeader";
 import { MeasurementTypes } from "../pages/MeasurementTypes/MeasurementTypes";
@@ -35,7 +36,15 @@ const router = createBrowserRouter([
     path: "/admin/users",
     element: (
       <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
-        <Users />
+        <UsersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/users/manage",
+    element: (
+      <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
+        <UsersManage />
       </DefaultLayout>
     ),
   },
@@ -58,8 +67,24 @@ const router = createBrowserRouter([
   {
     path: "/test",
     element: (
-      <DefaultLayout navContent={<TestHeader />}>
-        <Test />
+      <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
+        <UsersManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/profiles",
+    element: (
+      <DefaultLayout navContent={<ProfilesHeader />} headerTitle="Perfiles">
+        <ProfilesList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/profiles/manage",
+    element: (
+      <DefaultLayout navContent={<ProfilesHeader />} headerTitle="Perfiles">
+        <ProfilesManage />
       </DefaultLayout>
     ),
   },

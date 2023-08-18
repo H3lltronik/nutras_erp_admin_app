@@ -1,12 +1,12 @@
 import BaseAPI from "../common/ApiBase";
 
 class BaseUserAPI extends BaseAPI {
-    async createUser<U>(data: U): Promise<void> {
-      return this.post<void, U>('', data);
+    async createUser<CreateUserRequest>(data: CreateUserRequest): Promise<UserCreatedResponse> {
+      return this.post<UserCreatedResponse, CreateUserRequest>('', data);
     }
 
-    async getUsers(params?: QueryParams): Promise<unknown> {
-        return this.get<unknown>('', params);
+    async getUsers(params?: QueryParams): Promise<GetUserResponse> {
+        return this.get<GetUserResponse>('', params);
     }
   
     async getUser(userId: string, params?: QueryParams): Promise<unknown> {
