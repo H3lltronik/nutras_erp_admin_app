@@ -33,6 +33,7 @@ const items: MenuItem[] = [
     getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
   ]),
   getItem("Administración", "2", null, [
+    getItem("Unidades de medida", "/admin/measurement-types", <BarcodeOutlined />),
     getItem("Prodcutos", "/admin/products", <BarcodeOutlined />),
   ]),
   // Uncomment and modify as needed

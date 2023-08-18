@@ -1,12 +1,12 @@
 import BaseAPI from "../common/ApiBase";
 
 class BaseProductAPI extends BaseAPI {
-    async createProduct<U>(data: U): Promise<void> {
-      return this.post<void, U>('', data);
+    async createProduct<CreateProductRequest>(data: CreateProductRequest): Promise<ProductCreatedResponse> {
+      return this.post<ProductCreatedResponse, CreateProductRequest>('', data);
     }
 
-    async getProducts(params?: QueryParams): Promise<unknown> {
-        return this.get<unknown>('', params);
+    async getProducts(params?: QueryParams): Promise<GetProductsResponse> {
+        return this.get<GetProductsResponse>('', params);
     }
   
     async getProduct(productId: string, params?: QueryParams): Promise<unknown> {
