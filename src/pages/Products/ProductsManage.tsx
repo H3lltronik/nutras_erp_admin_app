@@ -7,6 +7,7 @@ import ProductForm, {
 } from "../../components/Forms/Product/ProductForm";
 import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../lib/notify";
+import { AppLoader } from "../../components/Common/AppLoader";
 
 const { Content } = Layout;
 
@@ -66,6 +67,8 @@ export const ProductsManage: React.FC = () => {
             </button>
           </section>
         </div>
+
+        <AppLoader isLoading={pageLoading} />
       </Content>
     </>
   );

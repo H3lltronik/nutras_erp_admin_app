@@ -21,7 +21,7 @@ export type ProfilesFormHandle = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ProfilesForm = forwardRef((props, ref) => {
+const ProfilesForm = forwardRef((_props, ref) => {
   const [form] = Form.useForm();
 
   useImperativeHandle(

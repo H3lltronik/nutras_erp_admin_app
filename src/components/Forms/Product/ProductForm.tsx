@@ -21,7 +21,7 @@ export type ProductFormHandle = {
   getFormData: () => Promise<FieldType>;
 };
 
-const ProductForm = forwardRef((props, ref) => {
+const ProductForm = forwardRef((_props, ref) => {
   const [form] = Form.useForm();
   const { data: measurementsData, isLoading: loadingMeasurements } =
     useAdminQuery("measurements");
@@ -48,14 +48,18 @@ const ProductForm = forwardRef((props, ref) => {
       <Form.Item<FieldType>
         label="Name"
         name="name"
-        rules={[{ required: true, message: "Please input your product name!" }]}>
+        rules={[
+          { required: true, message: "Please input your product name!" },
+        ]}>
         <Input />
       </Form.Item>
 
       <Form.Item<FieldType>
         label="Code"
         name="code"
-        rules={[{ required: true, message: "Please input your product code!" }]}>
+        rules={[
+          { required: true, message: "Please input your product code!" },
+        ]}>
         <Input />
       </Form.Item>
 
@@ -78,7 +82,9 @@ const ProductForm = forwardRef((props, ref) => {
       <Form.Item<FieldType>
         label="Unidad de medida"
         name="unit"
-        rules={[{ required: true, message: "Please select a measurement unit!" }]}>
+        rules={[
+          { required: true, message: "Please select a measurement unit!" },
+        ]}>
         <Select
           placeholder="Select a measurement unit"
           allowClear

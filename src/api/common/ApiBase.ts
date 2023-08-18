@@ -31,7 +31,7 @@ class BaseAPI implements IRESTfulAPI {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  checkTokenValidity(token: string): boolean {
+  checkTokenValidity(_token: string): boolean {
     // Implement a method to check token's validity, e.g., JWT decode or call an endpoint
     return true; // dummy value
   }

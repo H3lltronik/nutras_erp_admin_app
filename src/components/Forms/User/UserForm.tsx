@@ -20,7 +20,7 @@ export type UserFormHandle = {
   getFormData: () => Promise<FieldType>;
 };
 
-const UserForm = forwardRef((props, ref) => {
+const UserForm = forwardRef((_props, ref) => {
   const [form] = Form.useForm();
   const { data: profilesData, isLoading: loadingProfiles } =
     useAdminQuery("profiles");

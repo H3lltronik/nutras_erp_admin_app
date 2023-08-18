@@ -60,7 +60,7 @@ export const ProductsList: React.FC = () => {
       title: "Action",
       key: "action",
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      render: (_: unknown, record: unknown) => (
+      render: (_: unknown, _record: unknown) => (
         <Space size="middle">
           <a>Edit</a>
           <a>Delete</a>

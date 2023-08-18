@@ -2,6 +2,7 @@ import { Breadcrumb, Layout, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppLoader } from "../../components/Common/AppLoader";
 import MeasurementTypeForm, {
   MeasurementTypeFormHandle,
 } from "../../components/Forms/MeasurementType/MeasurementTypeForm";
@@ -66,6 +67,8 @@ export const MeasurementsManage: React.FC = () => {
             </button>
           </section>
         </div>
+
+        <AppLoader isLoading={pageLoading} />
       </Content>
     </>
   );

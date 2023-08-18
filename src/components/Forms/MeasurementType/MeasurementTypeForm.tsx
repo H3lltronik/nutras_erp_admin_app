@@ -17,7 +17,7 @@ export type MeasurementTypeFormHandle = {
   getFormData: () => Promise<FieldType>;
 };
 
-const MeasurementTypeForm = forwardRef((props, ref) => {
+const MeasurementTypeForm = forwardRef((_props, ref) => {
   const [form] = Form.useForm();
 
   useImperativeHandle(
@@ -42,13 +42,23 @@ const MeasurementTypeForm = forwardRef((props, ref) => {
       <Form.Item<FieldType>
         label="Name"
         name="name"
-        rules={[{ required: true, message: "Please input your measurement type name!" }]}>
+        rules={[
+          {
+            required: true,
+            message: "Please input your measurement type name!",
+          },
+        ]}>
         <Input />
       </Form.Item>
       <Form.Item<FieldType>
         label="Abreviation"
         name="abrev"
-        rules={[{ required: true, message: "Please input your measurement type abreviation!" }]}>
+        rules={[
+          {
+            required: true,
+            message: "Please input your measurement type abreviation!",
+          },
+        ]}>
         <Input />
       </Form.Item>
     </Form>
