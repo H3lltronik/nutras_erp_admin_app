@@ -9,6 +9,8 @@ import { Users } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/UsersHeader";
 import { Products } from "../pages/Products";
 import { ProductsHeader } from "../pages/Products/ProductsHeader";
+import { MeasurementTypes } from "../pages/MeasurementTypes/MeasurementTypes";
+import { MeasurementTypesHeader } from "../pages/MeasurementTypes/MeasurementTypesHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
         <Users />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/measurement-types",
+    element: (
+      <DefaultLayout navContent={<MeasurementTypesHeader />} headerTitle="Productos">
+        <MeasurementTypes />
       </DefaultLayout>
     ),
   },
