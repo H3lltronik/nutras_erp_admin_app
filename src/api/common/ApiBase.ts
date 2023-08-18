@@ -13,7 +13,6 @@ class BaseAPI implements IRESTfulAPI {
     // Attach an interceptor to check for token validity on each request
     this.instance.interceptors.request.use((config) => {
       const token = this.getToken();
-      console.log("Redirecting to login page ACA", token)
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       } else {
@@ -50,7 +49,7 @@ class BaseAPI implements IRESTfulAPI {
 
   redirectToLogin(): void {
     // Depending on your setup, this can redirect to a login page
-    console.log("Redirecting to login page")
+    console.warn("Redirecting to login page")
     window.location.href = '/';
     showToast('error', 'error');
   }

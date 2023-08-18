@@ -1,29 +1,40 @@
 import { Breadcrumb, Layout, Typography, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import React, { useEffect, useRef } from "react";
-import { UserAPI } from "../../api";
-import UserForm, { UserFormHandle } from "../../components/Forms/User/UserForm";
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppLoader } from "../../components/Common/AppLoader";
+import ProfilesForm, {
+  ProfilesFormHandle,
+} from "../../components/Forms/Profiles/ProfilesForm";
+import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
+import { showToast } from "../../lib/notify";
 
 const { Text } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 
 export const ProfilesManage: React.FC = () => {
-  const userFormRef = useRef<UserFormHandle | null>(null);
+  const profileFormRef = useRef<ProfilesFormHandle | null>(null);
+  const [pageLoading, setPageLoading] = React.useState<boolean>(false);
+  const { mutateAsync } = useAdminMutation("createProfile");
+  const navigate = useNavigate();
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  useEffect(() => {
-    (async () => {
-      const res = await UserAPI.getUsers();
-      console.log(res);
-    })();
-  }, []);
-
   const submitForm = async () => {
-    const userFormData = await userFormRef.current?.getFormData();
-    console.log("userFormData", userFormData);
+    const profileFormData =
+      (await profileFormRef.current?.getFormData()) as CreateProfileRequest;
+
+    setPageLoading(true);
+    const result = await mutateAsync(profileFormData);
+
+    if (result.id) {
+      showToast("Perfil creado correctamente", "success");
+      navigate("/admin/profiles");
+    }
+
+    setPageLoading(false);
   };
 
   const breadcrumb: ItemType[] = [
@@ -31,7 +42,16 @@ export const ProfilesManage: React.FC = () => {
       title: "Seguridad",
     },
     {
-      title: "Usuarios",
+      title: "Perfiles",
+      className:
+        "cursor-pointer hover:text-blue-500 transition-all duration-300",
+      onClick: () => {
+        navigate("/admin/profiles");
+      },
+      href: "/admin/profiles",
+    },
+    {
+      title: "Crear - Editar perfil",
     },
   ];
 
@@ -47,7 +67,7 @@ export const ProfilesManage: React.FC = () => {
             background: colorBgContainer,
           }}>
           <section className="max-w-[1500px]">
-            <UserForm ref={userFormRef} />
+            <ProfilesForm ref={profileFormRef} />
 
             <button
               className="bg-gray-500 py-1 px-2 rounded-lg text-white"
@@ -56,6 +76,8 @@ export const ProfilesManage: React.FC = () => {
             </button>
           </section>
         </div>
+
+        <AppLoader isLoading={pageLoading} />
       </Content>
     </>
   );

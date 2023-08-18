@@ -1,8 +1,11 @@
 import BaseAPI from "../common/ApiBase";
 
 class BaseProfilesAPI extends BaseAPI {
-    async createProfile<U>(data: U): Promise<void> {
-      return this.post<void, U>('', data);
+    // async createUser<CreateUserRequest>(data: CreateUserRequest): Promise<UserCreatedResponse> {
+    //   return this.post<UserCreatedResponse, CreateUserRequest>('', data);
+    // }
+    async createProfile<CreateProfileRequest>(data: CreateProfileRequest): Promise<ProfileCreatedResponse> {
+      return this.post<ProfileCreatedResponse, CreateProfileRequest>('', data);
     }
 
     async getProfiles(params?: QueryParams): Promise<GetProfilesResponse> {

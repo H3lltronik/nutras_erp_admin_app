@@ -74,7 +74,7 @@ export const ProfilesList: React.FC = () => {
           <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
 
           <Button
-            onClick={() => navigate("/admin/users/manage")}
+            onClick={() => navigate("/admin/profiles/manage")}
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
             Nuevo perfil

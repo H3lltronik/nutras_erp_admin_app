@@ -49,5 +49,9 @@ interface CreateUserRequest {
   profile: string;
 }
 
+type ProfileCreatedResponse = Profile
 
-  
+interface CreateProfileRequest {
+  name: string;
+  roles: string;
+}
