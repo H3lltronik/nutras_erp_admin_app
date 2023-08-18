@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../assets/nutras-logo.png";
 import { DefaultHeader } from "./DefaultHeader";
+import { DefaultLayoutContent } from "./DefaultLayoutContent";
 import { AdminMenu } from "./Menu";
 
 const { Text } = Typography;
@@ -39,7 +40,9 @@ export const DefaultLayout: React.FC<HeaderProps> = (props) => {
         />
         {/* <Outlet /> */}
         <ToastContainer />
-        {props.children}
+
+        <DefaultLayoutContent children={props.children} />
+
         <Footer style={{ textAlign: "center" }} />
       </Layout>
     </Layout>
