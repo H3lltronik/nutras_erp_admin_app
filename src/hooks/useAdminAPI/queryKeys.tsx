@@ -1,13 +1,29 @@
-import { AuthAPI, MeasurementAPI, ProductAPI, ProfileAPI, UserAPI } from "../../api";
+import {
+  AuthAPI,
+  MeasurementAPI,
+  ProductAPI,
+  ProfileAPI,
+  UserAPI,
+} from "../../api";
 
 // type Endpoint = 'me' | 'comments'; // Add new endpoint names here
-export type Endpoint = "me" | "users" | "profiles" | "measurements" | "products"; // Add new endpoint names here
+export type Endpoint =
+  | "me"
+  | "users"
+  | "profiles"
+  | "measurements"
+  | "products"; // Add new endpoint names here
 
-export type EndpointResponse<T extends Endpoint> = T extends "me" ? MeResponse
-  : T extends "users" ? GetUserResponse
-  : T extends "profiles" ? GetProfilesResponse
-  : T extends "measurements" ? GetMeasurementsResponse
-  : T extends "products" ? GetProductsResponse
+export type EndpointResponse<T extends Endpoint> = T extends "me"
+  ? MeResponse
+  : T extends "users"
+  ? GetUserResponse
+  : T extends "profiles"
+  ? GetProfilesResponse
+  : T extends "measurements"
+  ? GetMeasurementsResponse
+  : T extends "products"
+  ? GetProductsResponse
   : never;
 
 interface EndpointDetails<T extends Endpoint> {
@@ -17,7 +33,7 @@ interface EndpointDetails<T extends Endpoint> {
 
 console.log("AuthAPI", AuthAPI);
 
-export const endpoints: Record<Endpoint, EndpointDetails<any>> = {
+export const endpoints: Record<Endpoint, EndpointDetails<Endpoint>> = {
   me: {
     queryKey: "me",
     apiCall: () => AuthAPI.me(),

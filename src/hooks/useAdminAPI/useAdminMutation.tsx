@@ -1,6 +1,5 @@
 // useAdminMutation.tsx
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
-import useAuth from "../useAuth";
 import {
   Mutation,
   MutationRequest,
@@ -11,7 +10,8 @@ import {
 const useAdminMutation = <T extends Mutation>(
   mutation: T
 ): UseMutationResult<MutationResponse<T>, unknown, MutationRequest<T>> => {
-  const { isAuthenticated, loading, error } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const { isAuthenticated, loading, error } = useAuth();
   if (!mutations[mutation]) {
     throw new Error(`Unknown mutation: ${mutation}`);
   }

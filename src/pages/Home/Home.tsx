@@ -1,9 +1,8 @@
-import { Breadcrumb, Layout, Typography, theme } from "antd";
+import { Breadcrumb, Layout, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import React from "react";
 
-const { Text } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 export const Home: React.FC = () => {
   const {

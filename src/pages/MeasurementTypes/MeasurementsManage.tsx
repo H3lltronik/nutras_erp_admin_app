@@ -1,17 +1,18 @@
-import { Breadcrumb, Layout, Typography, theme } from "antd";
+import { Breadcrumb, Layout, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import React, { useEffect, useRef } from "react";
-import { MeasurementAPI } from "../../api";
-import MeasurementTypeForm, { MeasurementTypeFormHandle } from "../../components/Forms/MeasurementType/MeasurementTypeForm";
-import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import MeasurementTypeForm, {
+  MeasurementTypeFormHandle,
+} from "../../components/Forms/MeasurementType/MeasurementTypeForm";
+import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../lib/notify";
 
-const { Text } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 export const MeasurementsManage: React.FC = () => {
   const measurementTypeFormRef = useRef<MeasurementTypeFormHandle | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
   const { mutateAsync } = useAdminMutation("createMeasurement");
   const navigate = useNavigate();

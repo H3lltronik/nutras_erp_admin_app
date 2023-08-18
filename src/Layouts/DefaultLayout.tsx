@@ -1,4 +1,4 @@
-import { Layout, Typography } from "antd";
+import { Layout } from "antd";
 import React, { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,8 +7,7 @@ import { DefaultHeader } from "./DefaultHeader";
 import { DefaultLayoutContent } from "./DefaultLayoutContent";
 import { AdminMenu } from "./Menu";
 
-const { Text } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+const { Footer, Sider } = Layout;
 
 interface HeaderProps {
   navContent?: React.ReactNode;

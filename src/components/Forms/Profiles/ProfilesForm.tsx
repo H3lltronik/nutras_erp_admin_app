@@ -2,11 +2,11 @@ import { Form, Input, Select } from "antd";
 import { forwardRef, useImperativeHandle, useMemo } from "react";
 import { roles } from "./roles";
 
-const onFinish = (values: any) => {
+const onFinish = (values: unknown) => {
   console.log("Success:", values);
 };
 
-const onFinishFailed = (errorInfo: any) => {
+const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
 
@@ -20,6 +20,7 @@ export type ProfilesFormHandle = {
   getFormData: () => Promise<FieldType>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProfilesForm = forwardRef((props, ref) => {
   const [form] = Form.useForm();
 
@@ -47,7 +48,7 @@ const ProfilesForm = forwardRef((props, ref) => {
         }),
       };
     });
-  }, [roles]);
+  }, []);
 
   return (
     <Form

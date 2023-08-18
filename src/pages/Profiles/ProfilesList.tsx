@@ -1,19 +1,10 @@
-import {
-  Breadcrumb,
-  Button,
-  Layout,
-  Space,
-  Table,
-  Typography,
-  theme,
-} from "antd";
+import { Breadcrumb, Button, Layout, Space, Table, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAPI } from "../../hooks";
 
-const { Text } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 export const ProfilesList: React.FC = () => {
   const {
@@ -21,7 +12,8 @@ export const ProfilesList: React.FC = () => {
   } = theme.useToken();
 
   const navigate = useNavigate();
-  const { data: profilesData, isLoading: profilesLoading } = useAdminAPI("profiles");
+  const { data: profilesData, isLoading: profilesLoading } =
+    useAdminAPI("profiles");
 
   const breadcrumb: ItemType[] = [
     {
@@ -57,7 +49,8 @@ export const ProfilesList: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      render: (_: unknown, record: unknown) => (
         <Space size="middle">
           <a>Invite</a>
           <a>Delete</a>

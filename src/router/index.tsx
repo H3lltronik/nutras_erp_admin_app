@@ -3,17 +3,17 @@ import { DefaultLayout } from "../Layouts/DefaultLayout";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
 import Login from "../pages/Login/Login";
+import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
+import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
+import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage";
+import { ProductsHeader } from "../pages/Products/ProductsHeader";
+import { ProductsList } from "../pages/Products/ProductsList";
+import { ProductsManage } from "../pages/Products/ProductsManage";
 import { ProfilesList, ProfilesManage } from "../pages/Profiles";
 import { ProfilesHeader } from "../pages/Profiles/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/UsersHeader";
 import { UsersList } from "../pages/Users/UsersList";
-import { ProductsManage } from "../pages/Products/ProductsManage";
-import { ProductsList } from "../pages/Products/ProductsList";
-import { ProductsHeader } from "../pages/Products/ProductsHeader";
-import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage";
-import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
-import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -53,7 +53,9 @@ const router = createBrowserRouter([
   {
     path: "/admin/measurement-types",
     element: (
-      <DefaultLayout navContent={<MeasurementsHeader />} headerTitle="Unidades de medida">
+      <DefaultLayout
+        navContent={<MeasurementsHeader />}
+        headerTitle="Unidades de medida">
         <MeasurementsList />
       </DefaultLayout>
     ),
@@ -61,7 +63,9 @@ const router = createBrowserRouter([
   {
     path: "/admin/measurement-types/manage",
     element: (
-      <DefaultLayout navContent={<MeasurementsHeader />} headerTitle="Unidades de medida">
+      <DefaultLayout
+        navContent={<MeasurementsHeader />}
+        headerTitle="Unidades de medida">
         <MeasurementsManage />
       </DefaultLayout>
     ),
@@ -79,14 +83,6 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsManage />
-      </DefaultLayout>
-    ),
-  },
-  {
-    path: "/test",
-    element: (
-      <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
-        <UsersManage />
       </DefaultLayout>
     ),
   },

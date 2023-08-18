@@ -6,7 +6,7 @@ const useAdminQuery = <T extends Endpoint>(
   endpoint: T
 ): UseQueryResult<EndpointResponse<T>, unknown> => {
   // Adjust the generic types based on your API response and error type
-  const { isAuthenticated, loading, error } = useAuth();
+  const { loading } = useAuth();
 
   if (!endpoints[endpoint]) {
     throw new Error(`Unknown endpoint: ${endpoint}`);

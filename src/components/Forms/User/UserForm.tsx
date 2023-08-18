@@ -2,11 +2,11 @@ import { Form, Input, Select } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
 import useAdminQuery from "../../../hooks/useAdminAPI/useAdminQuery";
 
-const onFinish = (values: any) => {
+const onFinish = (values: unknown) => {
   console.log("Success:", values);
 };
 
-const onFinishFailed = (errorInfo: any) => {
+const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
 

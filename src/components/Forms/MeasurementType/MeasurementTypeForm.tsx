@@ -1,11 +1,11 @@
 import { Form, Input } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
 
-const onFinish = (values: any) => {
+const onFinish = (values: unknown) => {
   console.log("Success:", values);
 };
 
-const onFinishFailed = (errorInfo: any) => {
+const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
 

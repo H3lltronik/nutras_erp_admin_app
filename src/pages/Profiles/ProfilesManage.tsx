@@ -1,4 +1,4 @@
-import { Breadcrumb, Layout, Typography, theme } from "antd";
+import { Breadcrumb, Layout, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +9,7 @@ import ProfilesForm, {
 import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../lib/notify";
 
-const { Text } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 export const ProfilesManage: React.FC = () => {
   const profileFormRef = useRef<ProfilesFormHandle | null>(null);

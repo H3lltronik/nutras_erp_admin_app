@@ -1,4 +1,8 @@
-import { BarcodeOutlined, PieChartOutlined, ProfileOutlined } from "@ant-design/icons";
+import {
+  BarcodeOutlined,
+  PieChartOutlined,
+  ProfileOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import React from "react";
@@ -19,7 +23,7 @@ function getItem(
   children?: MenuItem[]
 ): MenuItem {
   return {
-    key: path || label.toString(),
+    key: path || label?.toString(),
     icon,
     children,
     label,
@@ -33,7 +37,11 @@ const items: MenuItem[] = [
     getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
   ]),
   getItem("Administración", "2", null, [
-    getItem("Unidades de medida", "/admin/measurement-types", <BarcodeOutlined />),
+    getItem(
+      "Unidades de medida",
+      "/admin/measurement-types",
+      <BarcodeOutlined />
+    ),
     getItem("Prodcutos", "/admin/products", <BarcodeOutlined />),
   ]),
   // Uncomment and modify as needed
@@ -49,7 +57,7 @@ const pathMatches = (path: string, pattern: string) => {
   return regex.test(path);
 };
 
-export const AdminMenu: React.FC = (props) => {
+export const AdminMenu: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -90,8 +98,8 @@ export const AdminMenu: React.FC = (props) => {
   return (
     <Menu
       theme="dark"
-      selectedKeys={[getSelectedKey() as any]}
-      defaultOpenKeys={getOpenKeys() as any}
+      selectedKeys={[getSelectedKey() as string]}
+      defaultOpenKeys={getOpenKeys() as string[]}
       mode="inline">
       {items.map((item) => {
         if (item.children) {
