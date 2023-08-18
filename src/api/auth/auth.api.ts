@@ -76,8 +76,12 @@ class BaseAuthAPI implements IAuthAPI  {
       return result.data
     }
 
-    logout(): Promise<void> {
-        throw new Error("Method not implemented.");
+    async logout(): Promise<void> {
+      localStorage.removeItem(AUTH_TOKEN_LOCAL_KEY);
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+      return Promise.resolve();
     }
 
     forgotPassword(data: ForgotPasswordArgs): Promise<void> {

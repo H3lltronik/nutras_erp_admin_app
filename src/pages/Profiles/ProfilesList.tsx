@@ -21,8 +21,7 @@ export const ProfilesList: React.FC = () => {
   } = theme.useToken();
 
   const navigate = useNavigate();
-  const { data: profilesData, isLoading: profilesLoading } =
-    useAdminAPI("profiles");
+  const { data: profilesData, isLoading: profilesLoading } = useAdminAPI("profiles");
 
   const breadcrumb: ItemType[] = [
     {

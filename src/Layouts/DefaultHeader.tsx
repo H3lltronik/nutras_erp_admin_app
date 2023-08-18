@@ -1,7 +1,9 @@
 import { PoweroffOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Layout, Popover, Spin, Typography, theme } from "antd";
 import { useMemo } from "react";
+import { AuthAPI } from "../api";
 import { useAdminAPI } from "../hooks";
+import { showToast } from "../lib/notify";
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -34,6 +36,11 @@ export const DefaultHeader: React.FC<HeaderProps> = (props) => {
     return getInitials(meData?.username ?? "");
   }, [meData, meLoading]);
 
+  const handleLogoutClick = async () => {
+    await AuthAPI.logout();
+    showToast("Sesión cerrada correctamente", "success");
+  };
+
   const popupContent = () => {
     return (
       <>
@@ -55,7 +62,7 @@ export const DefaultHeader: React.FC<HeaderProps> = (props) => {
             <UserOutlined />
             Mi perfil
           </Button>
-          <Button block>
+          <Button block onClick={handleLogoutClick}>
             <PoweroffOutlined />
             Cerrar sesión
           </Button>
