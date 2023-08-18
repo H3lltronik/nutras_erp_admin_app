@@ -1,15 +1,17 @@
-import { ProfileAPI, UserAPI } from "../../api";
+import { MeasurementAPI, ProfileAPI, UserAPI } from "../../api";
 
-export type Mutation = "createUser" | "createProfile"; // Add other mutation names here
+export type Mutation = "createUser" | "createProfile" | "createMeasurement"; // Add other mutation names here
 
 export type MutationRequest<T extends Mutation> = 
   T extends "createUser" ? CreateUserRequest
   : T extends "createProfile" ? CreateProfileRequest
+  : T extends "createMeasurement" ? CreateMeasurementRequest
   : never;
 
 export type MutationResponse<T extends Mutation> = 
   T extends "createUser" ? UserCreatedResponse
   : T extends "createProfile" ? ProfileCreatedResponse
+  : T extends "createMeasurement" ? MeasurementCreatedResponse
   : never;
 
 interface MutationDetails<T extends Mutation> {
@@ -22,6 +24,9 @@ export const mutations: { [K in Mutation]: MutationDetails<K> } = {
   },
   createProfile: {
     apiCall: (data) => ProfileAPI.createProfile(data),
+  },
+  createMeasurement: {
+    apiCall: (data) => MeasurementAPI.createMeasurement(data),
   },
   // Add other mutations here
 };

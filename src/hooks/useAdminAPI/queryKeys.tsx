@@ -1,11 +1,13 @@
-import { AuthAPI, ProfileAPI, UserAPI } from "../../api";
+import { AuthAPI, MeasurementAPI, ProfileAPI, UserAPI } from "../../api";
 
 // type Endpoint = 'me' | 'comments'; // Add new endpoint names here
-export type Endpoint = "me" | "users" | "profiles"; // Add new endpoint names here
+export type Endpoint = "me" | "users" | "profiles" | "measurements" | "products"; // Add new endpoint names here
 
 export type EndpointResponse<T extends Endpoint> = T extends "me" ? MeResponse
   : T extends "users" ? GetUserResponse
   : T extends "profiles" ? GetProfilesResponse
+  : T extends "measurements" ? GetMeasurementsResponse
+  : T extends "products" ? GetProfilesResponse
   : never;
 
 interface EndpointDetails<T extends Endpoint> {
@@ -26,6 +28,14 @@ export const endpoints: Record<Endpoint, EndpointDetails<any>> = {
   },
   profiles: {
     queryKey: "profiles",
+    apiCall: () => ProfileAPI.getProfiles(),
+  },
+  measurements: {
+    queryKey: "measurements",
+    apiCall: () => MeasurementAPI.getMeasurements(),
+  },
+  products: {
+    queryKey: "products",
     apiCall: () => ProfileAPI.getProfiles(),
   },
 };

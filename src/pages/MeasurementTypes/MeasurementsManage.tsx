@@ -1,29 +1,38 @@
 import { Breadcrumb, Layout, Typography, theme } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import React, { useEffect, useRef } from "react";
-// import { measurementTypeAPI } from "../../api";
+import { MeasurementAPI } from "../../api";
 import MeasurementTypeForm, { MeasurementTypeFormHandle } from "../../components/Forms/MeasurementType/MeasurementTypeForm";
+import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
+import { useNavigate } from "react-router-dom";
+import { showToast } from "../../lib/notify";
 
 const { Text } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 
-export const MeasurementTypes: React.FC = () => {
+export const MeasurementsManage: React.FC = () => {
   const measurementTypeFormRef = useRef<MeasurementTypeFormHandle | null>(null);
+  const [pageLoading, setPageLoading] = React.useState<boolean>(false);
+  const { mutateAsync } = useAdminMutation("createMeasurement");
+  const navigate = useNavigate();
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  useEffect(() => {
-    (async () => {
-      // const res = await measurementTypeAPI.getmeasurementTypes();
-      // console.log(res);
-    })();
-  }, []);
-
   const submitForm = async () => {
-    const measurementTypeFormData = await measurementTypeFormRef.current?.getFormData();
-    console.log("measurementTypeFormData", measurementTypeFormData);
+    const measurementFormData =
+      (await measurementTypeFormRef.current?.getFormData()) as CreateMeasurementRequest;
+
+    setPageLoading(true);
+    const result = await mutateAsync(measurementFormData);
+
+    if (result.id) {
+      showToast(" Unidad de medida creada correctamente", "success");
+      navigate("/admin/measurement-types");
+    }
+
+    setPageLoading(false);
   };
 
   const breadcrumb: ItemType[] = [

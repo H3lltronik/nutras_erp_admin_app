@@ -45,6 +45,12 @@ const MeasurementTypeForm = forwardRef((props, ref) => {
         rules={[{ required: true, message: "Please input your measurement type name!" }]}>
         <Input />
       </Form.Item>
+      <Form.Item<FieldType>
+        label="Abreviation"
+        name="abrev"
+        rules={[{ required: true, message: "Please input your measurement type abreviation!" }]}>
+        <Input />
+      </Form.Item>
     </Form>
   );
 });

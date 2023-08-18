@@ -10,6 +10,13 @@ interface Profile {
   name: string;
   roles?: (string)[] | null;
 }
+interface Measurement {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: null;
+  id: string;
+  name: string;
+}
 
 /**
  * API RESPONSES
@@ -26,6 +33,8 @@ type GetUserResponse = MeResponse[]
 
 type GetProfileResponse = Profile
 type GetProfilesResponse = Profile[]
+type GetMeasurementResponse = Measurement
+type GetMeasurementsResponse = Measurement[]
 
 type APIError = {
     statusCode: number
@@ -50,8 +59,13 @@ interface CreateUserRequest {
 }
 
 type ProfileCreatedResponse = Profile
+type MeasurementCreatedResponse = Measurement
 
 interface CreateProfileRequest {
   name: string;
   roles: string;
+}
+
+interface CreateMeasurementRequest {
+  name: string;
 }
