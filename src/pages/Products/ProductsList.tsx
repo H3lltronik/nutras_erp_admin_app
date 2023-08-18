@@ -83,7 +83,7 @@ import {
             <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
   
             <Button
-              onClick={() => navigate("/admin/Product-types/manage")}
+              onClick={() => navigate("/admin/products/manage")}
               className="bg-green-600 text-white hover:bg-green-50"
               type="default">
               Nuevo producto
