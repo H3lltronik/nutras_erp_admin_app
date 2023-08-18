@@ -1,74 +1,40 @@
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, OrderedListOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import React, { useState } from "react";
-
-const items: MenuProps["items"] = [
-  {
-    label: "Navigation One",
-    key: "mail",
-    icon: <MailOutlined />,
-  },
-  {
-    label: "Navigation Two",
-    key: "app",
-    icon: <AppstoreOutlined />,
-    disabled: true,
-  },
-  {
-    label: "Navigation Three - Submenu",
-    key: "SubMenu",
-    icon: <SettingOutlined />,
-    children: [
-      {
-        type: "group",
-        label: "Item 1",
-        children: [
-          {
-            label: "Option 1",
-            key: "setting:1",
-          },
-          {
-            label: "Option 2",
-            key: "setting:2",
-          },
-        ],
-      },
-      {
-        type: "group",
-        label: "Item 2",
-        children: [
-          {
-            label: "Option 3",
-            key: "setting:3",
-          },
-          {
-            label: "Option 4",
-            key: "setting:4",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: (
-      <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-        Navigation Four - Link
-      </a>
-    ),
-    key: "alipay",
-  },
-];
+import React, { useEffect, useState } from "react"; // Import useEffect
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const UsersHeader: React.FC = () => {
-  const [current, setCurrent] = useState("mail");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [current, setCurrent] = useState(location.pathname);
+
+  useEffect(() => {
+    // Update the current state whenever the pathname changes
+    setCurrent(location.pathname);
+  }, [location.pathname]); // Dependency array to listen for changes in pathname
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Listado de usuarios",
+      key: "/admin/users",
+      icon: <OrderedListOutlined />,
+      onClick: () => {
+        navigate("/admin/users");
+      },
+    },
+    {
+      label: "Crear usuario",
+      key: "/admin/users/manage",
+      icon: <EditOutlined />,
+      onClick: () => {
+        navigate("/admin/users/manage");
+      },
+    },
+  ];
 
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
   };
 

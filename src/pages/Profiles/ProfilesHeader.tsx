@@ -1,14 +1,40 @@
+import { EditOutlined, OrderedListOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import React, { useState } from "react";
-
-const items: MenuProps["items"] = [];
+import React, { useEffect, useState } from "react"; // Import useEffect
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const ProfilesHeader: React.FC = () => {
-  const [current, setCurrent] = useState("mail");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [current, setCurrent] = useState(location.pathname);
+
+  useEffect(() => {
+    // Update the current state whenever the pathname changes
+    setCurrent(location.pathname);
+  }, [location.pathname]); // Dependency array to listen for changes in pathname
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Listado de perfiles",
+      key: "/admin/profiles",
+      icon: <OrderedListOutlined />,
+      onClick: () => {
+        navigate("/admin/profiles");
+      },
+    },
+    {
+      label: "Crear perfil",
+      key: "/admin/profiles/manage",
+      icon: <EditOutlined />,
+      onClick: () => {
+        navigate("/admin/profiles/manage");
+      },
+    },
+  ];
 
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
   };
 
