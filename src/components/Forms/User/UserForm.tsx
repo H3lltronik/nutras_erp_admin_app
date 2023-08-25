@@ -1,5 +1,5 @@
 import { Form, Input, Select } from "antd";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 import useAdminQuery from "../../../hooks/useAdminAPI/useAdminQuery";
 
 const onFinish = (values: unknown) => {
@@ -20,7 +20,11 @@ export type UserFormHandle = {
   getFormData: () => Promise<FieldType>;
 };
 
-const UserForm = forwardRef((_props, ref) => {
+type UserFormProps = {
+  entity?: User | null;
+};
+
+const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
   const [form] = Form.useForm();
   const { data: profilesData, isLoading: loadingProfiles } =
     useAdminQuery("profiles");
@@ -36,11 +40,14 @@ const UserForm = forwardRef((_props, ref) => {
     })
   );
 
+  useEffect(() => {
+    if (props.entity) form.setFieldsValue(props.entity);
+  }, [form, props.entity]);
+
   return (
     <Form
       form={form}
       name="basic"
-      initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off">
@@ -50,30 +57,60 @@ const UserForm = forwardRef((_props, ref) => {
         rules={[{ required: true, message: "Please input your username!" }]}>
         <Input />
       </Form.Item>
-      <Form.Item<FieldType>
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}>
-        <Input.Password />
-      </Form.Item>
-      <Form.Item<FieldType>
-        label="Confirm password"
-        name="confirmPassword"
-        rules={[
-          { required: true, message: "Please input your password again!" },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue("password") === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(
-                new Error("The two passwords do not match!")
-              );
+
+      {props.entity == null && (
+        <Form.Item<FieldType>
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: "Please input your password!" }]}>
+          <Input.Password />
+        </Form.Item>
+      )}
+
+      {props.entity == null && (
+        <Form.Item<FieldType>
+          label="Confirm password"
+          name="confirmPassword"
+          rules={[
+            { required: true, message: "Please input your password again!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error("The two passwords do not match!")
+                );
+              },
+            }),
+          ]}>
+          <Input.Password />
+        </Form.Item>
+      )}
+
+      {props.entity && (
+        <Form.Item<FieldType>
+          label="New password"
+          name="newPassword"
+          rules={[{ required: false }]}>
+          <Input.Password />
+        </Form.Item>
+      )}
+
+      {props.entity && (
+        <Form.Item<FieldType>
+          label="Confirm old password"
+          name="confirmPassword"
+          rules={[
+            {
+              required: true,
+              message: "Please input your OLD password!",
             },
-          }),
-        ]}>
-        <Input.Password />
-      </Form.Item>
+          ]}>
+          <Input.Password />
+        </Form.Item>
+      )}
+
       <Form.Item<FieldType>
         label="Profile"
         name="profileId"

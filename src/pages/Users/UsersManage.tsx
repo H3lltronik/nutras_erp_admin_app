@@ -1,11 +1,13 @@
-import { Breadcrumb, Layout, theme } from "antd";
-import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
+import { useQuery } from "@tanstack/react-query";
+import { Breadcrumb, Layout } from "antd";
 import React, { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { UserAPI } from "../../api";
 import { AppLoader } from "../../components/Common/AppLoader";
 import UserForm, { UserFormHandle } from "../../components/Forms/User/UserForm";
 import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../lib/notify";
+import { usersBreadcrumb } from "./usersBreadcrums";
 
 const { Content } = Layout;
 
@@ -14,40 +16,39 @@ export const UsersManage: React.FC = () => {
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
   const { mutateAsync } = useAdminMutation("createUser");
   const navigate = useNavigate();
+  let { id } = useParams();
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
-  const breadcrumb: ItemType[] = [
+  const entity = useQuery<GetUserResponse | null>(
+    ["users", { id }],
+    () => UserAPI.getUser(id as string),
     {
-      title: "Seguridad",
-    },
-    {
-      title: "Usuarios",
-      className:
-        "cursor-pointer hover:text-blue-500 transition-all duration-300",
-      onClick: () => {
-        navigate("/admin/users");
-      },
-      href: "/admin/users",
-    },
-    {
-      title: "Crear - Editar usuario",
-    },
-  ];
+      enabled: !!id,
+    }
+  );
 
   const submitForm = async () => {
     const userFormData =
       (await userFormRef.current?.getFormData()) as CreateUserRequest;
-    console.log("userFormData", userFormData);
 
     setPageLoading(true);
-    const result = await mutateAsync(userFormData);
+    try {
+      let result = null;
+      let message = "";
+      console.log("entity", entity);
+      if (entity.data?.id) {
+        result = await UserAPI.updateUser(entity.data.id, userFormData);
+        message = "Usuario actualizado correctamente";
+      } else {
+        result = await mutateAsync(userFormData);
+        message = "Usuario creado correctamente";
+      }
 
-    if (result.id) {
-      showToast("Usuario creado correctamente", "success");
-      navigate("/admin/users");
+      if (result?.id) {
+        showToast(message, "success");
+        navigate("/admin/users");
+      }
+    } catch (error) {
+      console.log("error", error);
     }
 
     setPageLoading(false);
@@ -56,17 +57,16 @@ export const UsersManage: React.FC = () => {
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
+        <Breadcrumb style={{ margin: "16px 0" }} items={usersBreadcrumb} />
         <div
           className=""
           style={{
             padding: 24,
             minHeight: 360,
-            background: colorBgContainer,
+            background: "#fff",
           }}>
           <section className="max-w-[1500px]">
-            <UserForm ref={userFormRef} />
-
+            <UserForm ref={userFormRef} entity={entity.data} />
             <button
               className="bg-gray-500 py-1 px-2 rounded-lg text-white"
               onClick={submitForm}>

@@ -2,6 +2,13 @@
  * ENTITIES
  */
 
+interface User {
+  id: string;
+  username: string;
+  password: string;
+  profileId: string;
+}
+
 interface Profile {
   createdAt: string;
   updatedAt: string;
@@ -31,14 +38,20 @@ interface Measurement {
  * API RESPONSES
  */
 
-type MeResponse = {
-    id: string;
-    username: string;
-    password: string;
-    profileId: string;
-}
+type MeResponse = User
 
-type GetUserResponse = MeResponse[]
+type GetUsersResponse = MeResponse[]
+type GetUserResponse = MeResponse
+type UpdatedUserResponse = {
+  profile: Profile;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  username: string;
+  password: string;
+  profileId: string;
+}
 
 type GetProfileResponse = Profile
 type GetProfilesResponse = Profile[]

@@ -39,9 +39,11 @@ export const UsersList: React.FC = () => {
       title: "Action",
       key: "action",
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      render: (_: unknown, _record: unknown) => (
+      render: (_: unknown, _record: User) => (
         <Space size="middle">
-          <a>Invite</a>
+          <a onClick={() => navigate(`/admin/users/manage/${_record.id}`)}>
+            Edit
+          </a>
           <a>Delete</a>
         </Space>
       ),

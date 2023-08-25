@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/users/manage",
+    path: "/admin/users/manage/:id?",
     element: (
       <DefaultLayout navContent={<UsersHeader />} headerTitle="Usuarios">
         <UsersManage />

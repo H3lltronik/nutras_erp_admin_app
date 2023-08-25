@@ -14,10 +14,9 @@ export type Endpoint =
   | "measurements"
   | "products"; // Add new endpoint names here
 
-export type EndpointResponse<T extends Endpoint> = T extends "me"
+export type EndpointResponse<T extends Endpoint, U = undefined> = T extends "me"
   ? MeResponse
-  : T extends "users"
-  ? GetUserResponse
+  : T extends "users" ? U extends string ? GetUserResponse : GetUsersResponse
   : T extends "profiles"
   ? GetProfilesResponse
   : T extends "measurements"
@@ -26,12 +25,16 @@ export type EndpointResponse<T extends Endpoint> = T extends "me"
   ? GetProductsResponse
   : never;
 
-interface EndpointDetails<T extends Endpoint> {
-  queryKey: string;
-  apiCall: () => Promise<EndpointResponse<T>>;
-}
+type UsersQueryParams = {
+  id?: string;
+};
 
-console.log("AuthAPI", AuthAPI);
+export type AdminQueryEndpointParams = UsersQueryParams
+
+interface EndpointDetails<T extends Endpoint, P = UsersQueryParams> {
+  queryKey: string;
+  apiCall: (params?: P) => Promise<EndpointResponse<T>>;
+}
 
 export const endpoints: Record<Endpoint, EndpointDetails<Endpoint>> = {
   me: {
@@ -40,7 +43,8 @@ export const endpoints: Record<Endpoint, EndpointDetails<Endpoint>> = {
   },
   users: {
     queryKey: "users",
-    apiCall: () => UserAPI.getUsers(),
+    apiCall: (params?) =>
+      params?.id ? UserAPI.getUser(params.id) : UserAPI.getUsers(),
   },
   profiles: {
     queryKey: "profiles",
