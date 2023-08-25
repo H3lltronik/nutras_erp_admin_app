@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthAPI } from "../../api";
 import useAuth from "../../hooks/useAuth";
 import { showToast } from "../../lib/notify";
+import { LoginParticles } from "./LoginParticles";
 
 type FormValues = {
   username: string;
@@ -41,6 +42,8 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-400">
+      <LoginParticles />
+
       <div className="z-10 p-8 bg-white shadow-md rounded">
         <h2 className="text-2xl mb-4">Login</h2>
         <Form name="login" className="login-form" onFinish={onFinish}>
