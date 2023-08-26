@@ -15,10 +15,10 @@ type Action<TData> = {
 
 interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   queryKey: string;
-  fetchData: (params: object) => Promise<TResponse>;
+  fetchData: (params: object) => Promise<TResponse | APIError>;
   columns: ColumnsType<TData>;
   additionalActions?: Action<TData>[];
-  deleteAction: (id: string | number) => Promise<{ id: string | number }>;
+  deleteAction: (id: string | number) => Promise<{ id: string | number } | APIError>;
   editAction: (id: string | number) => Promise<void>;
   perPage?: number;
 }

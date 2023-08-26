@@ -1,25 +1,17 @@
 import { Button, Layout } from "antd";
 import { ColumnsType } from "antd/es/table";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ProfileAPI } from "../../api";
 import { AdminDataTable } from "../../components/Common/AdminDataTable";
 import { AppLoader } from "../../components/Common/AppLoader";
-import { useLocationQuery } from "../../hooks/useLocationQuery";
 import { ProfileListBreadcrumb } from "./Breadcrums";
 
 const { Content } = Layout;
 
 export const ProfilesList: React.FC = () => {
   const navigate = useNavigate();
-  const locationQuery = useLocationQuery();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-
-  useEffect(() => {
-    const _page = locationQuery.get("page");
-    const page = _page ? parseInt(_page, 10) : 1;
-    setCurrentPage(page);
-  }, [locationQuery]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
 
   const columns: ColumnsType<Profile> = [

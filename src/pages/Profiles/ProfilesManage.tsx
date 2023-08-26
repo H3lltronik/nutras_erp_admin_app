@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { Layout } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ProfileAPI } from "../../api";
 import { AppLoader } from "../../components/Common/AppLoader";
 import ProfilesForm, {
   ProfilesFormHandle,
@@ -8,8 +10,6 @@ import ProfilesForm, {
 import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../lib/notify";
 import { ProfileManageBreadcrumb } from "./Breadcrums";
-import { useQuery } from "@tanstack/react-query";
-import { ProfileAPI } from "../../api";
 
 const { Content } = Layout;
 
@@ -31,11 +31,34 @@ export const ProfilesManage: React.FC = () => {
       (await profileFormRef.current?.getFormData()) as CreateProfileRequest;
 
     setPageLoading(true);
-    const result = await mutateAsync(profileFormData);
+    try {
+      let result = null;
+      let message = "";
 
-    if (result.id) {
-      showToast("Perfil creado correctamente", "success");
-      navigate("/admin/profiles");
+      if (entity?.data) {
+        if ("id" in entity.data) {
+          result = await ProfileAPI.updateProfile(
+            entity.data.id,
+            profileFormData
+          );
+          message = "Perfil actualizado correctamente";
+        } else {
+          alert("No se puede actualizar el perfil");
+          console.error("Not valid entity", entity.data);
+        }
+      } else {
+        result = await mutateAsync(profileFormData);
+        message = "Perfil creado correctamente";
+      }
+
+      if (result) {
+        if ("id" in result) {
+          showToast(message, "success");
+          navigate("/admin/profiles");
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
     }
 
     setPageLoading(false);

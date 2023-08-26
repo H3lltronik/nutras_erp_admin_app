@@ -66,6 +66,10 @@ const ProfilesForm = forwardRef<ProfilesFormHandle, ProfileFormProps>(
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off">
+        <Form.Item<FieldType> label="Id" name="id" hidden={true}>
+          <Input />
+        </Form.Item>
+
         <Form.Item<FieldType>
           label="Nombre"
           name="name"

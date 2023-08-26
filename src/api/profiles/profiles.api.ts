@@ -7,7 +7,7 @@ class BaseProfilesAPI extends BaseAPI {
     return this.post<ProfileCreatedResponse, CreateProfileRequest>("", data);
   }
 
-  async getProfiles(params?: QueryParams): Promise<GetProfilesResponse> {
+  async getProfiles(params?: QueryParams): Promise<GetProfilesResponse | APIError> {
     return this.get<GetProfilesResponse>("", params);
   }
 
@@ -23,13 +23,13 @@ class BaseProfilesAPI extends BaseAPI {
     data: U,
     params?: QueryParams
   ): Promise<ProfileUpdatedResponse> {
-    return this.put<ProfileUpdatedResponse, U>(`/${userId}`, data, params);
+    return this.patch<ProfileUpdatedResponse, U>(`/${userId}`, data, params);
   }
 
   async deleteProfile(
     userId: string,
     params?: QueryParams
-  ): Promise<DeleteProfileResponse> {
+  ): Promise<DeleteProfileResponse | APIError> {
     return this.delete<DeleteProfileResponse>(`/${userId}`, params);
   }
 

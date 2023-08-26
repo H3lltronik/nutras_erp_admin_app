@@ -51,6 +51,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off">
+      <Form.Item<FieldType> label="Id" name="id" hidden={true}>
+        <Input />
+      </Form.Item>
+
       <Form.Item<FieldType>
         label="Username"
         name="username"
@@ -119,7 +123,7 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
           placeholder="Select a profile"
           allowClear
           loading={loadingProfiles}>
-          {profilesData?.map((profile) => (
+          {profilesData?.data.map((profile) => (
             <option key={profile.id} value={profile.id}>
               {profile.name}
             </option>

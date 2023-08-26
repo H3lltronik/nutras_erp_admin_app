@@ -75,6 +75,11 @@ class BaseAPI implements IRESTfulAPI {
     return response.data;
   }
 
+  async patch<T, U, P = object>(url: string, data: U, params?: QueryParams<P>): Promise<T> {
+    const response = await this.instance.patch<T>(url, data, { params });
+    return response.data;
+  }
+
   async delete<T, P = object>(url: string, params?: QueryParams<P>): Promise<T> {
     const response = await this.instance.delete<T>(url, { params });
     return response.data;

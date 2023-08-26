@@ -1,70 +1,18 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Layout, Space, Table } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import { Button, Layout } from "antd";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAPI } from "../../api";
+import { AdminDataTable } from "../../components/Common/AdminDataTable";
 import { AppLoader } from "../../components/Common/AppLoader";
-import { useLocationQuery } from "../../hooks/useLocationQuery";
-import { showToast } from "../../lib/notify";
 import { UsersListBreadcrumb } from "./Breadcrums";
 
 const { Content } = Layout;
 
 export const UsersList: React.FC = () => {
   const navigate = useNavigate();
-  const locationQuery = useLocationQuery();
-  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  useEffect(() => {
-    const _page = locationQuery.get("page");
-    const page = _page ? parseInt(_page, 10) : 1;
-    setCurrentPage(page);
-  }, [locationQuery]);
-
-  const {
-    data: usersData,
-    isLoading: usersLoading,
-    refetch: refetchUsers,
-  } = useQuery<GetUsersResponse | APIError>(["users", currentPage], () =>
-    UserAPI.getUsers({ page: currentPage })
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-
-  const { mutateAsync: deleteUser } = useMutation(
-    (id: string) => UserAPI.deleteUser(id),
-    {
-      onSuccess: () => {
-        showToast("Usuario eliminado correctamente", "success");
-      },
-      onError: (error: APIError) => {
-        showToast(error?.messages[0], "error");
-      },
-      onSettled: () => {
-        refetchUsers();
-        setPageLoading(false);
-      },
-    }
-  );
-
-  const doDelete = async (id: string) => {
-    const confirm = window.confirm("¿Estás seguro de eliminar este usuario?");
-    if (!confirm) return;
-
-    setPageLoading(true);
-    await deleteUser(id);
-  };
-
-  const dataSource = useMemo(() => {
-    if (usersLoading || !usersData) return [];
-    if (Array.isArray(usersData)) return usersData;
-
-    return [];
-  }, [usersData, usersLoading]);
-
-  const handleTableChange = (pagination: TablePaginationConfig) => {
-    navigate(`/admin/profiles?page=${pagination.current}`);
-    setCurrentPage(pagination.current as number);
-  };
 
   const columns = [
     {
@@ -72,21 +20,17 @@ export const UsersList: React.FC = () => {
       dataIndex: "username",
       key: "username",
     },
-    {
-      title: "Action",
-      key: "action",
-      render: (_: unknown, _record: User) => (
-        <Space size="middle">
-          <a onClick={() => navigate(`/admin/users/manage/${_record.id}`)}>
-            <span>Edit</span>
-          </a>
-          <a onClick={() => doDelete(_record.id)}>
-            <span>Delete</span>
-          </a>
-        </Space>
-      ),
-    },
   ];
+
+  const fetchData = (params: object) => UserAPI.getUsers(params);
+
+  const doDelete = async (id: string | number) => {
+    return UserAPI.deleteUser(id as string);
+  };
+
+  const doEdit = async (id: string | number) => {
+    navigate(`/admin/users/manage/${id}`);
+  };
 
   return (
     <>
@@ -109,11 +53,12 @@ export const UsersList: React.FC = () => {
             background: "#fff",
           }}>
           <section className="mx-auto">
-            <Table
-              dataSource={dataSource}
+            <AdminDataTable
+              queryKey="users"
+              fetchData={fetchData}
               columns={columns}
-              onChange={handleTableChange}
-              pagination={{ current: currentPage }}
+              deleteAction={doDelete}
+              editAction={doEdit}
             />
           </section>
         </div>

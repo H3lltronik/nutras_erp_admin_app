@@ -7,7 +7,11 @@ interface User {
 
 type MeResponse = User
 
-type GetUsersResponse = User[]
+type GetUsersResponse = {
+    data: Users[]
+    pagination: Pagination
+}
+
 type GetUserResponse = User
 type UpdatedUserResponse = {
     profile: Profile;
@@ -19,10 +23,7 @@ type UpdatedUserResponse = {
     password: string;
     profileId: string;
 }
-type DeleteUserResponse = {
-    raw: unknown;
-    affected: number;
-}
+type DeleteUserResponse = User
 
 interface UserCreatedResponse {
     username: string;
