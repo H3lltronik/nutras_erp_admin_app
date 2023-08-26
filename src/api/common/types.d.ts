@@ -1,6 +1,6 @@
 interface PaginationParams {
-    page?: number;
-    perPage?: number;
+    limit?: number;
+    offset?: number;
   }
   
 type QueryParams<T = object> = PaginationParams & T;

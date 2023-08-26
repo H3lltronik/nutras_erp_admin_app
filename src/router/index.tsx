@@ -95,7 +95,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/profiles/manage",
+    path: "/admin/profiles/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProfilesHeader />} headerTitle="Perfiles">
         <ProfilesManage />

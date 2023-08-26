@@ -1,33 +1,70 @@
-import { Breadcrumb, Button, Layout, Space, Table, theme } from "antd";
-import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import React, { useMemo } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button, Layout, Space, Table } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAdminAPI } from "../../hooks";
+import { UserAPI } from "../../api";
+import { AppLoader } from "../../components/Common/AppLoader";
+import { useLocationQuery } from "../../hooks/useLocationQuery";
+import { showToast } from "../../lib/notify";
+import { UsersListBreadcrumb } from "./Breadcrums";
 
 const { Content } = Layout;
 
 export const UsersList: React.FC = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
   const navigate = useNavigate();
-  const { data: usersData, isLoading: usersLoading } = useAdminAPI("users");
+  const locationQuery = useLocationQuery();
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const breadcrumb: ItemType[] = [
+  useEffect(() => {
+    const _page = locationQuery.get("page");
+    const page = _page ? parseInt(_page, 10) : 1;
+    setCurrentPage(page);
+  }, [locationQuery]);
+
+  const {
+    data: usersData,
+    isLoading: usersLoading,
+    refetch: refetchUsers,
+  } = useQuery<GetUsersResponse | APIError>(["users", currentPage], () =>
+    UserAPI.getUsers({ page: currentPage })
+  );
+  const [pageLoading, setPageLoading] = React.useState<boolean>(false);
+
+  const { mutateAsync: deleteUser } = useMutation(
+    (id: string) => UserAPI.deleteUser(id),
     {
-      title: "Seguridad",
-    },
-    {
-      title: "Usuarios",
-    },
-  ];
+      onSuccess: () => {
+        showToast("Usuario eliminado correctamente", "success");
+      },
+      onError: (error: APIError) => {
+        showToast(error?.messages[0], "error");
+      },
+      onSettled: () => {
+        refetchUsers();
+        setPageLoading(false);
+      },
+    }
+  );
+
+  const doDelete = async (id: string) => {
+    const confirm = window.confirm("¿Estás seguro de eliminar este usuario?");
+    if (!confirm) return;
+
+    setPageLoading(true);
+    await deleteUser(id);
+  };
 
   const dataSource = useMemo(() => {
-    if (usersLoading) return [];
+    if (usersLoading || !usersData) return [];
+    if (Array.isArray(usersData)) return usersData;
 
-    return usersData;
+    return [];
   }, [usersData, usersLoading]);
+
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    navigate(`/admin/profiles?page=${pagination.current}`);
+    setCurrentPage(pagination.current as number);
+  };
 
   const columns = [
     {
@@ -38,13 +75,14 @@ export const UsersList: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       render: (_: unknown, _record: User) => (
         <Space size="middle">
           <a onClick={() => navigate(`/admin/users/manage/${_record.id}`)}>
-            Edit
+            <span>Edit</span>
           </a>
-          <a>Delete</a>
+          <a onClick={() => doDelete(_record.id)}>
+            <span>Delete</span>
+          </a>
         </Space>
       ),
     },
@@ -54,7 +92,7 @@ export const UsersList: React.FC = () => {
     <>
       <Content style={{ margin: "0 16px" }}>
         <div className="flex justify-between items-center">
-          <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
+          <UsersListBreadcrumb />
 
           <Button
             onClick={() => navigate("/admin/users/manage")}
@@ -68,12 +106,19 @@ export const UsersList: React.FC = () => {
           style={{
             padding: 24,
             minHeight: 360,
-            background: colorBgContainer,
+            background: "#fff",
           }}>
           <section className="mx-auto">
-            <Table dataSource={dataSource} columns={columns} />
+            <Table
+              dataSource={dataSource}
+              columns={columns}
+              onChange={handleTableChange}
+              pagination={{ current: currentPage }}
+            />
           </section>
         </div>
+
+        <AppLoader isLoading={pageLoading} />
       </Content>
     </>
   );
