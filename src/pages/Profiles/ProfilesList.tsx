@@ -16,6 +16,12 @@ export const ProfilesList: React.FC = () => {
 
   const columns: ColumnsType<Profile> = [
     {
+      title: "Partida ID",
+      dataIndex: "partidaId",
+      key: "partidaId",
+      width: 150,
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",

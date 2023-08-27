@@ -18,7 +18,9 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   fetchData: (params: object) => Promise<TResponse | APIError>;
   columns: ColumnsType<TData>;
   additionalActions?: Action<TData>[];
-  deleteAction: (id: string | number) => Promise<{ id: string | number } | APIError>;
+  deleteAction: (
+    id: string | number
+  ) => Promise<{ id: string | number } | APIError>;
   editAction: (id: string | number) => Promise<void>;
   perPage?: number;
 }
@@ -57,7 +59,9 @@ export const AdminDataTable = <
 
   const { mutateAsync } = useMutation((id: string) => deleteAction(id), {
     onSuccess: (result) => {
-      showToast(`Registro ${result.id} eliminado correctamente`, "success");
+      if ("id" in result)
+        showToast(`Registro ${result.id} eliminado correctamente`, "success");
+      else showToast("Ha ocurrido un error al eliminar el registro", "error");
     },
     onError: (error: APIError) => {
       console.log(error);

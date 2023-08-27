@@ -16,6 +16,12 @@ export const UsersList: React.FC = () => {
 
   const columns = [
     {
+      title: "Partida ID",
+      dataIndex: "partidaId",
+      key: "partidaId",
+      width: 150,
+    },
+    {
       title: "Username",
       dataIndex: "username",
       key: "username",
