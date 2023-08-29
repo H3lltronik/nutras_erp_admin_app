@@ -79,7 +79,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/products/manage",
+    path: "/admin/products/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsManage />

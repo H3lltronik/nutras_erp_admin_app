@@ -18,3 +18,7 @@ body {
 .ant-popover-inner {
   padding: 0 !important;
 }
+
+.ant-pagination {
+  justify-content: center !important;
+}
