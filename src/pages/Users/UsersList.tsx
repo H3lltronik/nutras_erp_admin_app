@@ -26,6 +26,12 @@ export const UsersList: React.FC = () => {
       dataIndex: "username",
       key: "username",
     },
+    {
+      title: "Profile",
+      dataIndex: "profile",
+      key: "profileName",
+      render: (profile: Profile) => profile && profile.name,
+    },
   ];
 
   const fetchData = (params: object) => UserAPI.getUsers(params);

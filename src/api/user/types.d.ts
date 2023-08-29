@@ -3,12 +3,13 @@ interface User {
     username: string;
     password: string;
     profileId: string;
+    profile: Profile;
 }
 
 type MeResponse = User
 
 type GetUsersResponse = {
-    data: Users[]
+    data: User[]
     pagination: Pagination
 }
 

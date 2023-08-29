@@ -32,17 +32,18 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Seguridad", "1", null, [
-    getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
-    getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
-  ]),
-  getItem("Administración", "2", null, [
+  getItem("Almacén", "2", null, [
+    getItem("Inventario", "/admin/products", <BarcodeOutlined />),
     getItem(
       "Unidades de medida",
       "/admin/measurement-types",
       <BarcodeOutlined />
     ),
-    getItem("Prodcutos", "/admin/products", <BarcodeOutlined />),
+    getItem("Productos", "/admin/products", <BarcodeOutlined />),
+  ]),
+  getItem("Administración", "1", null, [
+    getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
+    getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
   ]),
   // Uncomment and modify as needed
   // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [
