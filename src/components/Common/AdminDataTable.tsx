@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Space, Table, TablePaginationConfig } from "antd";
+import { Button, Space, Table, TablePaginationConfig } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import { memo, useEffect, useMemo, useState } from "react";
@@ -7,9 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useLocationQuery } from "../../hooks/useLocationQuery";
 import { showToast } from "../../lib/notify";
 
-type Action<TData> = {
+export type Action<TData> = {
   label: string;
   onClick: (record: TData) => void;
+  icon?: React.ReactNode;
+  className?: string;
 };
 
 interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
@@ -112,10 +114,12 @@ const _AdminDataTable = <
   const defaultActions: Action<TData>[] = [
     {
       label: "Edit",
+      className: "bg-blue-600 text-white hover:bg-blue-50",
       onClick: async (record) => await editAction(record.id as string),
     },
     {
       label: "Delete",
+      className: "bg-red-600 text-white hover:bg-red-50",
       onClick: async (record) => {
         const confirm = window.confirm("Are you sure you want to delete?");
         if (confirm) {
@@ -133,11 +137,16 @@ const _AdminDataTable = <
       title: "Action",
       key: "action",
       render: (_: unknown, record: TData) => (
-        <Space size="middle">
+        <Space size="small">
           {combinedActions.map((action, index) => (
-            <a key={index} onClick={() => action.onClick(record)}>
+            <Button
+              className={`flex items-center justify-center ${action.className}`}
+              key={index}
+              onClick={() => action.onClick(record)}
+              size="small"
+              icon={action.icon}>
               <span>{action.label}</span>
-            </a>
+            </Button>
           ))}
         </Space>
       ),

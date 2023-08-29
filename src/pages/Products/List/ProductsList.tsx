@@ -5,8 +5,8 @@ import { ProductAPI } from "../../../api";
 import { AdminDataTable } from "../../../components/Common/AdminDataTable";
 import { ProductsListBreadcrumb } from "../Common/Breadcrums";
 import ProductFilters from "./ProductFilters";
-import { useProductsListPageStore } from "./products_list_page.store";
 import { productListColumns } from "./productsTableColumns";
+import { useProductsListPageStore } from "./products_list_page.store";
 
 const { Content } = Layout;
 
