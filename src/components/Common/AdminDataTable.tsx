@@ -2,11 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocationQuery } from "../../hooks/useLocationQuery";
 import { showToast } from "../../lib/notify";
-import { AppLoader } from "./AppLoader";
 
 type Action<TData> = {
   label: string;
@@ -16,20 +15,22 @@ type Action<TData> = {
 interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   queryKey: string;
   fetchData: (params: object) => Promise<TResponse | APIError>;
-  columns: ColumnsType<TData>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnsType<any>;
   additionalActions?: Action<TData>[];
   deleteAction: (
     id: string | number
   ) => Promise<{ id: string | number } | APIError>;
   editAction: (id: string | number) => Promise<void>;
   perPage?: number;
+  queryParameters?: Record<string, string | number>;
 }
 
-interface IDataWithID {
+export interface IDataWithID {
   id: string | number;
 }
 
-export const AdminDataTable = <
+const _AdminDataTable = <
   TData extends IDataWithID,
   TResponse extends { data: TData[]; pagination: Pagination },
 >({
@@ -39,6 +40,7 @@ export const AdminDataTable = <
   additionalActions = [],
   deleteAction,
   editAction,
+  queryParameters = {},
   perPage = 5,
 }: AdminDataTableProps<TData, TResponse>) => {
   const navigate = useNavigate();
@@ -52,10 +54,25 @@ export const AdminDataTable = <
     setCurrentPage(page);
   }, [locationQuery]);
 
-  const { data, isLoading, refetch } = useQuery<TResponse | APIError>(
-    [queryKey, currentPage],
-    () => fetchData({ offset: (currentPage - 1) * perPage, limit: perPage })
+  const { data, isLoading, isFetching, refetch } = useQuery<
+    TResponse | APIError
+  >([queryKey, currentPage], () =>
+    fetchData({
+      offset: (currentPage - 1) * perPage,
+      limit: perPage,
+      ...queryParameters,
+    })
   );
+
+  const loading = useMemo(
+    () => isLoading || pageLoading || isFetching,
+    [isLoading, pageLoading, isFetching]
+  );
+
+  useEffect(() => {
+    if (Object.keys(queryParameters).length === 0) return;
+    refetch();
+  }, [refetch, queryParameters]);
 
   const { mutateAsync } = useMutation((id: string) => deleteAction(id), {
     onSuccess: (result) => {
@@ -130,8 +147,9 @@ export const AdminDataTable = <
   return (
     <>
       <Table
+        loading={loading}
         dataSource={dataSource as AnyObject[]}
-        columns={combinedColumns}
+        columns={combinedColumns as unknown as ColumnsType<TData>}
         onChange={handleTableChange}
         pagination={{
           current: currentPage,
@@ -139,7 +157,8 @@ export const AdminDataTable = <
           pageSize: perPage,
         }}
       />
-      <AppLoader isLoading={pageLoading} />
     </>
   );
 };
+
+export const AdminDataTable = memo(_AdminDataTable);

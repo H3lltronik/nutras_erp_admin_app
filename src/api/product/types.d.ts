@@ -8,6 +8,7 @@ interface Product {
     code: string;
     type: string;
     description: string;
+    name: string;
 }
 
 type CreateProductRequest = Omit<Product, 'id'>;

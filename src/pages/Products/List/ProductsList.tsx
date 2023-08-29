@@ -1,55 +1,26 @@
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ProductAPI } from "../../api";
-import { AdminDataTable } from "../../components/Common/AdminDataTable";
-import { ProductsListBreadcrumb } from "./Breadcrums";
+import { ProductAPI } from "../../../api";
+import { AdminDataTable } from "../../../components/Common/AdminDataTable";
+import { ProductsListBreadcrumb } from "../Common/Breadcrums";
+import ProductFilters from "./ProductFilters";
+import { useProductsListPageStore } from "./products_list_page.store";
+import { productListColumns } from "./productsTableColumns";
 
 const { Content } = Layout;
 
 export const ProductsList: React.FC = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-
-  const columns = [
-    {
-      title: "Partida ID",
-      dataIndex: "partidaId",
-      key: "partidaId",
-      width: 150,
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Code",
-      dataIndex: "code",
-      key: "code",
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-    },
-  ];
+  const { search } = useProductsListPageStore();
 
   const fetchData = (params: object) => ProductAPI.getProducts(params);
 
-  const doDelete = async (id: string | number) => {
-    return ProductAPI.deleteProduct(id as string);
-  };
+  const doDelete = async (id: string | number) =>
+    ProductAPI.deleteProduct(id as string);
 
-  const doEdit = async (id: string | number) => {
+  const doEdit = async (id: string | number) =>
     navigate(`/admin/products/manage/${id}`);
-  };
 
   return (
     <>
@@ -71,13 +42,15 @@ export const ProductsList: React.FC = () => {
             minHeight: 360,
             background: "#fff",
           }}>
+          <ProductFilters />
           <section className="mx-auto">
             <AdminDataTable
               queryKey="users"
               fetchData={fetchData}
-              columns={columns}
+              columns={productListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
+              queryParameters={{ search }}
             />
           </section>
         </div>

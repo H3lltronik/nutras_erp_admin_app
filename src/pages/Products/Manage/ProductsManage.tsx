@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Layout } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProductAPI } from "../../api";
-import { AppLoader } from "../../components/Common/AppLoader";
+import { ProductAPI } from "../../../api";
+import { AppLoader } from "../../../components/Common/AppLoader";
 import ProductForm, {
   ProductFormHandle,
-} from "../../components/Forms/Product/ProductForm";
-import useAdminMutation from "../../hooks/useAdminAPI/useAdminMutation";
-import { showToast } from "../../lib/notify";
-import { ProductsManageBreadcrumb } from "./Breadcrums";
+} from "../../../components/Forms/Product/ProductForm";
+import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
+import { showToast } from "../../../lib/notify";
+import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
 
 const { Content } = Layout;
 
