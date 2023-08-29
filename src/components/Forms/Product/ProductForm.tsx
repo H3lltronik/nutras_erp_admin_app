@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Form, Input, Select } from "antd";
+import { Col, Form, Input, InputNumber, Row, Select } from "antd";
 import { forwardRef, useEffect, useImperativeHandle, useMemo } from "react";
 import { MeasurementAPI } from "../../../api";
 
@@ -51,72 +51,144 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
     const measurements = useMemo(() => {
       if (loadingMeasurements || !measurementsData) return [];
       if ("data" in measurementsData) return measurementsData.data;
-  
+
       return [];
     }, [measurementsData, loadingMeasurements]);
 
     return (
       <Form
         form={form}
-        name="basic"
+        name="productForm"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off">
-        <Form.Item<FieldType>
-          label="Name"
-          name="name"
-          rules={[
-            { required: true, message: "Please input your product name!" },
-          ]}>
+        <Form.Item<FieldType> name="id" style={{ display: "none" }}>
           <Input />
         </Form.Item>
 
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<FieldType>
+              label="Common Name"
+              name="commonName"
+              rules={[
+                { required: true, message: "Please input the common name!" },
+              ]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldType>
+              label="Vendor Description"
+              name="vendorDescription">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<FieldType>
+              label="Code"
+              name="code"
+              rules={[
+                { required: true, message: "Please input the product code!" },
+              ]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Status" name="status">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Provider" name="provider">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Alternate Code" name="codeAlt">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Presentation" name="presentation">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Quantity" name="quantity">
+              <InputNumber />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<FieldType>
+              label="Unidad de medida"
+              name="unit"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a measurement unit!",
+                },
+              ]}>
+              <Select
+                placeholder="Select a measurement unit"
+                allowClear
+                loading={loadingMeasurements}>
+                {measurements.map((measurement) => (
+                  <option key={measurement.id} value={measurement.id}>
+                    {measurement.name}
+                  </option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Allergen" name="allergen">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Kosher Agency" name="kosherAgency">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldType> label="Vendor" name="vendor">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item<FieldType>
-          label="Code"
-          name="code"
-          rules={[
-            { required: true, message: "Please input your product code!" },
-          ]}>
+          label="Company Ingredient Name"
+          name="companyIngredientName">
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label="Type"
-          name="type"
-          rules={[
-            { required: true, message: "Please input your product type!" },
-          ]}>
+        <Form.Item<FieldType> label="Certificate Name" name="certificateName">
           <Input />
         </Form.Item>
-        <Form.Item<FieldType>
-          label="Description"
-          name="description"
-          rules={[
-            {
-              required: true,
-              message: "Please input your product description!",
-            },
-          ]}>
-          <Input />
+
+        <Form.Item<FieldType> label="Note" name="note">
+          <Input.TextArea />
         </Form.Item>
-        <Form.Item<FieldType>
-          label="Unidad de medida"
-          name="unitId"
-          rules={[
-            { required: true, message: "Please select a measurement unit!" },
-          ]}>
-          <Select
-            placeholder="Select a measurement unit"
-            allowClear
-            loading={loadingMeasurements}>
-            {measurements.map((measurement) => (
-              <option key={measurement.id} value={measurement.id}>
-                {measurement.name}
-              </option>
-            ))}
-          </Select>
-        </Form.Item>
+
+        {/* Add other form controls like Submit button, etc. if needed */}
       </Form>
     );
   }
