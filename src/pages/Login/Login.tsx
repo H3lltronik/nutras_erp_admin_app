@@ -17,28 +17,35 @@ type FormValues = {
 function Login() {
   const { isAuthenticated, loading } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [badCredentials, setBadCredentials] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loading) return;
 
     if (isAuthenticated) {
-      showToast("Session active...", "success", "✅");
+      showToast("Sesiín activa...", "success", "✅");
       navigate("/admin");
     }
   }, [isAuthenticated, loading, navigate]);
 
   const onFinish = async (values: FormValues) => {
-    const result = await AuthAPI.login({
-      username: values.username,
-      password: values.password,
-    });
-
-    if (result.access_token) {
-      window.location.href = "/admin";
+    console.log("on finish...");
+    try {
+      const result = await AuthAPI.login({
+        username: values.username,
+        password: values.password,
+      });
+      if (result.access_token) {
+        window.location.href = "/admin";
+      }
+      else setBadCredentials(true);
+      console.log("result LOGIN", result);
+    } catch (err) {
+      setBadCredentials(true);
     }
 
-    console.log("result LOGIN", result);
+
   };
 
   const showModal = () => {
@@ -75,6 +82,7 @@ function Login() {
             <Input placeholder="Correo electrónico" />
           </Form.Item>
           <Form.Item
+            className={badCredentials ? "mb-0" : ""}
             name="password"
             rules={[
               {
@@ -84,6 +92,13 @@ function Login() {
             ]}>
             <Input.Password placeholder="Contraseña" />
           </Form.Item>
+          {
+            badCredentials ? (
+              <div className="text-red-500 text-center mb-1 mt-3">
+                Las credenciales que has proporcionado no son válidas
+              </div>
+            ) : null
+          }
           <Form.Item>
             <Button
               type="primary"
@@ -93,7 +108,7 @@ function Login() {
               Iniciar Sesión
             </Button>
           </Form.Item>
-          <div className="flex flex-col items-center self-stretch mb-3">
+          <div className="flex flex-col items-center self-stretch mb-3 mt-5">
             <div className="w-10/12 text-center">
               ¿Tienes problemas para acceder? Por favor envía un correo a
             </div>
@@ -126,7 +141,7 @@ function Login() {
       ]}>
         <div className="flex flex-col justify-center items-center">
           <span>
-            Developed with {'<3'} by <span className="italic">Unnamed Computer Club</span>®
+            Developed with <span className="text-red-600" style={{fontSize: 16}}>&hearts;</span> by <span className="italic">Unnamed Computer Club</span>®
           </span>
           <span className="flex flex-col justify-center items-center gap-1">
             <a href="mailto:support@unnamedcomputerclub.com">support@unnamedcomputerclub.com</a> <a href="mailto:ventas@unnamedcomputerclub.com">ventas@unnamedcomputerclub.com</a>
