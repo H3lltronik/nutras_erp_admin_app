@@ -18,10 +18,19 @@ export const UsersManage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const entity = useQuery<GetUserResponse | APIError>(
+  const {
+    data: entity,
+    isFetching,
+    isLoading,
+  } = useQuery<GetUserResponse | APIError>(
     ["users", { id }],
     () => UserAPI.getUser(id as string),
-    { enabled: !!id }
+    { enabled: !!id, refetchOnWindowFocus: false }
+  );
+
+  const loading = useMemo(
+    () => pageLoading || isFetching || (isLoading && !!id),
+    [isLoading, pageLoading, isFetching, id]
   );
 
   const submitForm = async () => {
@@ -33,13 +42,13 @@ export const UsersManage: React.FC = () => {
       let result = null;
       let message = "";
 
-      if (entity?.data) {
-        if ("id" in entity.data) {
-          result = await UserAPI.updateUser(entity.data.id, userFormData);
+      if (entity) {
+        if ("id" in entity) {
+          result = await UserAPI.updateUser(entity.id, userFormData);
           message = "Usuario actualizado correctamente";
         } else {
           alert("No se puede actualizar el usuario");
-          console.error("Not valid entity", entity.data);
+          console.error("Not valid entity", entity);
         }
       } else {
         result = await mutateAsync(userFormData);
@@ -60,15 +69,15 @@ export const UsersManage: React.FC = () => {
   };
 
   const entityData = useMemo(() => {
-    if (entity.isLoading || !entity.data) return null;
-    if ("id" in entity.data) return entity.data;
+    if (!entity) return null;
+    if ("id" in entity) return entity;
 
     return null;
   }, [entity]);
 
   return (
     <>
-      <Content style={{ margin: "0 16px" }}>
+      <Content className="relative mx-4">
         <UsersManageBreadcrumb />
         <div
           className=""
@@ -87,7 +96,7 @@ export const UsersManage: React.FC = () => {
           </section>
         </div>
 
-        <AppLoader isLoading={pageLoading} />
+        <AppLoader isLoading={loading} />
       </Content>
     </>
   );

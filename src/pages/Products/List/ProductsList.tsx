@@ -12,7 +12,7 @@ const { Content } = Layout;
 
 export const ProductsList: React.FC = () => {
   const navigate = useNavigate();
-  const { search } = useProductsListPageStore();
+  const { search, getDraftMode } = useProductsListPageStore();
 
   const fetchData = (params: object) => ProductAPI.getProducts(params);
 
@@ -35,13 +35,7 @@ export const ProductsList: React.FC = () => {
             Nuevo producto
           </Button>
         </div>
-        <div
-          className=""
-          style={{
-            padding: 24,
-            minHeight: 360,
-            background: "#fff",
-          }}>
+        <div className="p-[24px] bg-white">
           <ProductFilters />
           <section className="mx-auto">
             <AdminDataTable
@@ -50,7 +44,11 @@ export const ProductsList: React.FC = () => {
               columns={productListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
-              queryParameters={{ search }}
+              perPage={20}
+              queryParameters={{
+                search,
+                draftMode: getDraftMode(),
+              }}
             />
           </section>
         </div>

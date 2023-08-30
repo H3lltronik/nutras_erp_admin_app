@@ -17,7 +17,7 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Content style={{ margin: "0 16px" }}>
+      <Content className="mx-[16px]">
         <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
         <div
           className=""

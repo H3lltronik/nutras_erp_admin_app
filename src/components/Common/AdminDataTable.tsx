@@ -8,7 +8,7 @@ import { useLocationQuery } from "../../hooks/useLocationQuery";
 import { showToast } from "../../lib/notify";
 
 export type Action<TData> = {
-  label: string;
+  label?: string;
   onClick: (record: TData) => void;
   icon?: React.ReactNode;
   className?: string;
@@ -25,7 +25,7 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   ) => Promise<{ id: string | number } | APIError>;
   editAction: (id: string | number) => Promise<void>;
   perPage?: number;
-  queryParameters?: Record<string, string | number>;
+  queryParameters?: Record<string, string | number | undefined>;
 }
 
 export interface IDataWithID {
@@ -67,8 +67,8 @@ const _AdminDataTable = <
   );
 
   const loading = useMemo(
-    () => isLoading || pageLoading || isFetching,
-    [isLoading, pageLoading, isFetching]
+    () => pageLoading || isFetching,
+    [pageLoading, isFetching]
   );
 
   useEffect(() => {
@@ -113,15 +113,17 @@ const _AdminDataTable = <
 
   const defaultActions: Action<TData>[] = [
     {
-      label: "Edit",
+      label: "Editar",
       className: "bg-blue-600 text-white hover:bg-blue-50",
       onClick: async (record) => await editAction(record.id as string),
     },
     {
-      label: "Delete",
+      label: "Cancelar",
       className: "bg-red-600 text-white hover:bg-red-50",
       onClick: async (record) => {
-        const confirm = window.confirm("Are you sure you want to delete?");
+        const confirm = window.confirm(
+          "¿Estás seguro de cancelar el registro?"
+        );
         if (confirm) {
           setPageLoading(true);
           mutateAsync(record.id as string);

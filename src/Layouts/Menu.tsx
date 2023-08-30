@@ -3,7 +3,6 @@ import {
   CodeSandboxOutlined,
   PieChartOutlined,
   ProfileOutlined,
-  ScissorOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
@@ -36,11 +35,11 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Almacén", "2", null, [
     getItem("Inventario", "/admin/inventory", <CodeSandboxOutlined />),
-    getItem(
-      "Unidades de medida",
-      "/admin/measurement-types",
-      <ScissorOutlined />
-    ),
+    // getItem(
+    //   "Unidades de medida",
+    //   "/admin/measurement-types",
+    //   <ScissorOutlined />
+    // ),
     getItem("Productos", "/admin/products", <BarcodeOutlined />),
   ]),
   getItem("Administración", "1", null, [

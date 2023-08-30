@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Col, Form, Input, InputNumber, Row, Select } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useMemo } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { MeasurementAPI } from "../../../api";
 
 const onFinish = (values: unknown) => {
@@ -11,15 +17,12 @@ const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
 
-type FieldType = {
-  name?: string;
-  code?: string;
-  type?: string;
-  description?: string;
-};
+interface GetFormData {
+  draftMode: boolean;
+}
 
 export type ProductFormHandle = {
-  getFormData: () => Promise<FieldType>;
+  getFormData: (params?: GetFormData) => Promise<Product>;
 };
 
 type ProductFormProps = {
@@ -29,6 +32,8 @@ type ProductFormProps = {
 const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
+    const [isDraft, setIsDraft] = useState<boolean>(false);
+
     const { data: measurementsData, isLoading: loadingMeasurements } = useQuery<
       GetMeasurementsResponse | APIError
     >(["measurements"], () => MeasurementAPI.getMeasurements());
@@ -36,10 +41,12 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
     useImperativeHandle(
       ref,
       (): ProductFormHandle => ({
-        getFormData: async () => {
+        getFormData: async (params) => {
+          setIsDraft(!!params?.draftMode);
+
           const valid = await form.validateFields();
           console.log("valid", valid);
-          return form.getFieldsValue();
+          return { ...form.getFieldsValue(), isDraft: !!params?.draftMode };
         },
       })
     );
@@ -63,25 +70,34 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off">
-        <Form.Item<FieldType> name="id" style={{ display: "none" }}>
+        <Form.Item<Product> name="id" style={{ display: "none" }}>
           <Input />
         </Form.Item>
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<FieldType>
-              label="Common Name"
+            <Form.Item<Product>
+              label="Nombre Común"
               name="commonName"
               rules={[
-                { required: true, message: "Please input the common name!" },
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
               ]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<FieldType>
-              label="Vendor Description"
-              name="vendorDescription">
+            <Form.Item<Product>
+              label="Descripción del Proveedor"
+              name="vendorDescription"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
@@ -89,17 +105,28 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<FieldType>
-              label="Code"
+            <Form.Item<Product>
+              label="Código"
               name="code"
               rules={[
-                { required: true, message: "Please input the product code!" },
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
               ]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<FieldType> label="Status" name="status">
+            <Form.Item<Product>
+              label="Estado"
+              name="status"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
@@ -107,12 +134,28 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<FieldType> label="Provider" name="provider">
+            <Form.Item<Product>
+              label="Proveedor"
+              name="provider"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<FieldType> label="Alternate Code" name="codeAlt">
+            <Form.Item<Product>
+              label="Código Alternativo"
+              name="codeAlt"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
@@ -120,12 +163,28 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<FieldType> label="Presentation" name="presentation">
+            <Form.Item<Product>
+              label="Presentación"
+              name="presentation"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<FieldType> label="Quantity" name="quantity">
+            <Form.Item<Product>
+              label="Cantidad"
+              name="quantity"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <InputNumber />
             </Form.Item>
           </Col>
@@ -133,13 +192,13 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<FieldType>
-              label="Unidad de medida"
-              name="unit"
+            <Form.Item<Product>
+              label="Unidad de Medida"
+              name="unitId"
               rules={[
                 {
-                  required: true,
-                  message: "Please select a measurement unit!",
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
                 },
               ]}>
               <Select
@@ -155,7 +214,15 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<FieldType> label="Allergen" name="allergen">
+            <Form.Item<Product>
+              label="Alérgeno"
+              name="allergen"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
@@ -163,28 +230,66 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<FieldType> label="Kosher Agency" name="kosherAgency">
+            <Form.Item<Product>
+              label="Agencia Kosher"
+              name="kosherAgency"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<FieldType> label="Vendor" name="vendor">
+            <Form.Item<Product>
+              label="Vendedor"
+              name="vendor"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Input />
             </Form.Item>
           </Col>
         </Row>
 
-        <Form.Item<FieldType>
-          label="Company Ingredient Name"
-          name="companyIngredientName">
+        <Form.Item<Product>
+          label="Nombre del Ingrediente de la Empresa"
+          name="companyIngredientName"
+          rules={[
+            {
+              required: true && !isDraft,
+              message: "Este campo es obligatorio",
+            },
+          ]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType> label="Certificate Name" name="certificateName">
+        <Form.Item<Product>
+          label="Nombre del Certificado"
+          name="certificateName"
+          rules={[
+            {
+              required: true && !isDraft,
+              message: "Este campo es obligatorio",
+            },
+          ]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType> label="Note" name="note">
+        <Form.Item<Product>
+          label="Nota"
+          name="note"
+          rules={[
+            {
+              required: true && !isDraft,
+              message: "Este campo es obligatorio",
+            },
+          ]}>
           <Input.TextArea />
         </Form.Item>
 
