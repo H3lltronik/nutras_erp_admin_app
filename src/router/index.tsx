@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import { DefaultLayout } from "../Layouts/DefaultLayout";
+import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
 import Login from "../pages/Login/Login";
 import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
 import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage";
-import { ProductsHeader } from "../pages/Products/ProductsHeader";
-import { ProductsList } from "../pages/Products/ProductsList";
-import { ProductsManage } from "../pages/Products/ProductsManage";
+import { ProductsHeader } from "../pages/Products/Common/ProductsHeader";
+import { ProductsList } from "../pages/Products/List/ProductsList";
+import { ProductsManage } from "../pages/Products/Manage/ProductsManage";
 import { ProfilesList, ProfilesManage } from "../pages/Profiles";
 import { ProfilesHeader } from "../pages/Profiles/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
@@ -79,7 +80,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/products/manage",
+    path: "/admin/products/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsManage />
@@ -95,10 +96,18 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/profiles/manage",
+    path: "/admin/profiles/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProfilesHeader />} headerTitle="Perfiles">
         <ProfilesManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <DefaultLayout headerTitle="El recurso no se encontro...">
+        <NotFound />
       </DefaultLayout>
     ),
   },

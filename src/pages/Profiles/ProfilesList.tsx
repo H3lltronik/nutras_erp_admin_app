@@ -1,36 +1,26 @@
-import { Breadcrumb, Button, Layout, Space, Table, theme } from "antd";
-import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import React, { useMemo } from "react";
+import { Button, Layout } from "antd";
+import { ColumnsType } from "antd/es/table";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAdminAPI } from "../../hooks";
+import { ProfileAPI } from "../../api";
+import { AdminDataTable } from "../../components/Common/AdminDataTable";
+import { AppLoader } from "../../components/Common/AppLoader";
+import { ProfileListBreadcrumb } from "./Breadcrums";
 
 const { Content } = Layout;
 
 export const ProfilesList: React.FC = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
   const navigate = useNavigate();
-  const { data: profilesData, isLoading: profilesLoading } =
-    useAdminAPI("profiles");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [pageLoading, setPageLoading] = React.useState<boolean>(false);
 
-  const breadcrumb: ItemType[] = [
+  const columns: ColumnsType<Profile> = [
     {
-      title: "Seguridad",
+      title: "Partida ID",
+      dataIndex: "partidaId",
+      key: "partidaId",
+      width: 150,
     },
-    {
-      title: "Perfiles",
-    },
-  ];
-
-  const dataSource = useMemo(() => {
-    if (profilesLoading) return [];
-
-    return profilesData;
-  }, [profilesData, profilesLoading]);
-
-  const columns = [
     {
       title: "Name",
       dataIndex: "name",
@@ -46,24 +36,23 @@ export const ProfilesList: React.FC = () => {
       dataIndex: "roles",
       key: "roles",
     },
-    {
-      title: "Action",
-      key: "action",
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      render: (_: unknown, _record: unknown) => (
-        <Space size="middle">
-          <a>Invite</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
   ];
+
+  const fetchData = (params: object) => ProfileAPI.getProfiles(params);
+
+  const doDelete = async (id: string | number) => {
+    return ProfileAPI.deleteProfile(id as string);
+  };
+
+  const doEdit = async (id: string | number) => {
+    navigate(`/admin/profiles/manage/${id}`);
+  };
 
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
         <div className="flex justify-between items-center">
-          <Breadcrumb style={{ margin: "16px 0" }} items={breadcrumb} />
+          <ProfileListBreadcrumb />
 
           <Button
             onClick={() => navigate("/admin/profiles/manage")}
@@ -77,12 +66,20 @@ export const ProfilesList: React.FC = () => {
           style={{
             padding: 24,
             minHeight: 360,
-            background: colorBgContainer,
+            background: "#fff",
           }}>
           <section className="mx-auto">
-            <Table dataSource={dataSource} columns={columns} />
+            <AdminDataTable
+              queryKey="profiles"
+              fetchData={fetchData}
+              columns={columns}
+              deleteAction={doDelete}
+              editAction={doEdit}
+            />
           </section>
         </div>
+
+        <AppLoader isLoading={pageLoading} />
       </Content>
     </>
   );

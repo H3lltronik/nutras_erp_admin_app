@@ -1,5 +1,6 @@
 import {
   BarcodeOutlined,
+  CodeSandboxOutlined,
   PieChartOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
@@ -32,17 +33,18 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Seguridad", "1", null, [
+  getItem("Almacén", "2", null, [
+    getItem("Inventario", "/admin/inventory", <CodeSandboxOutlined />),
+    // getItem(
+    //   "Unidades de medida",
+    //   "/admin/measurement-types",
+    //   <ScissorOutlined />
+    // ),
+    getItem("Productos", "/admin/products", <BarcodeOutlined />),
+  ]),
+  getItem("Administración", "1", null, [
     getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
     getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
-  ]),
-  getItem("Administración", "2", null, [
-    getItem(
-      "Unidades de medida",
-      "/admin/measurement-types",
-      <BarcodeOutlined />
-    ),
-    getItem("Prodcutos", "/admin/products", <BarcodeOutlined />),
   ]),
   // Uncomment and modify as needed
   // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [

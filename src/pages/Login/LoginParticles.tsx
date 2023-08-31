@@ -3,8 +3,9 @@ import Particles from "react-particles";
 //import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
 import { loadSlim } from "tsparticles-slim"; // if you are going to use `loadSlim`, install the "tsparticles-slim" package too.
 
-export const LoginParticles = (props: any) => {
-  const particlesInit = useCallback(async (engine) => {
+export const LoginParticles = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const particlesInit = useCallback(async (engine: any) => {
     console.log(engine);
     // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
     // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
@@ -13,7 +14,8 @@ export const LoginParticles = (props: any) => {
     await loadSlim(engine);
   }, []);
 
-  const particlesLoaded = useCallback(async (container) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const particlesLoaded = useCallback(async (container: any) => {
     await console.log(container);
   }, []);
 

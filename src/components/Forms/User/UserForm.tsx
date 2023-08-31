@@ -1,5 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { Form, Input, Select } from "antd";
-import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo } from "react";
+import { DepartmentsAPI } from "../../../api";
 import useAdminQuery from "../../../hooks/useAdminAPI/useAdminQuery";
 
 const onFinish = (values: unknown) => {
@@ -29,6 +31,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
   const { data: profilesData, isLoading: loadingProfiles } =
     useAdminQuery("profiles");
 
+  const { data: departmentsData, isLoading: loadingDepartments } = useQuery<
+    GetDepartmentsResponse | APIError
+  >(["departments"], () => DepartmentsAPI.getDepartments());
+
   useImperativeHandle(
     ref,
     (): UserFormHandle => ({
@@ -44,6 +50,13 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
     if (props.entity) form.setFieldsValue(props.entity);
   }, [form, props.entity]);
 
+  const departments = useMemo(() => {
+    if (loadingDepartments || !departmentsData) return [];
+    if ("data" in departmentsData) return departmentsData.data;
+
+    return [];
+  }, [departmentsData, loadingDepartments]);
+
   return (
     <Form
       form={form}
@@ -51,6 +64,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off">
+      <Form.Item<FieldType> label="Id" name="id" hidden={true}>
+        <Input />
+      </Form.Item>
+
       <Form.Item<FieldType>
         label="Username"
         name="username"
@@ -119,9 +136,25 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
           placeholder="Select a profile"
           allowClear
           loading={loadingProfiles}>
-          {profilesData?.map((profile) => (
+          {profilesData?.data.map((profile) => (
             <option key={profile.id} value={profile.id}>
               {profile.name}
+            </option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item<FieldType>
+        label="Department"
+        name="departmentId"
+        rules={[{ required: true, message: "Please select a department!" }]}>
+        <Select
+          placeholder="Select a department"
+          allowClear
+          loading={loadingDepartments}>
+          {departments.map((department) => (
+            <option key={department.id} value={department.id}>
+              {department.name}
             </option>
           ))}
         </Select>

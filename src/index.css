@@ -18,3 +18,19 @@ body {
 .ant-popover-inner {
   padding: 0 !important;
 }
+
+.ant-pagination {
+  justify-content: center !important;
+}
+
+.table-striped-rows tr:nth-child(2n) td {
+  background-color: #fbfbfb;
+}
+.table-striped-rows thead {
+  background-color: #f1f1f1;
+}
+
+/* hover tr background #ccc */
+.table-striped-rows tr:hover td {
+  background-color: #ccc !important;
+}
