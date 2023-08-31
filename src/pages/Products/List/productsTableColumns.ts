@@ -39,7 +39,7 @@ export const productListColumns: ColumnsType<Product> = [
       title: "Unidad",
       dataIndex: "unit",
       key: "unit",
-      render(_value, record, _index) {
+      render(_value, record) {
         return record.unit?.name;
       },
     },

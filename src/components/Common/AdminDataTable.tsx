@@ -159,6 +159,7 @@ const _AdminDataTable = <
     <>
       <Table
         loading={loading}
+        className="table-striped-rows"
         dataSource={dataSource as AnyObject[]}
         columns={combinedColumns as unknown as ColumnsType<TData>}
         onChange={handleTableChange}

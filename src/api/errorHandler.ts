@@ -1,6 +1,7 @@
 import axios from "axios";
 import { showToast } from "../lib/notify";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleAPIError = (error: any): APIError => {
     let messages: string[] = [];
     let statusCode: number = 500; // Default to 500 if no status code is found
