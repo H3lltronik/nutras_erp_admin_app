@@ -1,27 +1,55 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 type ProductsListPageState = {
-    search: string;
-    setSearch: (value: string) => void;
+  nameSearch: string;
+  setNameSearch: (value: string) => void;
 
-    loading: boolean;
-    setLoading: (value: boolean) => void;
+  codeSearch: string;
+  setCodeSearch: (value: string) => void;
 
-    draftMode: boolean | undefined;
-    setDraftMode: (value: boolean) => void;
-    getDraftMode: () => string | undefined;
-  };
-  
-export const useProductsListPageStore = create<ProductsListPageState>((set, get) => ({
-    search: '',
-    setSearch: (value: string) => set({ search: value }),
+  providerSearch: string;
+  setProviderSearch: (value: string) => void;
+
+  loading: boolean;
+  setLoading: (value: boolean) => void;
+
+  draftMode: boolean | undefined;
+  setDraftMode: (value: boolean | undefined) => void;
+  getDraftMode: () => string | undefined;
+
+  published: boolean | undefined;
+  setPublished: (value: boolean | undefined) => void;
+  getPublished: () => string | undefined;
+};
+
+export const useProductsListPageStore = create<ProductsListPageState>(
+  (set, get) => ({
+    nameSearch: "",
+    setNameSearch: (value: string) => set({ nameSearch: value }),
+
+    codeSearch: "",
+    setCodeSearch: (value: string) => set({ codeSearch: value }),
+
+    providerSearch: "",
+    setProviderSearch: (value: string) => set({ providerSearch: value }),
+
+    draftMode: undefined,
+    setDraftMode: (value: boolean | undefined) => set({ draftMode: value }),
+    getDraftMode: () => {
+      const draftMode = get().draftMode;
+      if (draftMode === undefined) return undefined;
+      return draftMode ? "true" : "false";
+    },
+
+    published: undefined,
+    setPublished: (value: boolean | undefined) => set({ published: value }),
+    getPublished: () => {
+      const published = get().published;
+      if (published === undefined) return undefined;
+      return published ? "true" : "false";
+    },
+
     loading: false,
     setLoading: (value: boolean) => set({ loading: value }),
-    draftMode: undefined,
-    setDraftMode: (value: boolean) => set({ draftMode: value }),
-    getDraftMode: () => {
-        const draftMode = get().draftMode;
-        if (draftMode === undefined) return undefined;
-        return draftMode ? 'true' : 'false';
-    }
-}));
+  })
+);

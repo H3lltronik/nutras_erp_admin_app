@@ -1,5 +1,6 @@
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Layout } from "antd";
+import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductAPI } from "../../../api";
@@ -11,6 +12,7 @@ import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../../lib/notify";
 import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
 
+const { confirm } = Modal;
 const { Content } = Layout;
 
 export const ProductsManage: React.FC = () => {
@@ -73,6 +75,22 @@ export const ProductsManage: React.FC = () => {
     setPageLoading(false);
   };
 
+  const doCancel = () => {
+    confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <p className="mt-5">
+          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
+          recuperar.
+        </p>
+      ),
+      onOk: () => navigate("/admin/products"),
+      okButtonProps: {
+        className: "bg-red-500 border-none hover:bg-red-600",
+      },
+    });
+  };
+
   const entityData = useMemo(() => {
     if (!entity) return null;
     if ("id" in entity) return entity;
@@ -95,11 +113,19 @@ export const ProductsManage: React.FC = () => {
               className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
               Procesar
             </button>
+            {!entityData?.isPublished && (
+              <button
+                type="button"
+                onClick={() => submitForm(true)}
+                className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
+                Borrador
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => submitForm(true)}
-              className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
-              Borrador
+              onClick={doCancel}
+              className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
+              Cancelar
             </button>
           </section>
         </div>

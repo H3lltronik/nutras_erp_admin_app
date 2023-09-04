@@ -1,65 +1,105 @@
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { Button, Input, Popover } from "antd";
+import { Input, Select } from "antd";
 import debounce from "lodash.debounce";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { entityStatuses } from "../../../lib/entity.utils";
 import { useProductsListPageStore } from "./products_list_page.store";
 
 export default function ProductFilters() {
-  const [showFilters, setShowFilters] = useState<boolean>(false);
-  const setSearch = useProductsListPageStore((state) => state.setSearch);
-  const setDraftMode = useProductsListPageStore((state) => state.setDraftMode);
+  const {
+    setNameSearch,
+    setCodeSearch,
+    setProviderSearch,
+    setDraftMode,
+    setPublished,
+  } = useProductsListPageStore((state) => state);
 
-  const debouncedSetSearch = useMemo(
-    () => debounce(setSearch, 300),
-    [setSearch]
+  const debouncedSetNameSearch = useMemo(
+    () => debounce(setNameSearch, 300),
+    [setNameSearch]
   );
 
-  const handleShowFilters = () => setShowFilters(!showFilters);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    debouncedSetSearch(e.target.value);
-
-  const handleDraftModeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setDraftMode(e.target.checked);
-
-  const popoverContent = (
-    <div className="p-3">
-      <strong>{showFilters ? "Ocultar filtros" : "Mostrar filtros"}</strong>
-    </div>
+  const debouncedSetCodeSearch = useMemo(
+    () => debounce(setCodeSearch, 300),
+    [setCodeSearch]
   );
+
+  const debouncedSetProviderSearch = useMemo(
+    () => debounce(setProviderSearch, 300),
+    [setProviderSearch]
+  );
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    debouncedSetNameSearch(e.target.value);
+
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    debouncedSetCodeSearch(e.target.value);
+
+  const handleProviderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    debouncedSetProviderSearch(e.target.value);
+
+  const handleStatusChange = (value: string[]) => {
+    if (value.includes(entityStatuses.DRAFT)) setDraftMode(true);
+    else setDraftMode(undefined);
+
+    if (value.includes(entityStatuses.PUBLISHED)) setPublished(true);
+    else setPublished(undefined);
+
+    if (!value || value.length === 0) {
+      setDraftMode(undefined);
+      setPublished(undefined);
+    }
+  };
 
   return (
     <section className="flex items-center pb-2 gap-3">
-      <Popover content={popoverContent}>
-        <Button
-          className="flex items-center justify-center"
-          shape="circle"
-          size={showFilters ? "large" : "small"}
-          onClick={handleShowFilters}>
-          {showFilters ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-        </Button>
-      </Popover>
-      {showFilters && (
-        <>
-          <div className="">
-            <small>Busqueda por nombre</small>
-            <Input
-              placeholder="Busqueda..."
-              onChange={handleInputChange}
-              allowClear
-            />
-          </div>
+      <>
+        <div className="flex flex-col">
+          <small>Busqueda por nombre</small>
+          <Input
+            className="w-40"
+            placeholder="Busqueda..."
+            onChange={handleNameChange}
+            allowClear
+          />
+        </div>
 
-          <label className="flex flex-col gap-2 items-center">
-            <small>Registros borrador</small>
-            <input
-              onChange={handleDraftModeChange}
-              className="leading-loose text-pink-600 top-0"
-              type="checkbox"
-            />
-          </label>
-        </>
-      )}
+        <div className="flex flex-col">
+          <small>Busqueda por codigo</small>
+          <Input
+            className="w-40"
+            placeholder="Busqueda..."
+            onChange={handleCodeChange}
+            allowClear
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <small>Busqueda por proveedor</small>
+          <Input
+            className="w-40"
+            placeholder="Busqueda..."
+            onChange={handleProviderChange}
+            allowClear
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <small>Busqueda por status</small>
+          <Select
+            className="w-40"
+            placeholder="Busqueda..."
+            onChange={handleStatusChange}
+            mode="multiple"
+            allowClear>
+            <Select.Option value={entityStatuses.DRAFT}>
+              {entityStatuses.DRAFT}
+            </Select.Option>
+            <Select.Option value={entityStatuses.PUBLISHED}>
+              {entityStatuses.PUBLISHED}
+            </Select.Option>
+          </Select>
+        </div>
+      </>
     </section>
   );
 }

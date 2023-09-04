@@ -1,11 +1,17 @@
+import {
+  EditOutlined,
+  ExclamationCircleOutlined,
+  ExclamationOutlined,
+} from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Space, Table, TablePaginationConfig } from "antd";
+import { Button, Modal, Space, Table, TablePaginationConfig } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import { memo, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocationQuery } from "../../hooks/useLocationQuery";
 import { showToast } from "../../lib/notify";
+const { confirm } = Modal;
 
 export type Action<TData> = {
   label?: string;
@@ -78,8 +84,11 @@ const _AdminDataTable = <
 
   const { mutateAsync } = useMutation((id: string) => deleteAction(id), {
     onSuccess: (result) => {
-      if ("id" in result)
-        showToast(`Registro ${result.id} eliminado correctamente`, "success");
+      if ("partidaId" in result)
+        showToast(
+          `Registro ${result.partidaId} eliminado correctamente`,
+          "success"
+        );
       else showToast("Ha ocurrido un error al eliminar el registro", "error");
     },
     onError: (error: APIError) => {
@@ -113,21 +122,25 @@ const _AdminDataTable = <
 
   const defaultActions: Action<TData>[] = [
     {
-      label: "Editar",
+      icon: <EditOutlined className="mr-[-6px]" />,
       className: "bg-blue-600 text-white hover:bg-blue-50",
       onClick: async (record) => await editAction(record.id as string),
     },
     {
-      label: "Cancelar",
+      icon: <ExclamationOutlined className="mr-[-6px]" />,
       className: "bg-red-600 text-white hover:bg-red-50",
       onClick: async (record) => {
-        const confirm = window.confirm(
-          "¿Estás seguro de cancelar el registro?"
-        );
-        if (confirm) {
-          setPageLoading(true);
-          mutateAsync(record.id as string);
-        }
+        confirm({
+          icon: <ExclamationCircleOutlined />,
+          content: <p className="">¿Estás seguro de cancelar el registro?</p>,
+          onOk: () => {
+            setPageLoading(true);
+            mutateAsync(record.id as string);
+          },
+          okButtonProps: {
+            className: "bg-red-500 border-none hover:bg-red-600",
+          },
+        });
       },
     },
   ];
