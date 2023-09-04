@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Form, Input, Select } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useMemo } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { DepartmentsAPI } from "../../../api";
 import useAdminQuery from "../../../hooks/useAdminAPI/useAdminQuery";
 
@@ -18,8 +24,12 @@ type FieldType = {
   remember?: string;
 };
 
+interface GetFormData {
+  draftMode: boolean;
+}
+
 export type UserFormHandle = {
-  getFormData: () => Promise<FieldType>;
+  getFormData: (params?: GetFormData) => Promise<User>;
 };
 
 type UserFormProps = {
@@ -28,6 +38,8 @@ type UserFormProps = {
 
 const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
   const [form] = Form.useForm();
+  const [isDraft, setIsDraft] = useState<boolean>(false);
+
   const { data: profilesData, isLoading: loadingProfiles } =
     useAdminQuery("profiles");
 
@@ -38,10 +50,16 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
   useImperativeHandle(
     ref,
     (): UserFormHandle => ({
-      getFormData: async () => {
+      getFormData: async (params) => {
+        setIsDraft(!!params?.draftMode);
+
         const valid = await form.validateFields();
         console.log("valid", valid);
-        return form.getFieldsValue();
+        return {
+          ...form.getFieldsValue(),
+          isDraft: !!params?.draftMode,
+          isPublished: !params?.draftMode,
+        };
       },
     })
   );
@@ -69,17 +87,30 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
       </Form.Item>
 
       <Form.Item<FieldType>
+        label="Nombre"
+        name="name"
+        rules={[
+          { required: true && !isDraft, message: "Este campo es requerido" },
+        ]}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item<FieldType>
         label="Username"
         name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}>
-        <Input />
+        rules={[
+          { required: true && !isDraft, message: "Este campo es requerido" },
+        ]}>
+        <Input type="email" />
       </Form.Item>
 
       {props.entity == null && (
         <Form.Item<FieldType>
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}>
+          rules={[
+            { required: true && !isDraft, message: "Este campo es requerido" },
+          ]}>
           <Input.Password />
         </Form.Item>
       )}
@@ -89,7 +120,7 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
           label="Confirm password"
           name="confirmPassword"
           rules={[
-            { required: true, message: "Please input your password again!" },
+            { required: true && !isDraft, message: "Este campo es requerido" },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
@@ -109,21 +140,7 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
         <Form.Item<FieldType>
           label="New password"
           name="newPassword"
-          rules={[{ required: false }]}>
-          <Input.Password />
-        </Form.Item>
-      )}
-
-      {props.entity && (
-        <Form.Item<FieldType>
-          label="Confirm old password"
-          name="confirmPassword"
-          rules={[
-            {
-              required: true,
-              message: "Please input your OLD password!",
-            },
-          ]}>
+          rules={[{ required: false && !isDraft }]}>
           <Input.Password />
         </Form.Item>
       )}
@@ -131,7 +148,9 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
       <Form.Item<FieldType>
         label="Profile"
         name="profileId"
-        rules={[{ required: true, message: "Please select a profile!" }]}>
+        rules={[
+          { required: true && !isDraft, message: "Este campo es requerido" },
+        ]}>
         <Select
           placeholder="Select a profile"
           allowClear
@@ -147,7 +166,9 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
       <Form.Item<FieldType>
         label="Department"
         name="departmentId"
-        rules={[{ required: true, message: "Please select a department!" }]}>
+        rules={[
+          { required: true && !isDraft, message: "Este campo es requerido" },
+        ]}>
         <Select
           placeholder="Select a department"
           allowClear

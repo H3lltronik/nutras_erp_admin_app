@@ -149,7 +149,7 @@ const _AdminDataTable = <
   const combinedColumns = [
     ...columns,
     {
-      title: "Action",
+      title: "Acción",
       key: "action",
       render: (_: unknown, record: TData) => (
         <Space size="small">
