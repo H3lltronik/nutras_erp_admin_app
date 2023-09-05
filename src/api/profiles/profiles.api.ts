@@ -1,4 +1,6 @@
+import { statusParser } from "../../lib/entity.utils";
 import BaseAPI from "../common/ApiBase";
+import { handleAPIError } from "../errorHandler";
 
 class BaseProfilesAPI extends BaseAPI {
   async createProfile<CreateProfileRequest>(
@@ -7,8 +9,24 @@ class BaseProfilesAPI extends BaseAPI {
     return this.post<ProfileCreatedResponse, CreateProfileRequest>("", data);
   }
 
-  async getProfiles(params?: QueryParams): Promise<GetProfilesResponse | APIError> {
-    return this.get<GetProfilesResponse>("", params);
+  async getProfiles(params?: QueryParams): Promise<GetProfilesResponseWithStatus | APIError> {
+    try {
+      // return this.get<GetProfilesResponse>("", params);
+      const profiles = await this.get<GetProfilesResponse>("", params);
+      const profilesWithStatus = profiles.data.map((profile) =>
+        Object.assign({}, profile, {
+          status: statusParser(profile),
+        })
+      );
+
+      return {
+        data: profilesWithStatus,
+        pagination: profiles.pagination,
+      };
+      
+    } catch (error) {
+      return handleAPIError(error);
+    }
   }
 
   async getProfile(

@@ -1,11 +1,12 @@
 import { Button, Layout } from "antd";
-import { ColumnsType } from "antd/es/table";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ProfileAPI } from "../../api";
-import { AdminDataTable } from "../../components/Common/AdminDataTable";
-import { AppLoader } from "../../components/Common/AppLoader";
-import { ProfileListBreadcrumb } from "./Breadcrums";
+import { ProfileAPI } from "../../../api";
+import { AdminDataTable } from "../../../components/Common/AdminDataTable";
+import { AppLoader } from "../../../components/Common/AppLoader";
+import { ProfileListBreadcrumb } from "../Common/Breadcrums";
+import ProfilesFilters from "./ProfilesFilters";
+import { profileListColumns } from "./profilesTableColumn";
 
 const { Content } = Layout;
 
@@ -13,30 +14,6 @@ export const ProfilesList: React.FC = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-
-  const columns: ColumnsType<Profile> = [
-    {
-      title: "Partida ID",
-      dataIndex: "partidaId",
-      key: "partidaId",
-      width: 150,
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Created at",
-      dataIndex: "createdAt",
-      key: "createdAt",
-    },
-    {
-      title: "Roles",
-      dataIndex: "roles",
-      key: "roles",
-    },
-  ];
 
   const fetchData = (params: object) => ProfileAPI.getProfiles(params);
 
@@ -61,18 +38,14 @@ export const ProfilesList: React.FC = () => {
             Nuevo perfil
           </Button>
         </div>
-        <div
-          className=""
-          style={{
-            padding: 24,
-            minHeight: 360,
-            background: "#fff",
-          }}>
+        <div className="p-[24px] bg-white">
+          <ProfilesFilters />
+
           <section className="mx-auto">
             <AdminDataTable
               queryKey="profiles"
               fetchData={fetchData}
-              columns={columns}
+              columns={profileListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
             />

@@ -1,7 +1,7 @@
 import {
+  CloseOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  ExclamationOutlined,
 } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Modal, Space, Table, TablePaginationConfig } from "antd";
@@ -127,7 +127,7 @@ const _AdminDataTable = <
       onClick: async (record) => await editAction(record.id as string),
     },
     {
-      icon: <ExclamationOutlined className="mr-[-6px]" />,
+      icon: <CloseOutlined className="mr-[-6px]" />,
       className: "bg-red-600 text-white hover:bg-red-50",
       onClick: async (record) => {
         confirm({
