@@ -20,6 +20,8 @@ import { UsersList } from "../pages/Users/List/UsersList";
 import { UsersHeader } from "../pages/Users/Common/UsersHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
+import { WorkRequestsHeader } from "../pages/WorkRequest/Common/WorkRequestHeader";
+import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequest";
 
 const router = createBrowserRouter([
   {
@@ -107,14 +109,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "*",
-    element: (
-      <DefaultLayout headerTitle="El recurso no se encontro...">
-        <NotFound />
-      </DefaultLayout>
-    ),
-  },
-  {
     path: "/admin/purchase-orders",
     element: (
       <DefaultLayout navContent={<PurchaseOrdersHeader />} headerTitle="Productos">
@@ -127,6 +121,30 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<PurchaseOrdersHeader />} headerTitle="Productos">
         <PurchaseOrdersManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/work-requests",
+    element: (
+      <DefaultLayout navContent={<WorkRequestsHeader />} headerTitle="Productos">
+        <WorkRequestsList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/work-requests/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<WorkRequestsHeader />} headerTitle="Productos">
+        <WorkRequestsManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <DefaultLayout headerTitle="El recurso no se encontro...">
+        <NotFound />
       </DefaultLayout>
     ),
   },

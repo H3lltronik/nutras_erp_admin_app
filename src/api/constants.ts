@@ -6,5 +6,6 @@ export const ENTITIES_ENDPOINTS = {
     departments: 'departments',
     products: 'products',
     purchaseOrders: 'purchaseOrders',
+    workRequests: 'workRequests',
     measurements: 'measure-unit',
 }
