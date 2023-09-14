@@ -1,6 +1,7 @@
 import {
   BarcodeOutlined,
   CodeSandboxOutlined,
+  OrderedListOutlined,
   PieChartOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
@@ -45,6 +46,19 @@ const items: MenuItem[] = [
   getItem("Administración", "1", null, [
     getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
     getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
+    getItem("Notificaciones", "/admin/notifications", <ProfileOutlined />),
+  ]),
+  getItem("Compras", "3", null, [
+    getItem("Ordenes de compra", "/admin/purchase-orders", <OrderedListOutlined />, []),
+  ]),
+  getItem("Producción", "4", null, [
+    getItem("Solicitudes de trabajo", "/admin/work-requests", <OrderedListOutlined />, []),
+    getItem("Ordenes de trabajo", "/admin/work-orders", <OrderedListOutlined />, []),
+    getItem("Requisición de compras", "/admin/purchase-order", <PieChartOutlined />, []),
+    getItem("Etiquetación", "/admin/labelation", <PieChartOutlined />, []),
+  ]),
+  getItem("Calidad", "5", null, [
+    getItem("Calidad", "/admin/quality", <PieChartOutlined />, []),
   ]),
   // Uncomment and modify as needed
   // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [
