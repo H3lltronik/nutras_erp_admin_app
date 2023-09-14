@@ -10,6 +10,9 @@ import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage
 import { ProductsHeader } from "../pages/Products/Common/ProductsHeader";
 import { ProductsList } from "../pages/Products/List/ProductsList";
 import { ProductsManage } from "../pages/Products/Manage/ProductsManage";
+import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchasesOrderHeader";
+import { PurchaseOrdersList } from "../pages/PurchaseOrders/List/PurchaseOrdersList";
+import { PurchaseOrdersManage } from "../pages/PurchaseOrders/Manage/PurchaseOrdersManage";
 import { ProfilesList, ProfilesManage } from "../pages/Profiles";
 import { ProfilesHeader } from "../pages/Profiles/Common/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
@@ -108,6 +111,22 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout headerTitle="El recurso no se encontro...">
         <NotFound />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/purchase-orders",
+    element: (
+      <DefaultLayout navContent={<PurchaseOrdersHeader />} headerTitle="Productos">
+        <PurchaseOrdersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/purchase-orders/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<PurchaseOrdersHeader />} headerTitle="Productos">
+        <PurchaseOrdersManage />
       </DefaultLayout>
     ),
   },
