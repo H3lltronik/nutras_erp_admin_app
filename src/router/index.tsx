@@ -22,6 +22,8 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
 import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
+import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
+import { WorkOrdersList, WorkOrdersManage } from "../pages/WorkOrders";
 
 const router = createBrowserRouter([
   {
@@ -137,6 +139,22 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<WorkRequestsHeader />} headerTitle="Productos">
         <WorkRequestsManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/work-orders",
+    element: (
+      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+        <WorkOrdersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/work-orders/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+        <WorkOrdersManage />
       </DefaultLayout>
     ),
   },

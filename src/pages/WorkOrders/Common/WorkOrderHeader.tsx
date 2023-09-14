@@ -4,7 +4,7 @@ import { Menu } from "antd";
 import React, { useEffect, useState } from "react"; // Import useEffect
 import { useLocation, useNavigate } from "react-router-dom";
 
-export const WorkRequestsHeader: React.FC = () => {
+export const WorkOrdersHeader: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,19 +17,19 @@ export const WorkRequestsHeader: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Listado de solicitudes de trabajo",
-      key: "/admin/work-requests",
+      label: "Listado de ordenes de trabajo",
+      key: "/admin/work-orders",
       icon: <OrderedListOutlined />,
       onClick: () => {
-        navigate("/admin/work-requests");
+        navigate("/admin/work-orders");
       },
     },
     {
-      label: "Crear solicitud de trabajo",
-      key: "/admin/work-requests/manage",
+      label: "Crear orden de trabajo",
+      key: "/admin/work-orders/manage",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/work-requests/manage");
+        navigate("/admin/work-orders/manage");
       },
     },
   ];

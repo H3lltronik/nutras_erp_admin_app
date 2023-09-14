@@ -2,13 +2,13 @@ import { Input, Select } from "antd";
 import debounce from "lodash.debounce";
 import { useMemo } from "react";
 import { entityStatuses } from "../../../lib/entity.utils";
-import { useWorkRequestsListPageStore } from "./work_requests_list_page.store";
+import { useWorkOrdersListPageStore } from "./work_orders_list_page.store";
 
-export default function WorkRequestFilters() {
+export default function WorkOrderFilters() {
   const {
     setDraftMode,
     setPublished,
-  } = useWorkRequestsListPageStore((state) => state);
+  } = useWorkOrdersListPageStore((state) => state);
 
   const handleStatusChange = (value: string[]) => {
     if (value.includes(entityStatuses.DRAFT)) setDraftMode(true);

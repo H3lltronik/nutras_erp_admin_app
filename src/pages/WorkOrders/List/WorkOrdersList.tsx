@@ -1,48 +1,48 @@
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { WorkRequestAPI } from "../../../api";
+import { WorkOrderAPI } from "../../../api";
 import { AdminDataTable } from "../../../components/Common/AdminDataTable";
-import { WorkRequestsListBreadcrumb } from "../Common/Breadcrums";
-import WorkRequestFilters from "./WorkRequestsFilters";
-import { WorkRequestListColumns } from "./workRequestTableColumns";
-import { useWorkRequestsListPageStore } from "./work_requests_list_page.store";
+import { WorkOrdersListBreadcrumb } from "../Common/Breadcrums";
+import WorkOrderFilters from "./WorkOrdersFilters";
+import { WorkOrderListColumns } from "./workOrderTableColumns";
+import { useWorkOrdersListPageStore } from "./work_orders_list_page.store";
 
 const { Content } = Layout;
 
-export const WorkRequestsList: React.FC = () => {
+export const WorkOrdersList: React.FC = () => {
   const navigate = useNavigate();
   const { getDraftMode, getPublished } =
-    useWorkRequestsListPageStore();
+    useWorkOrdersListPageStore();
 
-  const fetchData = (params: object) => WorkRequestAPI.getWorkRequests(params);
+  const fetchData = (params: object) => WorkOrderAPI.getWorkOrders(params);
 
   const doDelete = async (id: string | number) =>
-    WorkRequestAPI.deleteWorkRequest(id as string);
+    WorkOrderAPI.deleteWorkOrder(id as string);
 
   const doEdit = async (id: string | number) =>
-    navigate(`/admin/work-requests/manage/${id}`);
+    navigate(`/admin/work-orders/manage/${id}`);
 
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
         <div className="flex justify-between items-center">
-          <WorkRequestsListBreadcrumb />
+          <WorkOrdersListBreadcrumb />
 
           <Button
-            onClick={() => navigate("/admin/work-requests/manage")}
+            onClick={() => navigate("/admin/work-orders/manage")}
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
-            Nueva solicitud de trabajo
+            Nueva orden de trabajo
           </Button>
         </div>
         <div className="p-[24px] bg-white">
-          <WorkRequestFilters />
+          <WorkOrderFilters />
           <section className="mx-auto">
             <AdminDataTable
               queryKey="users"
               fetchData={fetchData}
-              columns={WorkRequestListColumns}
+              columns={WorkOrderListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
               perPage={20}

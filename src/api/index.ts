@@ -8,6 +8,7 @@ import BaseProfilesAPI from "./profiles/profiles.api";
 import BaseUserAPI from "./user/user.api";
 import BasePurchaseOrderAPI from "./purchaseOrder/purchaseOrder.api";
 import BaseWorkRequestAPI from "./workRequest/workRequest.api";
+import BaseWorkOrderAPI from "./workOrder/workOrder.api";
 
 const BASE_URL = import.meta.env.VITE_API_PATH;
 
@@ -15,6 +16,7 @@ export const MeasurementAPI = new BaseMeasurementAPI(`${BASE_URL}/${ENTITIES_END
 export const ProductAPI = new BaseProductAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.products}`);
 export const PurchaseOrderAPI = new BasePurchaseOrderAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.purchaseOrders}`);
 export const WorkRequestAPI = new BaseWorkRequestAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.workRequests}`);
+export const WorkOrderAPI = new BaseWorkOrderAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.workOrders}`);
 export const UserAPI = new BaseUserAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.users}`);
 export const ProfileAPI = new BaseProfilesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.profiles}`);
 export const DepartmentsAPI = new BaseDepartmentsAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.departments}`);

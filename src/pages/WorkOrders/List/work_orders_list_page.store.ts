@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type WorkRequestsListPageState = {
+type WorkOrdersListPageState = {
   loading: boolean;
   setLoading: (value: boolean) => void;
 
@@ -13,7 +13,7 @@ type WorkRequestsListPageState = {
   getPublished: () => string | undefined;
 };
 
-export const useWorkRequestsListPageStore = create<WorkRequestsListPageState>(
+export const useWorkOrdersListPageStore = create<WorkOrdersListPageState>(
   (set, get) => ({
     draftMode: undefined,
     setDraftMode: (value: boolean | undefined) => set({ draftMode: value }),
