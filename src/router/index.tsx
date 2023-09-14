@@ -20,8 +20,8 @@ import { UsersList } from "../pages/Users/List/UsersList";
 import { UsersHeader } from "../pages/Users/Common/UsersHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
-import { WorkRequestsHeader } from "../pages/WorkRequest/Common/WorkRequestHeader";
-import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequest";
+import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
+import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
 
 const router = createBrowserRouter([
   {
