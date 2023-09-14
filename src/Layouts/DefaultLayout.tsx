@@ -24,6 +24,7 @@ export const DefaultLayout: React.FC<HeaderProps> = (props) => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
+        width={250}
         collapsible
         className="shadow-lg"
         collapsed={collapsed}
