@@ -12,7 +12,8 @@ const { Content } = Layout;
 
 export const ProductsList: React.FC = () => {
   const navigate = useNavigate();
-  const { search, getDraftMode } = useProductsListPageStore();
+  const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
+    useProductsListPageStore();
 
   const fetchData = (params: object) => ProductAPI.getProducts(params);
 
@@ -46,8 +47,11 @@ export const ProductsList: React.FC = () => {
               editAction={doEdit}
               perPage={20}
               queryParameters={{
-                search,
+                nameSearch,
+                codeSearch,
+                providerSearch,
                 draftMode: getDraftMode(),
+                published: getPublished(),
               }}
             />
           </section>

@@ -11,10 +11,10 @@ import { ProductsHeader } from "../pages/Products/Common/ProductsHeader";
 import { ProductsList } from "../pages/Products/List/ProductsList";
 import { ProductsManage } from "../pages/Products/Manage/ProductsManage";
 import { ProfilesList, ProfilesManage } from "../pages/Profiles";
-import { ProfilesHeader } from "../pages/Profiles/ProfilesHeader";
+import { ProfilesHeader } from "../pages/Profiles/Common/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
-import { UsersHeader } from "../pages/Users/UsersHeader";
-import { UsersList } from "../pages/Users/UsersList";
+import { UsersList } from "../pages/Users/List/UsersList";
+import { UsersHeader } from "../pages/Users/Common/UsersHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 

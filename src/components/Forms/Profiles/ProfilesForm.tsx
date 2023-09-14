@@ -1,5 +1,5 @@
 import { Form, Input, Select } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useMemo } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { roles } from "./roles";
 
 const onFinish = (values: unknown) => {
@@ -10,14 +10,12 @@ const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
 
-type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-};
+interface GetFormData {
+  draftMode: boolean;
+}
 
 export type ProfilesFormHandle = {
-  getFormData: () => Promise<FieldType>;
+  getFormData: (params?: GetFormData) => Promise<Profile>;
 };
 
 type ProfileFormProps = {
@@ -27,14 +25,20 @@ type ProfileFormProps = {
 const ProfilesForm = forwardRef<ProfilesFormHandle, ProfileFormProps>(
   (props, ref) => {
     const [form] = Form.useForm();
+    const [isDraft, setIsDraft] = useState<boolean>(false);
 
     useImperativeHandle(
       ref,
       (): ProfilesFormHandle => ({
-        getFormData: async () => {
+        getFormData: async (params) => {
+          setIsDraft(!!params?.draftMode);
+
           const valid = await form.validateFields();
-          console.log("valid", valid);
-          return form.getFieldsValue();
+          return { 
+            ...form.getFieldsValue(), 
+            isDraft: !!params?.draftMode,
+            isPublished: !params?.draftMode,
+          };
         },
       })
     );
@@ -66,20 +70,20 @@ const ProfilesForm = forwardRef<ProfilesFormHandle, ProfileFormProps>(
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off">
-        <Form.Item<FieldType> label="Id" name="id" hidden={true}>
+        <Form.Item<Profile> label="Id" name="id" hidden={true}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<Profile>
           label="Nombre"
           name="name"
-          rules={[{ required: true, message: "Please input the name!" }]}>
+          rules={[{ required: true && !isDraft, message: "Please input the name!" }]}>
           <Input />
         </Form.Item>
-        <Form.Item<FieldType>
+        <Form.Item<Profile>
           label="Roles"
           name="roles"
-          rules={[{ required: true, message: "Please select some roles!" }]}>
+          rules={[{ required: true && !isDraft, message: "Please select some roles!" }]}>
           <Select
             placeholder="Select a roles"
             mode="multiple"

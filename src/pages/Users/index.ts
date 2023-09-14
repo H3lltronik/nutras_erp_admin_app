@@ -1,3 +1,2 @@
-export { UsersList } from './UsersList';
-export { UsersManage } from './UsersManage';
-
+export { UsersList } from "./List/UsersList";
+export { UsersManage } from "./Manage/UsersManage";

@@ -1,38 +1,29 @@
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { UserAPI } from "../../api";
-import { AdminDataTable } from "../../components/Common/AdminDataTable";
-import { AppLoader } from "../../components/Common/AppLoader";
-import { UsersListBreadcrumb } from "./Breadcrums";
+import { UserAPI } from "../../../api";
+import { AdminDataTable } from "../../../components/Common/AdminDataTable";
+import { AppLoader } from "../../../components/Common/AppLoader";
+import { UsersListBreadcrumb } from "../Common/Breadcrums";
+import UsersFilters from "./UsersFilters";
+import { usersListColumns } from "./usersTableColumns";
+import { useUsersListPageStore } from "./users_list_page.store";
 
 const { Content } = Layout;
 
 export const UsersList: React.FC = () => {
   const navigate = useNavigate();
+  const {
+    nameSearch,
+    usernameSearch,
+    profileSearch,
+    departmentSearch,
+    getDraftMode,
+    getPublished,
+  } = useUsersListPageStore();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-
-  const columns = [
-    {
-      title: "Partida ID",
-      dataIndex: "partidaId",
-      key: "partidaId",
-      width: 150,
-    },
-    {
-      title: "Username",
-      dataIndex: "username",
-      key: "username",
-    },
-    {
-      title: "Profile",
-      dataIndex: "profile",
-      key: "profileName",
-      render: (profile: Profile) => profile && profile.name,
-    },
-  ];
 
   const fetchData = (params: object) => UserAPI.getUsers(params);
 
@@ -57,20 +48,25 @@ export const UsersList: React.FC = () => {
             Nuevo usuario
           </Button>
         </div>
-        <div
-          className=""
-          style={{
-            padding: 24,
-            minHeight: 360,
-            background: "#fff",
-          }}>
+        <div className="bg-white p-[24px]">
+          <UsersFilters />
+          profile {profileSearch}
           <section className="mx-auto">
             <AdminDataTable
               queryKey="users"
               fetchData={fetchData}
-              columns={columns}
+              columns={usersListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
+              perPage={20}
+              queryParameters={{
+                nameSearch,
+                usernameSearch,
+                profileId: profileSearch,
+                departmentId: departmentSearch,
+                draftMode: getDraftMode(),
+                published: getPublished(),
+              }}
             />
           </section>
         </div>

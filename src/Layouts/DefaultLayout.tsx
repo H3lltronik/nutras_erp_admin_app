@@ -1,8 +1,10 @@
 import { Layout } from "antd";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "../assets/nutras-logo.png";
+import { routesList } from "../router/routes";
 import { DefaultHeader } from "./DefaultHeader";
 import { DefaultLayoutContent } from "./DefaultLayoutContent";
 import { AdminMenu } from "./Menu";
@@ -26,10 +28,12 @@ export const DefaultLayout: React.FC<HeaderProps> = (props) => {
         className="shadow-lg"
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}>
-        <div
-          className="demo-logo-vertical"
-          style={{ backgroundImage: `url(${logo})` }}
-        />
+        <Link to={routesList.admin.path}>
+          <div
+            className="demo-logo-vertical"
+            style={{ backgroundImage: `url(${logo})` }}
+          />
+        </Link>
         <AdminMenu />
       </Sider>
       <Layout>

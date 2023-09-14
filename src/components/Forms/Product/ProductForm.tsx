@@ -45,8 +45,11 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
           setIsDraft(!!params?.draftMode);
 
           const valid = await form.validateFields();
-          console.log("valid", valid);
-          return { ...form.getFieldsValue(), isDraft: !!params?.draftMode };
+          return { 
+            ...form.getFieldsValue(), 
+            isDraft: !!params?.draftMode,
+            isPublished: !params?.draftMode,
+          };
         },
       })
     );

@@ -3,69 +3,61 @@ import { useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProductAPI } from "../../../api";
+import { ProfileAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
-import ProductForm, {
-  ProductFormHandle,
-} from "../../../components/Forms/Product/ProductForm";
+import ProfilesForm, {
+  ProfilesFormHandle,
+} from "../../../components/Forms/Profiles/ProfilesForm";
 import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
 import { showToast } from "../../../lib/notify";
-import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
+import { ProfileManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
 const { Content } = Layout;
 
-export const ProductsManage: React.FC = () => {
-  const productFormRef = useRef<ProductFormHandle | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const ProfilesManage: React.FC = () => {
+  const profileFormRef = useRef<ProfilesFormHandle | null>(null);
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useAdminMutation("createProduct");
+  const { mutateAsync } = useAdminMutation("createProfile");
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const {
-    data: entity,
-    isFetching,
-    isLoading,
-  } = useQuery<GetProductResponse | APIError>(
-    ["product", { id }],
-    () => ProductAPI.getProduct(id as string),
-    { enabled: !!id, refetchOnWindowFocus: false }
-  );
-
-  const loading = useMemo(
-    () => pageLoading || isFetching || (isLoading && !!id),
-    [isLoading, pageLoading, isFetching, id]
+  const entity = useQuery<GetProfileResponse | APIError>(
+    ["profiles", { id }],
+    () => ProfileAPI.getProfile(id as string),
+    { enabled: !!id }
   );
 
   const submitForm = async (isDraft = false) => {
-    const productFormData = (await productFormRef.current?.getFormData({
+    const profileFormData = (await profileFormRef.current?.getFormData({
       draftMode: isDraft,
-    })) as CreateProductRequest;
-    console.log("productFormData", productFormData);
+    })) as CreateProfileRequest;
 
     setPageLoading(true);
     try {
       let result = null;
       let message = "";
 
-      if (entity) {
-        if ("id" in entity) {
-          result = await ProductAPI.updateProduct(entity.id, productFormData);
-          message = "Producto actualizado correctamente";
+      if (entity?.data) {
+        if ("id" in entity.data) {
+          result = await ProfileAPI.updateProfile(
+            entity.data.id,
+            profileFormData
+          );
+          message = "Perfil actualizado correctamente";
         } else {
-          alert("No se puede actualizar el producto");
-          console.error("Not valid entity", entity);
+          alert("No se puede actualizar el perfil");
+          console.error("Not valid entity", entity.data);
         }
       } else {
-        result = await mutateAsync(productFormData);
-        message = "Producto creado correctamente";
+        result = await mutateAsync(profileFormData);
+        message = "Perfil creado correctamente";
       }
 
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          navigate("/admin/products");
+          navigate("/admin/profiles");
         }
       }
     } catch (error) {
@@ -84,7 +76,7 @@ export const ProductsManage: React.FC = () => {
           recuperar.
         </p>
       ),
-      onOk: () => navigate("/admin/products"),
+      onOk: () => navigate("/admin/profiles"),
       okButtonProps: {
         className: "bg-red-500 border-none hover:bg-red-600",
       },
@@ -92,20 +84,19 @@ export const ProductsManage: React.FC = () => {
   };
 
   const entityData = useMemo(() => {
-    if (!entity) return null;
-    if ("id" in entity) return entity;
+    if (entity.isLoading || !entity.data) return null;
+    if ("id" in entity.data) return entity.data;
 
     return null;
   }, [entity]);
 
   return (
     <>
-      <Content className="relative mx-4">
-        <ProductsManageBreadcrumb />
-
+      <Content style={{ margin: "0 16px" }}>
+        <ProfileManageBreadcrumb />
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            <ProductForm ref={productFormRef} entity={entityData} />
+            <ProfilesForm ref={profileFormRef} entity={entityData} />
 
             <button
               type="button"
@@ -129,7 +120,8 @@ export const ProductsManage: React.FC = () => {
             </button>
           </section>
         </div>
-        <AppLoader isLoading={loading} />
+
+        <AppLoader isLoading={pageLoading} />
       </Content>
     </>
   );
