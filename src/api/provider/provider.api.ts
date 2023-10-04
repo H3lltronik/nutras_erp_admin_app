@@ -2,26 +2,26 @@ import { statusParser } from "../../lib/entity.utils";
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
 
-class BaseProductAPI extends BaseAPI {
-  async createProduct<ProductToPost>(
-    data: ProductToPost
-  ): Promise<ProductCreatedResponse | APIError> {
+class BaseProviderAPI extends BaseAPI {
+  async createProvider<CreateProviderRequest>(
+    data: CreateProviderRequest
+  ): Promise<ProviderCreatedResponse | APIError> {
     try {
-      const response = await this.post<ProductCreatedResponse, ProductToPost>(
-        "",
-        data
-      );
+      const response = await this.post<
+        ProviderCreatedResponse,
+        CreateProviderRequest
+      >("", data);
       return response;
     } catch (error) {
       return handleAPIError(error);
     }
   }
 
-  async getProducts(
+  async getProviders(
     params?: QueryParams
-  ): Promise<GetProductsResponseWithStatus | APIError> {
+  ): Promise<GetProvidersResponseWithStatus | APIError> {
     try {
-      const products = await this.get<GetProductsResponse>("", params);
+      const products = await this.get<GetProvidersResponse>("", params);
       const productsWithStatus = products.data.map((product) =>
         Object.assign({}, product, {
           status: statusParser(product),
@@ -37,24 +37,24 @@ class BaseProductAPI extends BaseAPI {
     }
   }
 
-  async getProduct(
+  async getProvider(
     userId: string,
     params?: QueryParams
-  ): Promise<GetProductResponse | APIError> {
+  ): Promise<GetProviderResponse | APIError> {
     try {
-      return await this.get<GetProductResponse>(`/${userId}`, params);
+      return await this.get<GetProviderResponse>(`/${userId}`, params);
     } catch (error) {
       return handleAPIError(error);
     }
   }
 
-  async updateProduct(
+  async updateProvider(
     userId: string,
-    data: CreateProductRequest,
+    data: CreateProviderRequest,
     params?: QueryParams
-  ): Promise<UpdatedProductResponse | APIError> {
+  ): Promise<UpdatedProviderResponse | APIError> {
     try {
-      return await this.patch<UpdatedProductResponse, CreateProductRequest>(
+      return await this.patch<UpdatedProviderResponse, CreateProviderRequest>(
         `/${userId}`,
         data,
         params
@@ -65,18 +65,18 @@ class BaseProductAPI extends BaseAPI {
     }
   }
 
-  async deleteProduct(
+  async deleteProvider(
     userId: string,
     params?: QueryParams
-  ): Promise<DeleteProductResponse | APIError> {
+  ): Promise<DeleteProviderResponse | APIError> {
     try {
-      return await this.delete<DeleteProductResponse>(`/${userId}`, params);
+      return await this.delete<DeleteProviderResponse>(`/${userId}`, params);
     } catch (error) {
       return handleAPIError(error);
     }
   }
 
-  async findProducts<P = object>(
+  async findProviders<P = object>(
     params?: QueryParams<P>
   ): Promise<PaginatedResponse<unknown> | APIError> {
     try {
@@ -87,4 +87,4 @@ class BaseProductAPI extends BaseAPI {
   }
 }
 
-export default BaseProductAPI;
+export default BaseProviderAPI;

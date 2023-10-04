@@ -1,16 +1,24 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
-import ProductForm, {
+import ProductFormCompras, {
   ProductFormHandle,
-} from "../../../components/Forms/Product/ProductForm";
-import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
+} from "../../../components/Forms/Product/ProductFormCompras";
+import ProductFormProduccion from "../../../components/Forms/Product/ProductFormProduccion";
+import { roles } from "../../../components/Forms/Profiles/roles";
+import { useAbilities } from "../../../hooks/roles/useAbilities";
+import useAuth from "../../../hooks/useAuth";
 import { showToast } from "../../../lib/notify";
 import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
+import {
+  ProductFormResult,
+  ProductToPost,
+  formatProductForm,
+} from "../lib/formatProductForm";
 
 const { confirm } = Modal;
 const { Content } = Layout;
@@ -19,9 +27,13 @@ export const ProductsManage: React.FC = () => {
   const productFormRef = useRef<ProductFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useAdminMutation("createProduct");
+  const { mutateAsync } = useMutation((data: ProductToPost) =>
+    ProductAPI.createProduct<ProductToPost>(data)
+  );
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useAuth();
+  const ability = useAbilities(user?.profile.roles || []);
 
   const {
     data: entity,
@@ -41,8 +53,10 @@ export const ProductsManage: React.FC = () => {
   const submitForm = async (isDraft = false) => {
     const productFormData = (await productFormRef.current?.getFormData({
       draftMode: isDraft,
-    })) as CreateProductRequest;
-    console.log("productFormData", productFormData);
+    })) as ProductFormResult;
+    const parsedFormData = formatProductForm(productFormData);
+    parsedFormData.profileId = user?.profile.id as string;
+    return;
 
     setPageLoading(true);
     try {
@@ -51,14 +65,15 @@ export const ProductsManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await ProductAPI.updateProduct(entity.id, productFormData);
+          result = await ProductAPI.updateProduct(entity.id, parsedFormData);
           message = "Producto actualizado correctamente";
         } else {
           alert("No se puede actualizar el producto");
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(productFormData);
+        console.log("parsedFormData", parsedFormData);
+        result = await mutateAsync(parsedFormData);
         message = "Producto creado correctamente";
       }
 
@@ -105,8 +120,30 @@ export const ProductsManage: React.FC = () => {
 
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            <ProductForm ref={productFormRef} entity={entityData} />
+            {ability.can(
+              roles.Product.roles.comprasForm.action,
+              roles.Product.entity
+            ) && (
+              <>
+                <h2 className="text-2xl">Formulario de compras</h2>
+                <hr className="mt-2 mb-5" />
+                <ProductFormCompras ref={productFormRef} entity={entityData} />
+              </>
+            )}
 
+            {ability.can(
+              roles.Product.entity,
+              roles.Product.roles.produccionForm.action
+            ) && (
+              <>
+                <h2 className="text-2xl">Formulario de produccion</h2>
+                <hr className="mt-2 mb-5" />
+                <ProductFormProduccion
+                  ref={productFormRef}
+                  entity={entityData}
+                />
+              </>
+            )}
             <button
               type="button"
               onClick={() => submitForm(false)}

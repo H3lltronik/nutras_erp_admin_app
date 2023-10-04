@@ -8,16 +8,18 @@ const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<ErrorType>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const checkToken = async () => {
     try {
       const meData = await AuthAPI.me();
       if (meData.id) {
         setIsAuthenticated(true);
+        console.log("meData", meData);
+        setUser(meData);
       }
       setLoading(false);
     } catch (error: unknown) {
-      console.log("[useAuth] error", error);
       setError(error as ErrorType);
       setLoading(false);
     }
@@ -29,6 +31,7 @@ const useAuth = () => {
 
   return {
     loading,
+    user,
     isAuthenticated,
     error,
   };

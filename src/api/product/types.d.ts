@@ -1,31 +1,21 @@
 interface Product {
   createdAt: string;
   updatedAt: string;
-  deletedAt: string | null;
-  id: string;
+  deletedAt: string;
   isDraft: boolean;
   isPublished: boolean;
+  id: string;
   partidaId: number;
+  productTypeId?: string;
   code: string;
-  type: string;
-  description: string;
-  name: string;
-
   commonName: string;
-  vendorDescription?: string; // using '?' to denote optional fields
-  provider?: string;
-  codeAlt?: string;
-  presentation?: string;
-  quantity?: number;
-  unitId?: string; // this was already there, but I'm keeping it here for clarity
-  unit?: Measurement;
-  allergen?: string;
-  status?: string;
-  kosherAgency?: string;
-  companyIngredientName?: string;
-  certificateName?: string;
-  vendor?: string;
-  note?: string;
+  providerId?: string;
+  unitId: string;
+  isKosher?: boolean;
+  unit: Measurement;
+  kosherDetails?: KosherDetails;
+  purchaseData?: PurchaseData;
+  productionData?: ProductionData;
 }
 
 type CreateProductRequest = Omit<Product, "id">;
@@ -49,6 +39,64 @@ type ProductCreatedResponse = Product;
 type ProductWithStatus = Product & { status: string };
 type ProductsWithStatus = ProductWithStatus[];
 type GetProductsResponseWithStatus = {
-    data: ProductsWithStatus;
-    pagination: Pagination;
+  data: ProductsWithStatus;
+  pagination: Pagination;
+};
+
+interface KosherDetails {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  agency: string;
+  certifiedCompany: string;
+  nameOnCertificate: string;
+  kidOrUkd: string;
+  certificatePageNumber: number;
+  certificateValidity: string;
+}
+
+interface PurchaseData {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  partidaId: number;
+  presentation: string;
+  quantityPerUnit: string;
+  allergen: string;
+  productId: string;
+}
+
+interface ProductionData {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  partidaId: number;
+  productId: string;
+  description: string;
+  packaging: string;
+  mold: string;
+  presentation: string;
+  ptPresentation: string;
+}
+
+//
+//
+//
+
+interface ProductType {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  partidaId: number;
+  name: string;
+}
+
+type GetProductTypesResponse = ProductType[];
+
+type GetProductTypesResponseData = {
+  data: GetProductTypesResponse;
 };

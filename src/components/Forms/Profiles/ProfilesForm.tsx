@@ -1,5 +1,11 @@
 import { Form, Input, Select } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { roles } from "./roles";
 
 const onFinish = (values: unknown) => {
@@ -34,8 +40,8 @@ const ProfilesForm = forwardRef<ProfilesFormHandle, ProfileFormProps>(
           setIsDraft(!!params?.draftMode);
 
           const valid = await form.validateFields();
-          return { 
-            ...form.getFieldsValue(), 
+          return {
+            ...form.getFieldsValue(),
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -48,10 +54,10 @@ const ProfilesForm = forwardRef<ProfilesFormHandle, ProfileFormProps>(
     }, [form, props.entity]);
 
     const selectOptions = useMemo(() => {
-      return roles.map((role) => {
+      return Object.values(roles).map((role) => {
         return {
           label: role.label,
-          options: role.roles.map((value) => {
+          options: Object.values(role.roles).map((value) => {
             return {
               label: value.description,
               value: value.role,
@@ -77,13 +83,20 @@ const ProfilesForm = forwardRef<ProfilesFormHandle, ProfileFormProps>(
         <Form.Item<Profile>
           label="Nombre"
           name="name"
-          rules={[{ required: true && !isDraft, message: "Please input the name!" }]}>
+          rules={[
+            { required: true && !isDraft, message: "Please input the name!" },
+          ]}>
           <Input />
         </Form.Item>
         <Form.Item<Profile>
           label="Roles"
           name="roles"
-          rules={[{ required: true && !isDraft, message: "Please select some roles!" }]}>
+          rules={[
+            {
+              required: true && !isDraft,
+              message: "Please select some roles!",
+            },
+          ]}>
           <Select
             placeholder="Select a roles"
             mode="multiple"

@@ -1,13 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { Col, Form, Input, InputNumber, Row, Select } from "antd";
+import { Col, Form, Input, Row } from "antd";
 import {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useMemo,
+  useRef,
   useState,
 } from "react";
-import { MeasurementAPI } from "../../../api";
+import { MeasurementAPI, ProductTypesAPI } from "../../../api";
+import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
+import { GenericSelect } from "../Common/GenericSelect";
+import ProductKosherForm, {
+  ProductKosherFormHandle,
+} from "./ProductKosherForm";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -22,31 +26,34 @@ interface GetFormData {
 }
 
 export type ProductFormHandle = {
-  getFormData: (params?: GetFormData) => Promise<Product>;
+  getFormData: (params?: GetFormData) => Promise<ProductFormResult>;
 };
 
 type ProductFormProps = {
   entity?: Product | null;
 };
 
-const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
+const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
-
-    const { data: measurementsData, isLoading: loadingMeasurements } = useQuery<
-      GetMeasurementsResponse | APIError
-    >(["measurements"], () => MeasurementAPI.getMeasurements());
+    const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
+    const isKosher = Form.useWatch("isKosher", form);
 
     useImperativeHandle(
       ref,
       (): ProductFormHandle => ({
         getFormData: async (params) => {
           setIsDraft(!!params?.draftMode);
-
           const valid = await form.validateFields();
-          return { 
-            ...form.getFieldsValue(), 
+
+          const kosherDetails = await productKosherFormRef.current?.getFormData(
+            params
+          );
+
+          return {
+            ...form.getFieldsValue(),
+            ...kosherDetails,
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -57,13 +64,6 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
     }, [form, _props.entity]);
-
-    const measurements = useMemo(() => {
-      if (loadingMeasurements || !measurementsData) return [];
-      if ("data" in measurementsData) return measurementsData.data;
-
-      return [];
-    }, [measurementsData, loadingMeasurements]);
 
     return (
       <Form
@@ -79,6 +79,23 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
+            <GenericSelect
+              fetcher={() => ProductTypesAPI.getProductTypes()}
+              label="Tipo de producto"
+              placeholder="Selecciona un tipo de producto"
+              optionLabel="name"
+              name="productTypeId"
+              optionKey={"id"}
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es requerido",
+                },
+              ]}
+              queryKey={["productTypes"]}
+            />
+          </Col>
+          <Col span={12}>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
@@ -91,10 +108,59 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input />
             </Form.Item>
           </Col>
+        </Row>
+
+        <Row gutter={16}>
           <Col span={12}>
             <Form.Item<Product>
-              label="Descripción del Proveedor"
-              name="vendorDescription"
+              label="Codigo"
+              name="commonName"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <GenericSelect
+              fetcher={() => MeasurementAPI.getMeasurements()}
+              label="Unidad de medida"
+              placeholder="Selecciona una unidad de medida"
+              optionLabel="name"
+              name="unitId"
+              optionKey={"id"}
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es requerido",
+                },
+              ]}
+              queryKey={["measurements"]}
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<Product>
+              label="Descripción del producto"
+              name="commonName"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<Product>
+              label="Presentacion"
+              name="presentation"
               rules={[
                 {
                   required: true && !isDraft,
@@ -109,65 +175,7 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<Product>
-              label="Código"
-              name="code"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Estado"
-              name="status"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Proveedor"
-              name="provider"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Código Alternativo"
-              name="codeAlt"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Presentación"
+              label="Empaque"
               name="presentation"
               rules={[
                 {
@@ -180,49 +188,11 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           <Col span={12}>
             <Form.Item<Product>
-              label="Cantidad"
-              name="quantity"
+              label="Cantidad x unidad"
+              name="quantityPerUnit"
               rules={[
                 {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <InputNumber />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Unidad de Medida"
-              name="unitId"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Select
-                placeholder="Select a measurement unit"
-                allowClear
-                loading={loadingMeasurements}>
-                {measurements.map((measurement) => (
-                  <option key={measurement.id} value={measurement.id}>
-                    {measurement.name}
-                  </option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Alérgeno"
-              name="allergen"
-              rules={[
-                {
-                  required: true && !isDraft,
+                  required: false && !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -234,8 +204,8 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<Product>
-              label="Agencia Kosher"
-              name="kosherAgency"
+              label="Presentación PT"
+              name="presentation"
               rules={[
                 {
                   required: true && !isDraft,
@@ -247,8 +217,8 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           <Col span={12}>
             <Form.Item<Product>
-              label="Vendedor"
-              name="vendor"
+              label="Molde"
+              name="quantityPerUnit"
               rules={[
                 {
                   required: true && !isDraft,
@@ -260,46 +230,18 @@ const ProductForm = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
         </Row>
 
-        <Form.Item<Product>
-          label="Nombre del Ingrediente de la Empresa"
-          name="companyIngredientName"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item<Product>
-          label="Nombre del Certificado"
-          name="certificateName"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item<Product>
-          label="Nota"
-          name="note"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input.TextArea />
-        </Form.Item>
-
-        {/* Add other form controls like Submit button, etc. if needed */}
+        {isKosher && (
+          <Row
+            gutter={16}
+            className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
+            <Col span={24}>
+              <ProductKosherForm ref={productKosherFormRef} />
+            </Col>
+          </Row>
+        )}
       </Form>
     );
   }
 );
 
-export default ProductForm;
+export default ProductFormProduccion;
