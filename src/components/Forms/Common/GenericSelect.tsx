@@ -1,8 +1,8 @@
 // GenericSelect.tsx
 import { QueryKey, useQuery } from "@tanstack/react-query";
-import { Select as AntSelect, Form } from "antd";
+import { Select as AntSelect, Button, Form, Modal } from "antd";
 import { SelectProps as AntSelectProps } from "antd/lib/select";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type Data<T> = {
   data: T[];
@@ -18,6 +18,8 @@ interface GenericSelectProps<T> extends AntSelectProps<string> {
   optionKey: keyof T;
   optionLabel: keyof T;
   rules?: object[];
+  addForm?: React.ReactNode;
+  addFormTitle?: string;
 }
 
 export const GenericSelect = <T,>({
@@ -29,6 +31,8 @@ export const GenericSelect = <T,>({
   optionLabel,
   rules,
   queryKey,
+  addForm,
+  addFormTitle,
   ...restProps
 }: GenericSelectProps<T>) => {
   const fetch = useCallback(async () => {
@@ -38,6 +42,7 @@ export const GenericSelect = <T,>({
 
     return response.data || [];
   }, [fetcher]);
+  const addFormRef = useRef<{ getFormData: () => void }>(null);
 
   const { data, isLoading } = useQuery<T[]>(queryKey, () => fetch(), {
     refetchOnWindowFocus: false,
@@ -51,30 +56,45 @@ export const GenericSelect = <T,>({
 
   return (
     <Form.Item label={label} name={name} rules={rules}>
-      <AntSelect
-        showSearch
-        placeholder={`${placeholder}`}
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        }
-        allowClear
-        loading={isLoading}
-        {...restProps}>
-        {Array.isArray(data) &&
-          data.map((item: T) => (
-            <AntSelect.Option
-              key={String(item[optionKey])}
-              value={String(item[optionKey])}>
-              {String(item[optionLabel])}
-            </AntSelect.Option>
-          ))}
-      </AntSelect>
+      <div className="flex gap-1">
+        <AntSelect
+          showSearch
+          placeholder={`${placeholder}`}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          allowClear
+          loading={isLoading}
+          {...restProps}>
+          {Array.isArray(data) &&
+            data.map((item: T) => (
+              <AntSelect.Option
+                key={String(item[optionKey])}
+                value={String(item[optionKey])}>
+                {String(item[optionLabel])}
+              </AntSelect.Option>
+            ))}
+        </AntSelect>
 
-      {/* <Button onClick={() => setIsModalOpen(true)}>+</Button>
-      <Modal title="Basic Modal" open={isModalOpen} >
-        <UsersManage />
-      </Modal> */}
+        {addForm && (
+          <>
+            <Button onClick={() => setIsModalOpen(true)}>+</Button>
+            <Modal
+              title={addFormTitle}
+              open={isModalOpen}
+              width={800}
+              okButtonProps={{ className: "hidden" }}
+              cancelButtonProps={{ className: "hidden" }}
+              onCancel={() => setIsModalOpen(false)}>
+              {React.cloneElement(addForm, {
+                ref: addFormRef,
+                onSuccess: () => setIsModalOpen(false),
+              })}
+            </Modal>
+          </>
+        )}
+      </div>
     </Form.Item>
   );
 };

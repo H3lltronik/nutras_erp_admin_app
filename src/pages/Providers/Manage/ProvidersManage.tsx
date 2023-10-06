@@ -3,32 +3,30 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProductAPI } from "../../../api";
+import { ProvidersAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
-import ProductFormCompras, {
-  ProductFormHandle,
-} from "../../../components/Forms/Product/ProductFormCompras";
-import ProductFormProduccion from "../../../components/Forms/Product/ProductFormProduccion";
-import { roles } from "../../../components/Forms/Profiles/roles";
+import ProviderForm, {
+  ProviderFormHandle,
+} from "../../../components/Forms/Provider/ProviderForm";
 import { useAbilities } from "../../../hooks/roles/useAbilities";
 import useAuth from "../../../hooks/useAuth";
 import { showToast } from "../../../lib/notify";
-import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
-import {
-  ProductFormResult,
-  ProductToPost,
-  formatProductForm,
-} from "../lib/formatProductForm";
+import { ProvidersManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
 const { Content } = Layout;
 
-export const ProductsManage: React.FC = () => {
-  const productFormRef = useRef<ProductFormHandle | null>(null);
+type ProvidersManageProps = {
+  onSuccess?: (data?: Provider) => void;
+  enableRedirect?: boolean;
+};
+
+export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
+  const providerFormRef = useRef<ProviderFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation((data: ProductToPost) =>
-    ProductAPI.createProduct<ProductToPost>(data)
+  const { mutateAsync } = useMutation((data: CreateProviderRequest) =>
+    ProvidersAPI.createProvider<CreateProviderRequest>(data)
   );
   const navigate = useNavigate();
   const { id } = useParams();
@@ -39,9 +37,9 @@ export const ProductsManage: React.FC = () => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetProductResponse | APIError>(
-    ["product", { id }],
-    () => ProductAPI.getProduct(id as string),
+  } = useQuery<GetProviderResponse | APIError>(
+    ["provider", { id }],
+    () => ProvidersAPI.getProvider(id as string),
     { enabled: !!id, refetchOnWindowFocus: false }
   );
 
@@ -51,12 +49,9 @@ export const ProductsManage: React.FC = () => {
   );
 
   const submitForm = async (isDraft = false) => {
-    const productFormData = (await productFormRef.current?.getFormData({
+    const providerFormData = (await providerFormRef.current?.getFormData({
       draftMode: isDraft,
-    })) as ProductFormResult;
-    const parsedFormData = formatProductForm(productFormData);
-    parsedFormData.profileId = user?.profile.id as string;
-    return;
+    })) as CreateProviderRequest;
 
     setPageLoading(true);
     try {
@@ -65,22 +60,25 @@ export const ProductsManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await ProductAPI.updateProduct(entity.id, parsedFormData);
-          message = "Producto actualizado correctamente";
+          result = await ProvidersAPI.updateProvider(
+            entity.id,
+            providerFormData
+          );
+          message = "Proveedor actualizado correctamente";
         } else {
-          alert("No se puede actualizar el producto");
+          alert("No se puede actualizar el proveedor");
           console.error("Not valid entity", entity);
         }
       } else {
-        console.log("parsedFormData", parsedFormData);
-        result = await mutateAsync(parsedFormData);
-        message = "Producto creado correctamente";
+        result = await mutateAsync(providerFormData);
+        message = "Proveedor creado correctamente";
       }
 
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          navigate("/admin/products");
+          if (props.enableRedirect) navigate("/admin/providers");
+          if (props.onSuccess) props.onSuccess(result);
         }
       }
     } catch (error) {
@@ -99,7 +97,7 @@ export const ProductsManage: React.FC = () => {
           recuperar.
         </p>
       ),
-      onOk: () => navigate("/admin/products"),
+      onOk: () => navigate("/admin/providers"),
       okButtonProps: {
         className: "bg-red-500 border-none hover:bg-red-600",
       },
@@ -116,34 +114,11 @@ export const ProductsManage: React.FC = () => {
   return (
     <>
       <Content className="relative mx-4">
-        <ProductsManageBreadcrumb />
+        <ProvidersManageBreadcrumb />
 
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            {ability.can(
-              roles.Product.roles.comprasForm.action,
-              roles.Product.entity
-            ) && (
-              <>
-                <h2 className="text-2xl">Formulario de compras</h2>
-                <hr className="mt-2 mb-5" />
-                <ProductFormCompras ref={productFormRef} entity={entityData} />
-              </>
-            )}
-
-            {ability.can(
-              roles.Product.roles.produccionForm.action,
-              roles.Product.entity
-            ) && (
-              <>
-                <h2 className="text-2xl">Formulario de produccion</h2>
-                <hr className="mt-2 mb-5" />
-                <ProductFormProduccion
-                  ref={productFormRef}
-                  entity={entityData}
-                />
-              </>
-            )}
+            <ProviderForm ref={providerFormRef} entity={entityData} />
             <button
               type="button"
               onClick={() => submitForm(false)}

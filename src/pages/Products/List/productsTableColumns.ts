@@ -28,9 +28,9 @@ export const productListColumns: ColumnsType<Product> = [
     title: "Proveedor",
     dataIndex: "provider",
     key: "provider",
-    showSorterTooltip: false,
-    sorter: (a, b) =>
-      a.provider && b.provider ? alphabetically(a.provider, b.provider) : 0,
+    render(_value, record) {
+      return record.provider?.name;
+    },
   },
   {
     title: "Unidad",

@@ -10,6 +10,7 @@ import {
 } from "react";
 import { MeasurementAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
+import { ProvidersManage } from "../../../pages/Providers";
 import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
@@ -189,6 +190,8 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}
               queryKey={["providers"]}
+              addForm={<ProvidersManage enableRedirect={false} />}
+              addFormTitle="Agregar Proveedor"
             />
           </Col>
           <Col span={12}>

@@ -10,20 +10,22 @@ import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage
 import { ProductsHeader } from "../pages/Products/Common/ProductsHeader";
 import { ProductsList } from "../pages/Products/List/ProductsList";
 import { ProductsManage } from "../pages/Products/Manage/ProductsManage";
+import { ProfilesList, ProfilesManage } from "../pages/Profiles";
+import { ProfilesHeader } from "../pages/Profiles/Common/ProfilesHeader";
+import { ProvidersList, ProvidersManage } from "../pages/Providers";
+import { ProvidersHeader } from "../pages/Providers/Common/ProvidersHeader";
 import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchasesOrderHeader";
 import { PurchaseOrdersList } from "../pages/PurchaseOrders/List/PurchaseOrdersList";
 import { PurchaseOrdersManage } from "../pages/PurchaseOrders/Manage/PurchaseOrdersManage";
-import { ProfilesList, ProfilesManage } from "../pages/Profiles";
-import { ProfilesHeader } from "../pages/Profiles/Common/ProfilesHeader";
 import { UsersManage } from "../pages/Users";
-import { UsersList } from "../pages/Users/List/UsersList";
 import { UsersHeader } from "../pages/Users/Common/UsersHeader";
+import { UsersList } from "../pages/Users/List/UsersList";
+import { WorkOrdersList, WorkOrdersManage } from "../pages/WorkOrders";
+import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
+import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
+import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
-import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
-import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
-import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
-import { WorkOrdersList, WorkOrdersManage } from "../pages/WorkOrders";
 
 const router = createBrowserRouter([
   {
@@ -111,9 +113,27 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/admin/providers",
+    element: (
+      <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
+        <ProvidersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/providers/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
+        <ProvidersManage />
+      </DefaultLayout>
+    ),
+  },
+  {
     path: "/admin/purchase-orders",
     element: (
-      <DefaultLayout navContent={<PurchaseOrdersHeader />} headerTitle="Productos">
+      <DefaultLayout
+        navContent={<PurchaseOrdersHeader />}
+        headerTitle="Productos">
         <PurchaseOrdersList />
       </DefaultLayout>
     ),
@@ -121,7 +141,9 @@ const router = createBrowserRouter([
   {
     path: "/admin/purchase-orders/manage/:id?",
     element: (
-      <DefaultLayout navContent={<PurchaseOrdersHeader />} headerTitle="Productos">
+      <DefaultLayout
+        navContent={<PurchaseOrdersHeader />}
+        headerTitle="Productos">
         <PurchaseOrdersManage />
       </DefaultLayout>
     ),
@@ -129,7 +151,9 @@ const router = createBrowserRouter([
   {
     path: "/admin/work-requests",
     element: (
-      <DefaultLayout navContent={<WorkRequestsHeader />} headerTitle="Productos">
+      <DefaultLayout
+        navContent={<WorkRequestsHeader />}
+        headerTitle="Productos">
         <WorkRequestsList />
       </DefaultLayout>
     ),
@@ -137,7 +161,9 @@ const router = createBrowserRouter([
   {
     path: "/admin/work-requests/manage/:id?",
     element: (
-      <DefaultLayout navContent={<WorkRequestsHeader />} headerTitle="Productos">
+      <DefaultLayout
+        navContent={<WorkRequestsHeader />}
+        headerTitle="Productos">
         <WorkRequestsManage />
       </DefaultLayout>
     ),

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { ProfileAPI } from "../../../api";
 import { AdminDataTable } from "../../../components/Common/AdminDataTable";
 import { AppLoader } from "../../../components/Common/AppLoader";
+import { useAbilities } from "../../../hooks/roles/useAbilities";
+import useAuth from "../../../hooks/useAuth";
 import { ProfileListBreadcrumb } from "../Common/Breadcrums";
 import ProfilesFilters from "./ProfilesFilters";
 import { profileListColumns } from "./profilesTableColumn";
@@ -14,6 +16,8 @@ export const ProfilesList: React.FC = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
+  const { user } = useAuth();
+  const ability = useAbilities(user?.profile.roles || []);
 
   const fetchData = (params: object) => ProfileAPI.getProfiles(params);
 

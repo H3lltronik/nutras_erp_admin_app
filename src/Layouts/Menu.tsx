@@ -9,6 +9,9 @@ import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { roles } from "../components/Forms/Profiles/roles";
+import { useAbilities } from "../hooks/roles/useAbilities";
+import useAuth from "../hooks/useAuth";
 
 type MenuItem = {
   key: React.Key;
@@ -16,13 +19,15 @@ type MenuItem = {
   label: React.ReactNode;
   path?: string;
   children?: MenuItem[];
+  ability?: string;
 } & Omit<Required<MenuProps>["items"][number], "children">;
 
 function getItem(
   label: React.ReactNode,
   path?: string | null,
   icon?: React.ReactNode,
-  children?: MenuItem[]
+  children?: MenuItem[],
+  ability?: string // Add this line
 ): MenuItem {
   return {
     key: path || label?.toString(),
@@ -30,35 +35,109 @@ function getItem(
     children,
     label,
     path,
+    ability,
   } as MenuItem;
 }
 
 const items: MenuItem[] = [
   getItem("Almacén", "2", null, [
-    getItem("Inventario", "/admin/inventory", <CodeSandboxOutlined />),
+    getItem(
+      "Inventario",
+      "/admin/inventory",
+      <CodeSandboxOutlined />,
+      [],
+      roles.Inventory.roles.read.role
+    ),
     // getItem(
     //   "Unidades de medida",
     //   "/admin/measurement-types",
     //   <ScissorOutlined />
     // ),
-    getItem("Productos", "/admin/products", <BarcodeOutlined />),
+    getItem(
+      "Productos",
+      "/admin/products",
+      <BarcodeOutlined />,
+      [],
+      roles.Product.roles.read.role
+    ),
   ]),
   getItem("Administración", "1", null, [
-    getItem("Usuarios", "/admin/users", <PieChartOutlined />, []),
-    getItem("Perfiles", "/admin/profiles", <ProfileOutlined />),
-    getItem("Notificaciones", "/admin/notifications", <ProfileOutlined />),
+    getItem(
+      "Usuarios",
+      "/admin/users",
+      <PieChartOutlined />,
+      [],
+      roles.User.roles.read.role
+    ),
+    getItem(
+      "Perfiles",
+      "/admin/profiles",
+      <ProfileOutlined />,
+      [],
+      roles.Profile.roles.read.role
+    ),
+    getItem(
+      "Notificaciones",
+      "/admin/notifications",
+      <ProfileOutlined />,
+      [],
+      roles.Notification.roles.read.role
+    ),
   ]),
   getItem("Compras", "3", null, [
-    getItem("Ordenes de compra", "/admin/purchase-orders", <OrderedListOutlined />, []),
+    getItem(
+      "Ordenes de compra",
+      "/admin/purchase-orders",
+      <OrderedListOutlined />,
+      [],
+      roles.PurchaseOrders.roles.read.role
+    ),
+    getItem(
+      "Proveedores",
+      "/admin/providers",
+      <OrderedListOutlined />,
+      [],
+      roles.Provider.roles.read.role
+    ),
   ]),
   getItem("Producción", "4", null, [
-    getItem("Solicitudes de trabajo", "/admin/work-requests", <OrderedListOutlined />, []),
-    getItem("Ordenes de trabajo", "/admin/work-orders", <OrderedListOutlined />, []),
-    getItem("Requisición de compras", "/admin/purchase-order", <PieChartOutlined />, []),
-    getItem("Etiquetación", "/admin/labelation", <PieChartOutlined />, []),
+    getItem(
+      "Solicitudes de trabajo",
+      "/admin/work-requests",
+      <OrderedListOutlined />,
+      [],
+      roles.WorkRequests.roles.read.role
+    ),
+    getItem(
+      "Ordenes de trabajo",
+      "/admin/work-orders",
+      <OrderedListOutlined />,
+      [],
+      roles.WorkOrders.roles.read.role
+    ),
+    getItem(
+      "Requisición de compras",
+      "/admin/purchase-order",
+      <PieChartOutlined />,
+      [],
+      roles.PurchaseRequisition.roles.read.role
+    ),
+    getItem(
+      "Etiquetación",
+      "/admin/labelation",
+      <PieChartOutlined />,
+      [],
+      roles.Tagging.roles.read.role
+    ),
   ]),
   getItem("Calidad", "5", null, [
-    getItem("Calidad", "/admin/quality", <PieChartOutlined />, []),
+    getItem(
+      "Calidad",
+      "/admin/quality",
+      <PieChartOutlined />,
+      [],
+      roles.Quality.roles.read.role
+    ),
   ]),
   // Uncomment and modify as needed
   // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [
@@ -76,6 +155,8 @@ const pathMatches = (path: string, pattern: string) => {
 export const AdminMenu: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+  const ability = useAbilities(user?.profile.roles || []);
 
   const handleClick = (path: string) => {
     if (path) {
@@ -118,17 +199,47 @@ export const AdminMenu: React.FC = () => {
       defaultOpenKeys={getOpenKeys() as string[]}
       mode="inline">
       {items.map((item) => {
+        // return (
+        //   <div>
+        //     {item.label} - {item.ability}:{" "}
+        //     {ability.can(
+        //       item.ability?.split(":")[0],
+        //       item.ability?.split(":")[1]
+        //     )
+        //       ? "true"
+        //       : "false"}
+        //   </div>
+        // );
+
+        // if (
+        //   item.ability &&
+        //   !ability.can(item.ability.split(":")[0], item.ability.split(":")[1])
+        // ) {
+        //   return null;
+        // }
         if (item.children) {
           return (
             <Menu.SubMenu key={item.key} title={item.label} icon={item.icon}>
-              {item.children.map((child) => (
-                <Menu.Item
-                  key={child.key}
-                  icon={child.icon}
-                  onClick={() => handleClick(child.path || "")}>
-                  {child.label}
-                </Menu.Item>
-              ))}
+              {item.children.map((child) => {
+                if (
+                  child.ability &&
+                  !ability.can(
+                    child.ability.split(":")[1],
+                    child.ability.split(":")[0]
+                  )
+                ) {
+                  return null;
+                }
+
+                return (
+                  <Menu.Item
+                    key={child.key}
+                    icon={child.icon}
+                    onClick={() => handleClick(child.path || "")}>
+                    {child.label}
+                  </Menu.Item>
+                );
+              })}
             </Menu.SubMenu>
           );
         } else {

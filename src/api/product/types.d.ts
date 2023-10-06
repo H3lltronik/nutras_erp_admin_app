@@ -13,6 +13,7 @@ interface Product {
   unitId: string;
   isKosher?: boolean;
   unit: Measurement;
+  provider: Provider;
   kosherDetails?: KosherDetails;
   purchaseData?: PurchaseData;
   productionData?: ProductionData;
