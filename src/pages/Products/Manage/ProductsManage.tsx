@@ -5,6 +5,7 @@ import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
+import ProductFormAdmin from "../../../components/Forms/Product/ProductFormAdmin";
 import ProductFormCompras, {
   ProductFormHandle,
 } from "../../../components/Forms/Product/ProductFormCompras";
@@ -123,27 +124,41 @@ export const ProductsManage: React.FC = () => {
             {ability.can(
               roles.Product.roles.comprasForm.action,
               roles.Product.entity
-            ) && (
+            ) &&
+            ability.can(
+              roles.Product.roles.produccionForm.action,
+              roles.Product.entity
+            ) ? (
+              <>
+                <h2 className="text-2xl">Formulario de administracion</h2>
+                <hr className="mt-2 mb-5" />
+                <ProductFormAdmin ref={productFormRef} entity={entityData} />
+              </>
+            ) : ability.can(
+                roles.Product.roles.comprasForm.action,
+                roles.Product.entity
+              ) ? (
               <>
                 <h2 className="text-2xl">Formulario de compras</h2>
                 <hr className="mt-2 mb-5" />
                 <ProductFormCompras ref={productFormRef} entity={entityData} />
               </>
+            ) : (
+              ability.can(
+                roles.Product.roles.produccionForm.action,
+                roles.Product.entity
+              ) && (
+                <>
+                  <h2 className="text-2xl">Formulario de produccion</h2>
+                  <hr className="mt-2 mb-5" />
+                  <ProductFormProduccion
+                    ref={productFormRef}
+                    entity={entityData}
+                  />
+                </>
+              )
             )}
 
-            {ability.can(
-              roles.Product.roles.produccionForm.action,
-              roles.Product.entity
-            ) && (
-              <>
-                <h2 className="text-2xl">Formulario de produccion</h2>
-                <hr className="mt-2 mb-5" />
-                <ProductFormProduccion
-                  ref={productFormRef}
-                  entity={entityData}
-                />
-              </>
-            )}
             <button
               type="button"
               onClick={() => submitForm(false)}

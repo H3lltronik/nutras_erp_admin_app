@@ -54,7 +54,7 @@ const items: MenuItem[] = [
     //   <ScissorOutlined />
     // ),
     getItem(
-      "Productos",
+      "Catálogo de productos",
       "/admin/products",
       <BarcodeOutlined />,
       [],
@@ -199,24 +199,6 @@ export const AdminMenu: React.FC = () => {
       defaultOpenKeys={getOpenKeys() as string[]}
       mode="inline">
       {items.map((item) => {
-        // return (
-        //   <div>
-        //     {item.label} - {item.ability}:{" "}
-        //     {ability.can(
-        //       item.ability?.split(":")[0],
-        //       item.ability?.split(":")[1]
-        //     )
-        //       ? "true"
-        //       : "false"}
-        //   </div>
-        // );
-
-        // if (
-        //   item.ability &&
-        //   !ability.can(item.ability.split(":")[0], item.ability.split(":")[1])
-        // ) {
-        //   return null;
-        // }
         if (item.children) {
           return (
             <Menu.SubMenu key={item.key} title={item.label} icon={item.icon}>
