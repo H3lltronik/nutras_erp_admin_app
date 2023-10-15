@@ -2,6 +2,7 @@ import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ProductAPI } from "../../../api";
+import { GetProductsParams } from "../../../api/product/product.api";
 import { AdminDataTable } from "../../../components/Common/AdminDataTable";
 import { ProductsListBreadcrumb } from "../Common/Breadcrums";
 import ProductFilters from "./ProductFilters";
@@ -10,18 +11,26 @@ import { useProductsListPageStore } from "./products_list_page.store";
 
 const { Content } = Layout;
 
-export const ProductsList: React.FC = () => {
+type ProductsListProps = {
+  defaultFilters?: GetProductsParams;
+  newProductPath?: string;
+};
+export const ProductsList: React.FC<ProductsListProps> = (props) => {
   const navigate = useNavigate();
   const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
     useProductsListPageStore();
 
-  const fetchData = (params: object) => ProductAPI.getProducts(params);
+  const fetchData = (params: object) =>
+    ProductAPI.getProducts({
+      ...params,
+      ...props.defaultFilters,
+    } as GetProductsParams);
 
   const doDelete = async (id: string | number) =>
     ProductAPI.deleteProduct(id as string);
 
   const doEdit = async (id: string | number) =>
-    navigate(`/admin/products/manage/${id}`);
+    navigate(`${props.newProductPath ?? "/admin/products/manage"}/${id}`);
 
   return (
     <>
@@ -30,7 +39,9 @@ export const ProductsList: React.FC = () => {
           <ProductsListBreadcrumb />
 
           <Button
-            onClick={() => navigate("/admin/products/manage")}
+            onClick={() =>
+              navigate(props.newProductPath ?? "/admin/products/manage")
+            }
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
             Nuevo producto

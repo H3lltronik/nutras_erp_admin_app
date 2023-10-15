@@ -48,11 +48,6 @@ const items: MenuItem[] = [
       [],
       roles.Inventory.roles.read.role
     ),
-    // getItem(
-    //   "Unidades de medida",
-    //   "/admin/measurement-types",
-    //   <ScissorOutlined />
-    // ),
     getItem(
       "Catálogo de productos",
       "/admin/products",
@@ -139,16 +134,42 @@ const items: MenuItem[] = [
       roles.Quality.roles.read.role
     ),
   ]),
-  // Uncomment and modify as needed
-  // getItem("Almacen", "20", "/admin/almacen", <DesktopOutlined />, [
-  //   getItem("Inventario", "5", "/admin/almacen/inventario"),
-  //   getItem("Movimientos", "6", "/admin/almacen/movimientos"),
-  // ]),
+  getItem("Catalogo de productos", "6", null, [
+    getItem(
+      "Catalogo de insumos",
+      "/admin/products/insumos",
+      <CodeSandboxOutlined />,
+      [],
+      roles.Inventory.roles.read.role
+    ),
+
+    getItem(
+      "Catálogo PP",
+      "/admin/products/pp",
+      <BarcodeOutlined />,
+      [],
+      roles.Product.roles.read.role
+    ),
+    getItem(
+      "Catálogo PT",
+      "/admin/products/pt",
+      <BarcodeOutlined />,
+      [],
+      roles.Product.roles.read.role
+    ),
+    getItem(
+      "Agregar producto",
+      "/admin/products/manage",
+      <BarcodeOutlined />,
+      [],
+      roles.Product.roles.read.role
+    ),
+  ]),
 ];
 
 // Utility function to check if the current path matches the regex pattern
 const pathMatches = (path: string, pattern: string) => {
-  const regex = new RegExp(`^${pattern}`);
+  const regex = new RegExp(`^${pattern}$`);
   return regex.test(path);
 };
 

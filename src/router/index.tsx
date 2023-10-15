@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { DefaultLayout } from "../Layouts/DefaultLayout";
+import { jsonToUrlWithGetKey } from "../lib/entity.utils";
 import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
@@ -80,6 +81,9 @@ const router = createBrowserRouter([
       </DefaultLayout>
     ),
   },
+  // ********************************************************
+  // ***************** PRODUCTOS ****************************
+  // ********************************************************
   {
     path: "/admin/products",
     element: (
@@ -93,6 +97,83 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/pp",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <ProductsList
+          newProductPath={jsonToUrlWithGetKey(
+            "/admin/products/manage",
+            {
+              productTypeId: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID,
+            },
+            "defaultValues"
+          )}
+          defaultFilters={{
+            type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID,
+          }}
+        />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/pt",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <ProductsList
+          newProductPath={jsonToUrlWithGetKey(
+            "/admin/products/manage",
+            {
+              productTypeId: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
+            },
+            "defaultValues"
+          )}
+          defaultFilters={{
+            type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
+          }}
+        />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/insumos",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <ProductsList
+          defaultFilters={{
+            department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
+          }}
+        />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/insumos/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <ProductsManage />
+      </DefaultLayout>
+    ),
+  },
+  // ********************************************************
+  // ***************** PROVEEDORES **************************
+  // ********************************************************
+  {
+    path: "/admin/providers",
+    element: (
+      <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
+        <ProvidersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/providers/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
+        <ProvidersManage />
       </DefaultLayout>
     ),
   },

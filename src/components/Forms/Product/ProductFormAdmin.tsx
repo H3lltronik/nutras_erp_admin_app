@@ -3,10 +3,13 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { MeasurementAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
+import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { ProvidersManage } from "../../../pages/Providers";
 import { GenericSelect } from "../Common/GenericSelect";
@@ -40,6 +43,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
     const [isDraft, setIsDraft] = useState<boolean>(false);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
+    const location = useLocation();
 
     useImperativeHandle(
       ref,
@@ -55,6 +59,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
           return {
             ...form.getFieldsValue(),
             ...kosherDetails,
+            departmentId: "50aa4dec-e76b-4e14-950e-c327d901975f",
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -62,9 +67,18 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
       })
     );
 
+    const defaultValuesFromUrl = useMemo(() => {
+      return urlWithGetKeyToJson(
+        location.search,
+        "defaultValues"
+      ) as Product | null;
+    }, [location]);
+
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
-    }, [form, _props.entity]);
+
+      if (defaultValuesFromUrl) form.setFieldsValue(defaultValuesFromUrl);
+    }, [form, _props.entity, defaultValuesFromUrl]);
 
     return (
       <Form
@@ -86,6 +100,8 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
               placeholder="Selecciona un tipo de producto"
               optionLabel="name"
               name="productTypeId"
+              defaultValue={defaultValuesFromUrl?.productTypeId}
+              fixedDefaultValue={!!defaultValuesFromUrl?.productTypeId}
               optionKey={"id"}
               rules={[
                 {
@@ -115,7 +131,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
           <Col span={12}>
             <Form.Item<Product>
               label="Codigo"
-              name="commonName"
+              name="code"
               rules={[
                 {
                   required: true && !isDraft,
@@ -148,7 +164,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
           <Col span={12}>
             <Form.Item<Product>
               label="Descripción del producto"
-              name="commonName"
+              name="description"
               rules={[
                 {
                   required: true && !isDraft,

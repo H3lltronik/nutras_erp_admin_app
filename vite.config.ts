@@ -1,15 +1,16 @@
-import react from '@vitejs/plugin-react-swc';
-import path from 'path';
-import { defineConfig } from 'vite';
+import { envDtsGen } from "@liuli-util/vite-plugin-env-dts-gen";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  publicDir: 'assets',
+  plugins: [react(), envDtsGen() as Plugin],
+  publicDir: "assets",
   resolve: {
     alias: {
-        '@': path.resolve(__dirname, './src'),
-        '@api': path.resolve(__dirname, './src/api'),
-      }
+      "@": path.resolve(__dirname, "./src"),
+      "@api": path.resolve(__dirname, "./src/api"),
+    },
   },
-})
+});

@@ -57,6 +57,8 @@ export const ProductsManage: React.FC = () => {
     })) as ProductFormResult;
     const parsedFormData = formatProductForm(productFormData);
     parsedFormData.profileId = user?.profile.id as string;
+
+    console.log("parsedFormData", parsedFormData);
     return;
 
     setPageLoading(true);

@@ -2,7 +2,7 @@
 import { QueryKey, useQuery } from "@tanstack/react-query";
 import { Select as AntSelect, Button, Form, Modal } from "antd";
 import { SelectProps as AntSelectProps } from "antd/lib/select";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 type Data<T> = {
   data: T[];
@@ -20,6 +20,8 @@ interface GenericSelectProps<T> extends AntSelectProps<string> {
   rules?: object[];
   addForm?: React.ReactNode;
   addFormTitle?: string;
+  defaultValue?: string;
+  fixedDefaultValue?: boolean;
 }
 
 export const GenericSelect = <T,>({
@@ -33,6 +35,8 @@ export const GenericSelect = <T,>({
   queryKey,
   addForm,
   addFormTitle,
+  defaultValue,
+  fixedDefaultValue,
   ...restProps
 }: GenericSelectProps<T>) => {
   const fetch = useCallback(async () => {
@@ -50,15 +54,13 @@ export const GenericSelect = <T,>({
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log("data GENERIC", data);
-  }, [data]);
-
   return (
     <Form.Item label={label} name={name} rules={rules}>
       <div className="flex gap-1">
         <AntSelect
           showSearch
+          defaultValue={defaultValue}
+          disabled={fixedDefaultValue && defaultValue ? true : false}
           placeholder={`${placeholder}`}
           optionFilterProp="children"
           filterOption={(input, option) =>

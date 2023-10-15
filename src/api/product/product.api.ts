@@ -2,6 +2,16 @@ import { statusParser } from "../../lib/entity.utils";
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
 
+export type GetProductsParams = QueryParams & {
+  nameSearch?: string;
+  codeSearch?: string;
+  providerSearch?: string;
+  type?: string;
+  department?: string;
+  draftMode?: boolean;
+  published?: boolean;
+};
+
 class BaseProductAPI extends BaseAPI {
   async createProduct<ProductToPost>(
     data: ProductToPost
@@ -18,8 +28,9 @@ class BaseProductAPI extends BaseAPI {
   }
 
   async getProducts(
-    params?: QueryParams
+    params?: GetProductsParams
   ): Promise<GetProductsResponseWithStatus | APIError> {
+    console.log("[getProducts] params: ", params);
     try {
       const products = await this.get<GetProductsResponse>("", params);
       const productsWithStatus = products.data.map((product) =>
