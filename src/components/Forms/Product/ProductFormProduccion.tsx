@@ -80,21 +80,28 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => ProductTypesAPI.getProductTypes()}
+            <Form.Item<Product>
               label="Tipo de producto"
-              placeholder="Selecciona un tipo de producto"
-              optionLabel="name"
               name="productTypeId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
-                  message: "Este campo es requerido",
+                  message: "Este campo es obligatorio",
                 },
-              ]}
-              queryKey={["productTypes"]}
-            />
+              ]}>
+              <GenericSelect
+                fetcher={() =>
+                  ProductTypesAPI.getProductTypes({
+                    department: import.meta.env
+                      .VITE_DBVAL_DEPARTMENT_PRODUCTION_ID,
+                  })
+                }
+                placeholder="Selecciona un tipo de producto"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["productTypes"]}
+              />
+            </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<Product>

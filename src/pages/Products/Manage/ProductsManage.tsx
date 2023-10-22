@@ -5,7 +5,6 @@ import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
-import ProductFormAdmin from "../../../components/Forms/Product/ProductFormAdmin";
 import ProductFormCompras, {
   ProductFormHandle,
 } from "../../../components/Forms/Product/ProductFormCompras";
@@ -19,12 +18,18 @@ import {
   ProductFormResult,
   ProductToPost,
   formatProductForm,
+  unformatProductForm,
 } from "../lib/formatProductForm";
 
 const { confirm } = Modal;
 const { Content } = Layout;
 
-export const ProductsManage: React.FC = () => {
+type ProductsManageProps = {
+  formType: "compras" | "produccion" | "admin";
+  listPath: string;
+};
+
+export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
   const productFormRef = useRef<ProductFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
@@ -57,9 +62,7 @@ export const ProductsManage: React.FC = () => {
     })) as ProductFormResult;
     const parsedFormData = formatProductForm(productFormData);
     parsedFormData.profileId = user?.profile.id as string;
-
     console.log("parsedFormData", parsedFormData);
-    return;
 
     setPageLoading(true);
     try {
@@ -83,7 +86,7 @@ export const ProductsManage: React.FC = () => {
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          navigate("/admin/products");
+          navigate(props.listPath);
         }
       }
     } catch (error) {
@@ -102,7 +105,7 @@ export const ProductsManage: React.FC = () => {
           recuperar.
         </p>
       ),
-      onOk: () => navigate("/admin/products"),
+      onOk: () => navigate(props.listPath),
       okButtonProps: {
         className: "bg-red-500 border-none hover:bg-red-600",
       },
@@ -111,7 +114,7 @@ export const ProductsManage: React.FC = () => {
 
   const entityData = useMemo(() => {
     if (!entity) return null;
-    if ("id" in entity) return entity;
+    if ("id" in entity) return unformatProductForm(entity);
 
     return null;
   }, [entity]);
@@ -120,45 +123,43 @@ export const ProductsManage: React.FC = () => {
     <>
       <Content className="relative mx-4">
         <ProductsManageBreadcrumb />
-
+        <div className="flex">
+          <div className="">
+            entity
+            <pre>{JSON.stringify(entity, null, 2)}</pre>
+          </div>
+          <div className="">
+            entityData
+            <pre>{JSON.stringify(entityData, null, 2)}</pre>
+          </div>
+        </div>
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            {ability.can(
+            {props.formType === "compras" &&
+            ability.can(
               roles.Product.roles.comprasForm.action,
               roles.Product.entity
-            ) &&
-            ability.can(
-              roles.Product.roles.produccionForm.action,
-              roles.Product.entity
             ) ? (
-              <>
-                <h2 className="text-2xl">Formulario de administracion</h2>
-                <hr className="mt-2 mb-5" />
-                <ProductFormAdmin ref={productFormRef} entity={entityData} />
-              </>
-            ) : ability.can(
-                roles.Product.roles.comprasForm.action,
-                roles.Product.entity
-              ) ? (
               <>
                 <h2 className="text-2xl">Formulario de compras</h2>
                 <hr className="mt-2 mb-5" />
                 <ProductFormCompras ref={productFormRef} entity={entityData} />
               </>
-            ) : (
+            ) : props.formType === "produccion" &&
               ability.can(
                 roles.Product.roles.produccionForm.action,
                 roles.Product.entity
-              ) && (
-                <>
-                  <h2 className="text-2xl">Formulario de produccion</h2>
-                  <hr className="mt-2 mb-5" />
-                  <ProductFormProduccion
-                    ref={productFormRef}
-                    entity={entityData}
-                  />
-                </>
-              )
+              ) ? (
+              <>
+                <h2 className="text-2xl">Formulario de produccion</h2>
+                <hr className="mt-2 mb-5" />
+                <ProductFormProduccion
+                  ref={productFormRef}
+                  entity={entityData}
+                />
+              </>
+            ) : (
+              <>Not valid</>
             )}
 
             <button

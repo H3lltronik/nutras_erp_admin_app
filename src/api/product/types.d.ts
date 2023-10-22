@@ -45,8 +45,8 @@ type GetProductsResponseWithStatus = {
 };
 
 interface KosherDetails {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   deletedAt: string;
   id: string;
   agency: string;
@@ -54,24 +54,22 @@ interface KosherDetails {
   nameOnCertificate: string;
   kidOrUkd: string;
   certificatePageNumber: number;
-  certificateValidity: string;
+  certificateValidity: Date;
 }
 
 interface PurchaseData {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   deletedAt: string;
   id: string;
   partidaId: number;
-  presentation: string;
-  quantityPerUnit: string;
   allergen: string;
   productId: string;
 }
 
 interface ProductionData {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   deletedAt: string;
   id: string;
   partidaId: number;
@@ -79,7 +77,6 @@ interface ProductionData {
   description: string;
   packaging: string;
   mold: string;
-  presentation: string;
   ptPresentation: string;
 }
 
@@ -96,8 +93,7 @@ interface ProductType {
   name: string;
 }
 
-type GetProductTypesResponse = ProductType[];
-
-type GetProductTypesResponseData = {
-  data: GetProductTypesResponse;
+type GetProductTypesResponse = {
+  data: ProductType[];
+  pagination: Pagination;
 };

@@ -40,6 +40,30 @@ function getItem(
 }
 
 const items: MenuItem[] = [
+  getItem("Catalogo de productos", "6", null, [
+    getItem(
+      "Catalogo de insumos",
+      "/admin/products/insumos",
+      <CodeSandboxOutlined />,
+      [],
+      roles.Inventory.roles.read.role
+    ),
+
+    getItem(
+      "Catálogo PP",
+      "/admin/products/pp",
+      <BarcodeOutlined />,
+      [],
+      roles.Product.roles.read.role
+    ),
+    getItem(
+      "Catálogo PT",
+      "/admin/products/pt",
+      <BarcodeOutlined />,
+      [],
+      roles.Product.roles.read.role
+    ),
+  ]),
   getItem("Almacén", "2", null, [
     getItem(
       "Inventario",
@@ -47,13 +71,6 @@ const items: MenuItem[] = [
       <CodeSandboxOutlined />,
       [],
       roles.Inventory.roles.read.role
-    ),
-    getItem(
-      "Catálogo de productos",
-      "/admin/products",
-      <BarcodeOutlined />,
-      [],
-      roles.Product.roles.read.role
     ),
   ]),
   getItem("Administración", "1", null, [
@@ -132,37 +149,6 @@ const items: MenuItem[] = [
       <PieChartOutlined />,
       [],
       roles.Quality.roles.read.role
-    ),
-  ]),
-  getItem("Catalogo de productos", "6", null, [
-    getItem(
-      "Catalogo de insumos",
-      "/admin/products/insumos",
-      <CodeSandboxOutlined />,
-      [],
-      roles.Inventory.roles.read.role
-    ),
-
-    getItem(
-      "Catálogo PP",
-      "/admin/products/pp",
-      <BarcodeOutlined />,
-      [],
-      roles.Product.roles.read.role
-    ),
-    getItem(
-      "Catálogo PT",
-      "/admin/products/pt",
-      <BarcodeOutlined />,
-      [],
-      roles.Product.roles.read.role
-    ),
-    getItem(
-      "Agregar producto",
-      "/admin/products/manage",
-      <BarcodeOutlined />,
-      [],
-      roles.Product.roles.read.role
     ),
   ]),
 ];

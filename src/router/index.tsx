@@ -93,10 +93,18 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/products/manage/:id?",
+    path: "/admin/products/manage/pp/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <ProductsManage />
+        <ProductsManage formType="produccion" listPath="/admin/products/pp" />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/manage/pt/:id?",
+    element: (
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+        <ProductsManage formType="produccion" listPath="/admin/products/pt" />
       </DefaultLayout>
     ),
   },
@@ -105,13 +113,15 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsList
-          newProductPath={jsonToUrlWithGetKey(
-            "/admin/products/manage",
-            {
-              productTypeId: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID,
-            },
-            "defaultValues"
-          )}
+          buildNewProductPath={({ id }) =>
+            jsonToUrlWithGetKey(
+              `/admin/products/manage/pp/${id}`,
+              {
+                productTypeId: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID,
+              },
+              "defaultValues"
+            )
+          }
           defaultFilters={{
             type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID,
           }}
@@ -124,13 +134,15 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsList
-          newProductPath={jsonToUrlWithGetKey(
-            "/admin/products/manage",
-            {
-              productTypeId: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
-            },
-            "defaultValues"
-          )}
+          buildNewProductPath={({ id }) =>
+            jsonToUrlWithGetKey(
+              `/admin/products/manage/pt/${id}`,
+              {
+                productTypeId: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
+              },
+              "defaultValues"
+            )
+          }
           defaultFilters={{
             type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
           }}
@@ -141,8 +153,13 @@ const router = createBrowserRouter([
   {
     path: "/admin/products/insumos",
     element: (
-      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+      <DefaultLayout
+        navContent={<ProductsHeader />}
+        headerTitle="Productos (INSUMOS)">
         <ProductsList
+          buildNewProductPath={({ id }) =>
+            "/admin/products/insumos/manage" + id
+          }
           defaultFilters={{
             department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
           }}
@@ -154,7 +171,7 @@ const router = createBrowserRouter([
     path: "/admin/products/insumos/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <ProductsManage />
+        <ProductsManage listPath="/admin/products/insumos" formType="compras" />
       </DefaultLayout>
     ),
   },

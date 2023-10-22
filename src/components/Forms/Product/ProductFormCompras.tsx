@@ -94,21 +94,28 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => ProductTypesAPI.getProductTypes()}
+            <Form.Item<Product>
               label="Tipo de producto"
-              placeholder="Selecciona un tipo de producto"
-              optionLabel="name"
               name="productTypeId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
-                  message: "Este campo es requerido",
+                  message: "Este campo es obligatorio",
                 },
-              ]}
-              queryKey={["productTypes"]}
-            />
+              ]}>
+              <GenericSelect
+                fetcher={() =>
+                  ProductTypesAPI.getProductTypes({
+                    department: import.meta.env
+                      .VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
+                  })
+                }
+                placeholder="Selecciona un tipo de producto"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["productTypes"]}
+              />
+            </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<Product>
@@ -140,21 +147,23 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => MeasurementAPI.getMeasurements()}
+            <Form.Item<Product>
               label="Unidad de medida"
-              placeholder="Selecciona una unidad de medida"
-              optionLabel="name"
               name="unitId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
-                  message: "Este campo es requerido",
+                  message: "Este campo es obligatorio",
                 },
-              ]}
-              queryKey={["measurements"]}
-            />
+              ]}>
+              <GenericSelect
+                fetcher={() => MeasurementAPI.getMeasurements()}
+                placeholder="Selecciona una unidad de medida"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["measurements"]}
+              />
+            </Form.Item>
           </Col>
         </Row>
 
@@ -177,23 +186,25 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => ProvidersAPI.getProviders()}
+            <Form.Item<Product>
               label="Proveedor"
-              placeholder="Selecciona un proveedor"
-              optionLabel="name"
               name="providerId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
-                  message: "Este campo es requerido",
+                  message: "Este campo es obligatorio",
                 },
-              ]}
-              queryKey={["providers"]}
-              addForm={<ProvidersManage enableRedirect={false} />}
-              addFormTitle="Agregar Proveedor"
-            />
+              ]}>
+              <GenericSelect
+                fetcher={() => ProvidersAPI.getProviders()}
+                placeholder="Selecciona un proveedor"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["providers"]}
+                addForm={<ProvidersManage enableRedirect={false} />}
+                addFormTitle="Agregar Proveedor"
+              />
+            </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<Product>

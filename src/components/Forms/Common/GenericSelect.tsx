@@ -1,6 +1,6 @@
 // GenericSelect.tsx
 import { QueryKey, useQuery } from "@tanstack/react-query";
-import { Select as AntSelect, Button, Form, Modal } from "antd";
+import { Select as AntSelect, Button, Modal } from "antd";
 import { SelectProps as AntSelectProps } from "antd/lib/select";
 import React, { useCallback, useRef, useState } from "react";
 
@@ -10,14 +10,11 @@ type Data<T> = {
 type ResponseWithData<T> = Data<T> | APIError;
 
 interface GenericSelectProps<T> extends AntSelectProps<string> {
-  label: string;
   placeholder?: string;
-  name: string;
   fetcher: () => Promise<ResponseWithData<T>>;
   queryKey: QueryKey;
   optionKey: keyof T;
   optionLabel: keyof T;
-  rules?: object[];
   addForm?: React.ReactNode;
   addFormTitle?: string;
   defaultValue?: string;
@@ -25,13 +22,10 @@ interface GenericSelectProps<T> extends AntSelectProps<string> {
 }
 
 export const GenericSelect = <T,>({
-  label,
   placeholder,
-  name,
   fetcher,
   optionKey,
   optionLabel,
-  rules,
   queryKey,
   addForm,
   addFormTitle,
@@ -55,7 +49,7 @@ export const GenericSelect = <T,>({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
-    <Form.Item label={label} name={name} rules={rules}>
+    <>
       <div className="flex gap-1">
         <AntSelect
           showSearch
@@ -64,7 +58,7 @@ export const GenericSelect = <T,>({
           placeholder={`${placeholder}`}
           optionFilterProp="children"
           filterOption={(input, option) =>
-            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            option?.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
           allowClear
           loading={isLoading}
@@ -97,6 +91,6 @@ export const GenericSelect = <T,>({
           </>
         )}
       </div>
-    </Form.Item>
+    </>
   );
 };

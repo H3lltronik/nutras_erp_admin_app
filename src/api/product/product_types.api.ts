@@ -1,6 +1,10 @@
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
 
+export type GetProductTypesParams = QueryParams & {
+  department?: string;
+};
+
 class BaseProductTypesAPI extends BaseAPI {
   async createProduct<CreateProductRequest>(
     data: CreateProductRequest
@@ -17,16 +21,14 @@ class BaseProductTypesAPI extends BaseAPI {
   }
 
   async getProductTypes(
-    params?: QueryParams
-  ): Promise<GetProductTypesResponseData | APIError> {
+    params?: GetProductTypesParams
+  ): Promise<GetProductTypesResponse | APIError> {
     try {
       const result = await this.instance.get<GetProductTypesResponse>("", {
         params,
       });
 
-      return {
-        data: result.data,
-      };
+      return result.data;
     } catch (error) {
       return handleAPIError(error);
     }

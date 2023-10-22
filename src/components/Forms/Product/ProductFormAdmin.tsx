@@ -10,7 +10,12 @@ import {
 import { useLocation } from "react-router-dom";
 import { MeasurementAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
 import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
-import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
+import {
+  ProductFormResult,
+  ProductToPost,
+  ProductionDataToPost,
+  PurchaseDataToPost,
+} from "../../../pages/Products/lib/formatProductForm";
 import { ProvidersManage } from "../../../pages/Providers";
 import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
@@ -43,6 +48,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
     const [isDraft, setIsDraft] = useState<boolean>(false);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
+    const isAllergen = Form.useWatch("allergen", form);
     const location = useLocation();
 
     useImperativeHandle(
@@ -50,6 +56,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
       (): ProductFormHandle => ({
         getFormData: async (params) => {
           setIsDraft(!!params?.draftMode);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const valid = await form.validateFields();
 
           const kosherDetails = await productKosherFormRef.current?.getFormData(
@@ -88,32 +95,33 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off">
-        <Form.Item<Product> name="id" style={{ display: "none" }}>
+        <Form.Item<ProductToPost> name="id" style={{ display: "none" }}>
           <Input />
         </Form.Item>
-
         <Row gutter={16}>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => ProductTypesAPI.getProductTypes()}
+            <Form.Item
               label="Tipo de producto"
-              placeholder="Selecciona un tipo de producto"
-              optionLabel="name"
               name="productTypeId"
-              defaultValue={defaultValuesFromUrl?.productTypeId}
-              fixedDefaultValue={!!defaultValuesFromUrl?.productTypeId}
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es requerido",
                 },
-              ]}
-              queryKey={["productTypes"]}
-            />
+              ]}>
+              <GenericSelect
+                fetcher={() => ProductTypesAPI.getProductTypes()}
+                placeholder="Selecciona un tipo de producto"
+                optionLabel="name"
+                defaultValue={defaultValuesFromUrl?.productTypeId}
+                fixedDefaultValue={!!defaultValuesFromUrl?.productTypeId}
+                optionKey={"id"}
+                queryKey={["productTypes"]}
+              />
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductToPost>
               label="Nombre Común"
               name="commonName"
               rules={[
@@ -126,10 +134,9 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductToPost>
               label="Codigo"
               name="code"
               rules={[
@@ -142,27 +149,28 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => MeasurementAPI.getMeasurements()}
+            <Form.Item
               label="Unidad de medida"
-              placeholder="Selecciona una unidad de medida"
-              optionLabel="name"
               name="unitId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es requerido",
                 },
-              ]}
-              queryKey={["measurements"]}
-            />
+              ]}>
+              <GenericSelect
+                fetcher={() => MeasurementAPI.getMeasurements()}
+                placeholder="Selecciona una unidad de medida"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["measurements"]}
+              />
+            </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductionDataToPost>
               label="Descripción del producto"
               name="description"
               rules={[
@@ -175,7 +183,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductToPost>
               label="Presentacion"
               name="presentation"
               rules={[
@@ -188,10 +196,9 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductionDataToPost>
               label="Empaque"
               name="mold"
               rules={[
@@ -204,7 +211,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductToPost>
               label="Cantidad x unidad"
               name="quantityPerUnit"
               rules={[
@@ -217,10 +224,9 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductToPost>
               label="Presentación PT"
               name="presentation"
               rules={[
@@ -233,7 +239,7 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<Product>
+            <Form.Item<ProductToPost>
               label="Molde"
               name="quantityPerUnit"
               rules={[
@@ -246,45 +252,48 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => ProvidersAPI.getProviders()}
+            <Form.Item
               label="Proveedor"
-              placeholder="Selecciona un proveedor"
-              optionLabel="name"
               name="providerId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es requerido",
                 },
-              ]}
-              queryKey={["providers"]}
-              addForm={<ProvidersManage enableRedirect={false} />}
-              addFormTitle="Agregar Proveedor"
-            />
-          </Col>
-          <Col span={"auto"}>
-            <Form.Item<Product> label="Kosher" name="isKosher">
-              <Switch />
+              ]}>
+              <GenericSelect
+                fetcher={() => ProvidersAPI.getProviders()}
+                placeholder="Selecciona un proveedor"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["providers"]}
+                addForm={<ProvidersManage enableRedirect={false} />}
+                addFormTitle="Agregar Proveedor"
+              />
             </Form.Item>
           </Col>
           <Col span={"auto"}>
-            <Form.Item<Product> label="Alergeno" name="allergen">
-              <Switch />
+            <Form.Item<ProductToPost> label="Kosher" name="isKosher">
+              <Switch checked={isKosher} />
+            </Form.Item>
+          </Col>
+          <Col span={"auto"}>
+            <Form.Item<PurchaseDataToPost> label="Alergeno" name="allergen">
+              <Switch checked={isAllergen} />
             </Form.Item>
           </Col>
         </Row>
-
         {isKosher && (
           <Row
             gutter={16}
             className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
             <Col span={24}>
-              <ProductKosherForm ref={productKosherFormRef} />
+              <ProductKosherForm
+                entity={_props.entity?.kosherDetails}
+                ref={productKosherFormRef}
+              />
             </Col>
           </Row>
         )}

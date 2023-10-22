@@ -10,17 +10,20 @@ import { productListColumns } from "./productsTableColumns";
 import { useProductsListPageStore } from "./products_list_page.store";
 
 const { Content } = Layout;
+type PathProps = {
+  id: string;
+};
 
 type ProductsListProps = {
   defaultFilters?: GetProductsParams;
-  newProductPath?: string;
+  buildNewProductPath?: (params: PathProps) => string;
 };
 export const ProductsList: React.FC<ProductsListProps> = (props) => {
   const navigate = useNavigate();
   const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
     useProductsListPageStore();
 
-  const fetchData = (params: object) =>
+  const fetchData = (params: PathProps) =>
     ProductAPI.getProducts({
       ...params,
       ...props.defaultFilters,
@@ -29,8 +32,22 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
   const doDelete = async (id: string | number) =>
     ProductAPI.deleteProduct(id as string);
 
-  const doEdit = async (id: string | number) =>
-    navigate(`${props.newProductPath ?? "/admin/products/manage"}/${id}`);
+  const doEdit = async (id: string | number) => {
+    let url = `/admin/products/manage/${id}`;
+    if (props.buildNewProductPath) {
+      url = props.buildNewProductPath({ id: id + "" });
+    }
+    console.log("url", url);
+    navigate(url);
+  };
+
+  const handleNewProductClick = () => {
+    let url = "/admin/products/manage";
+    if (props.buildNewProductPath) {
+      url = props.buildNewProductPath({ id: "" });
+    }
+    navigate(url);
+  };
 
   return (
     <>
@@ -39,9 +56,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
           <ProductsListBreadcrumb />
 
           <Button
-            onClick={() =>
-              navigate(props.newProductPath ?? "/admin/products/manage")
-            }
+            onClick={handleNewProductClick}
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
             Nuevo producto
