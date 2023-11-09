@@ -18,13 +18,27 @@ export const providerListColumns: ColumnsType<Provider> = [
     showSorterTooltip: false,
   },
   {
-    title: "Descripcion",
-    dataIndex: "description",
-    key: "description",
+    title: "Servicio",
+    dataIndex: "service",
+    key: "service",
     sorter: (a, b) =>
-      a.description && b.description
-        ? alphabetically(a.description, b.description)
-        : 0,
+      a.service && b.service ? alphabetically(a.service, b.service) : 0,
+    showSorterTooltip: false,
+  },
+  {
+    title: "Telefono",
+    dataIndex: "phone",
+    key: "phone",
+    sorter: (a, b) =>
+      a.phone && b.phone ? alphabetically(a.phone, b.phone) : 0,
+    showSorterTooltip: false,
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    sorter: (a, b) =>
+      a.email && b.email ? alphabetically(a.email, b.email) : 0,
     showSorterTooltip: false,
   },
   {

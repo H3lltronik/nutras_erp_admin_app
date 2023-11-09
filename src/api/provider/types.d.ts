@@ -6,8 +6,15 @@ interface Provider {
   isPublished: boolean;
   id: string;
   partidaId: number;
-  name: string;
-  description: string;
+  name: string | null;
+  businessName: string | null;
+  service: string | null;
+  phone: string | null;
+  email: string | null;
+  paymentEmail: string | null;
+  bank: string | null;
+  clabeAccount: string | null;
+  accountNumber: string | null;
 }
 
 type CreateProviderRequest = Omit<Provider, "id">;
