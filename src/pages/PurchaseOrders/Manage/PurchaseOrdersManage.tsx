@@ -9,7 +9,7 @@ import PurchaseOrderForm, {
   PurchaseOrderFormHandle,
 } from "../../../components/Forms/PurchaseOrder/PurchaseOrderForm";
 import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
-import { showToast } from "../../../lib/notify";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { PurchaseOrdersManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
@@ -76,18 +76,8 @@ export const PurchaseOrdersManage: React.FC = () => {
   };
 
   const doCancel = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <p className="mt-5">
-          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
-          recuperar.
-        </p>
-      ),
+    cancelModal({
       onOk: () => navigate("/admin/purchaseOrders"),
-      okButtonProps: {
-        className: "bg-red-500 border-none hover:bg-red-600",
-      },
     });
   };
 

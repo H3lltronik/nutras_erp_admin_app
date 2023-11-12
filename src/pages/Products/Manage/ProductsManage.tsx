@@ -1,4 +1,3 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
@@ -12,7 +11,7 @@ import ProductFormProduccion from "../../../components/Forms/Product/ProductForm
 import { roles } from "../../../components/Forms/Profiles/roles";
 import { useAbilities } from "../../../hooks/roles/useAbilities";
 import useAuth from "../../../hooks/useAuth";
-import { showToast } from "../../../lib/notify";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
 import {
   ProductFormResult,
@@ -96,19 +95,9 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
     setPageLoading(false);
   };
 
-  const doCancel = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <p className="mt-5">
-          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
-          recuperar.
-        </p>
-      ),
+  const doCancel = async () => {
+    cancelModal({
       onOk: () => navigate(props.listPath),
-      okButtonProps: {
-        className: "bg-red-500 border-none hover:bg-red-600",
-      },
     });
   };
 

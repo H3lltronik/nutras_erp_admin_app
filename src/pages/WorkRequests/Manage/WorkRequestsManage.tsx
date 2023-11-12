@@ -1,4 +1,3 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
@@ -8,8 +7,7 @@ import { AppLoader } from "../../../components/Common/AppLoader";
 import WorkRequestForm, {
   WorkRequestFormHandle,
 } from "../../../components/Forms/WorkRequest/WorkRequestForm";
-import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
-import { showToast } from "../../../lib/notify";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { WorkRequestsManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
@@ -19,7 +17,10 @@ export const WorkRequestsManage: React.FC = () => {
   const workRequestFormRef = useRef<WorkRequestFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation<unknown>((id: string, data: WorkRequest) => WorkRequestAPI.updateWorkRequest(id, data));
+  const { mutateAsync } = useMutation<unknown>(
+    (id: string, data: WorkRequest) =>
+      WorkRequestAPI.updateWorkRequest(id, data)
+  );
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -51,7 +52,10 @@ export const WorkRequestsManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await WorkRequestAPI.updateWorkRequest(entity.id, workRequestFormData);
+          result = await WorkRequestAPI.updateWorkRequest(
+            entity.id,
+            workRequestFormData
+          );
           message = "workRequesto actualizado correctamente";
         } else {
           alert("No se puede actualizar el WorkRequesto");
@@ -76,18 +80,8 @@ export const WorkRequestsManage: React.FC = () => {
   };
 
   const doCancel = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <p className="mt-5">
-          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
-          recuperar.
-        </p>
-      ),
+    cancelModal({
       onOk: () => navigate("/admin/WorkRequests"),
-      okButtonProps: {
-        className: "bg-red-500 border-none hover:bg-red-600",
-      },
     });
   };
 

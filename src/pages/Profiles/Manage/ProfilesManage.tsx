@@ -9,7 +9,7 @@ import ProfilesForm, {
   ProfilesFormHandle,
 } from "../../../components/Forms/Profiles/ProfilesForm";
 import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
-import { showToast } from "../../../lib/notify";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { ProfileManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
@@ -68,18 +68,8 @@ export const ProfilesManage: React.FC = () => {
   };
 
   const doCancel = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <p className="mt-5">
-          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
-          recuperar.
-        </p>
-      ),
+    cancelModal({
       onOk: () => navigate("/admin/profiles"),
-      okButtonProps: {
-        className: "bg-red-500 border-none hover:bg-red-600",
-      },
     });
   };
 

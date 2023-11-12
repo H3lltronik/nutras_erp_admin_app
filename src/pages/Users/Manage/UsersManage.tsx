@@ -9,7 +9,7 @@ import UserForm, {
   UserFormHandle,
 } from "../../../components/Forms/User/UserForm";
 import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
-import { showToast } from "../../../lib/notify";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { UsersManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
@@ -74,18 +74,8 @@ export const UsersManage: React.FC = () => {
   };
 
   const doCancel = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <p className="mt-5">
-          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
-          recuperar.
-        </p>
-      ),
+    cancelModal({
       onOk: () => navigate("/admin/users"),
-      okButtonProps: {
-        className: "bg-red-500 border-none hover:bg-red-600",
-      },
     });
   };
 

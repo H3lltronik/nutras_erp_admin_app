@@ -10,7 +10,7 @@ import ProviderForm, {
 } from "../../../components/Forms/Provider/ProviderForm";
 import { useAbilities } from "../../../hooks/roles/useAbilities";
 import useAuth from "../../../hooks/useAuth";
-import { showToast } from "../../../lib/notify";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { ProvidersManageBreadcrumb } from "../Common/Breadcrums";
 
 const { confirm } = Modal;
@@ -89,18 +89,8 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
   };
 
   const doCancel = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <p className="mt-5">
-          ¿Desea salir? Si tiene algun cambio sin guardar, no se podra
-          recuperar.
-        </p>
-      ),
+    cancelModal({
       onOk: () => navigate("/admin/providers"),
-      okButtonProps: {
-        className: "bg-red-500 border-none hover:bg-red-600",
-      },
     });
   };
 
