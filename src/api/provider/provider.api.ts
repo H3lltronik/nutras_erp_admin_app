@@ -2,6 +2,14 @@ import { statusParser } from "../../lib/entity.utils";
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
 
+export type GetProvidersParams = QueryParams &
+  DraftMode &
+  SoftDelete & {
+    nameSearch?: string;
+    codeSearch?: string;
+    providerSearch?: string;
+  };
+
 class BaseProviderAPI extends BaseAPI {
   async createProvider<CreateProviderRequest>(
     data: CreateProviderRequest
@@ -18,7 +26,7 @@ class BaseProviderAPI extends BaseAPI {
   }
 
   async getProviders(
-    params?: QueryParams
+    params?: GetProvidersParams
   ): Promise<GetProvidersResponseWithStatus | APIError> {
     try {
       const products = await this.get<GetProvidersResponse>("", params);

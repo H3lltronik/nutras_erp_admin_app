@@ -2,15 +2,15 @@ import { statusParser } from "../../lib/entity.utils";
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
 
-export type GetProductsParams = QueryParams & {
-  nameSearch?: string;
-  codeSearch?: string;
-  providerSearch?: string;
-  type?: string;
-  department?: string;
-  draftMode?: boolean;
-  published?: boolean;
-};
+export type GetProductsParams = QueryParams &
+  DraftMode &
+  SoftDelete & {
+    nameSearch?: string;
+    codeSearch?: string;
+    providerSearch?: string;
+    type?: string;
+    department?: string;
+  };
 
 class BaseProductAPI extends BaseAPI {
   async createProduct<ProductToPost>(

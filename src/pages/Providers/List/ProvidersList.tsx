@@ -47,6 +47,7 @@ export const ProvidersList: React.FC = () => {
               editAction={doEdit}
               perPage={20}
               queryParameters={{
+                withDeleted: "true",
                 nameSearch,
                 codeSearch,
                 providerSearch,

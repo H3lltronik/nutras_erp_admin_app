@@ -12,11 +12,13 @@ export const entityStatuses = {
 };
 
 export const statusParser = (entity: EntityWithDraftMetadata): string => {
-  if (entity.isPublished) return entityStatuses.PUBLISHED;
-  if (entity.isDraft) return entityStatuses.DRAFT;
-  if (entity.deletedAt) return entityStatuses.DELETED;
+  let status = entityStatuses.UNKNOWN;
 
-  return entityStatuses.UNKNOWN;
+  if (entity.isPublished) status = entityStatuses.PUBLISHED;
+  if (entity.isDraft) status = entityStatuses.DRAFT;
+  if (entity.deletedAt) status = entityStatuses.DELETED;
+
+  return status;
 };
 
 export function jsonToUrlWithGetKey(

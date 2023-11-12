@@ -47,11 +47,15 @@ export const ProfilesList: React.FC = () => {
 
           <section className="mx-auto">
             <AdminDataTable
+              perPage={10}
               queryKey="profiles"
               fetchData={fetchData}
               columns={profileListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
+              queryParameters={{
+                withDeleted: "true",
+              }}
             />
           </section>
         </div>

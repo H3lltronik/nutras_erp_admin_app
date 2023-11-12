@@ -23,7 +23,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
   const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
     useProductsListPageStore();
 
-  const fetchData = (params: PathProps) =>
+  const fetchData = (params: object) =>
     ProductAPI.getProducts({
       ...params,
       ...props.defaultFilters,
@@ -73,6 +73,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               editAction={doEdit}
               perPage={20}
               queryParameters={{
+                withDeleted: "true",
                 nameSearch,
                 codeSearch,
                 providerSearch,

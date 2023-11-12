@@ -4,6 +4,13 @@ interface PaginationParams {
   }
   
 type QueryParams<T = object> = PaginationParams & T;
+type DraftMode = {
+    draftMode?: boolean;
+    published?: boolean;
+}
+type SoftDelete = {
+    withDeleted?: boolean;
+}
   
 interface PaginatedResponse<T> {
     data: T[];
