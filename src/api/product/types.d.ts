@@ -6,17 +6,20 @@ interface Product {
   isPublished: boolean;
   id: string;
   partidaId: number;
-  productTypeId?: string;
+  productTypeId: string;
   code: string;
   commonName: string;
-  providerId?: string;
+  providerId: string;
   unitId: string;
-  isKosher?: boolean;
-  unit: Measurement;
+  presentation: string;
+  quantityPerUnit: string;
+  isKosher: boolean;
+  departmentId: string;
+  unit: Unit;
+  kosherDetails: KosherDetails;
+  purchaseData: PurchaseData;
+  productionData: ProductionData;
   provider: Provider;
-  kosherDetails?: KosherDetails;
-  purchaseData?: PurchaseData;
-  productionData?: ProductionData;
 }
 
 type CreateProductRequest = Omit<Product, "id">;

@@ -151,7 +151,13 @@ export const unformatProductForm = (
     providerId: productToUnformat.providerId ?? "",
     unitId: productToUnformat.unitId ?? "",
     isKosher: productToUnformat.isKosher ?? false,
-    presentation: productToUnformat.productionData?.ptPresentation ?? "",
+    quantityPerUnit: productToUnformat.quantityPerUnit ?? "",
+    mold: productToUnformat.productionData?.mold ?? "",
+    packaging: productToUnformat.productionData?.packaging ?? "",
+    presentation:
+      productToUnformat.productionData?.ptPresentation ??
+      productToUnformat.presentation ??
+      "",
     // quantityPerUnit: productToUnformat ?? "",
     allergen: productToUnformat.purchaseData?.allergen ?? "",
     kosherDetails: {

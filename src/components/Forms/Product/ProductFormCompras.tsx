@@ -34,6 +34,7 @@ export type ProductFormHandle = {
 
 type ProductFormProps = {
   entity?: Product | null;
+  formMode?: FormMode;
 };
 
 const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
@@ -98,8 +99,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               label="Tipo de producto"
               name="productTypeId"
               rules={[
+                
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>

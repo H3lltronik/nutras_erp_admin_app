@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { MeasurementAPI, ProductTypesAPI } from "../../../api";
+import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
@@ -31,6 +32,7 @@ export type ProductFormHandle = {
 
 type ProductFormProps = {
   entity?: Product | null;
+  formMode?: FormMode;
 };
 
 const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
@@ -39,6 +41,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const [isDraft, setIsDraft] = useState<boolean>(false);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
+    const { disabled } = useFormModeChecker({ formMode: _props.formMode });
 
     useImperativeHandle(
       ref,
@@ -85,11 +88,12 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               name="productTypeId"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
               <GenericSelect
+                disabled={disabled}
                 fetcher={() =>
                   ProductTypesAPI.getProductTypes({
                     department: import.meta.env
@@ -113,7 +117,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
         </Row>
@@ -122,32 +126,35 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           <Col span={12}>
             <Form.Item<Product>
               label="Codigo"
-              name="commonName"
+              name="code"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <GenericSelect
-              fetcher={() => MeasurementAPI.getMeasurements()}
+            <Form.Item<Product>
               label="Unidad de medida"
-              placeholder="Selecciona una unidad de medida"
-              optionLabel="name"
               name="unitId"
-              optionKey={"id"}
               rules={[
                 {
                   required: true && !isDraft,
-                  message: "Este campo es requerido",
+                  message: "Este campo es obligatorio",
                 },
-              ]}
-              queryKey={["measurements"]}
-            />
+              ]}>
+              <GenericSelect
+                disabled={disabled}
+                fetcher={() => MeasurementAPI.getMeasurements()}
+                placeholder="Selecciona una unidad de medida"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["measurements"]}
+              />
+            </Form.Item>
           </Col>
         </Row>
 
@@ -155,14 +162,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           <Col span={12}>
             <Form.Item<Product>
               label="Descripción del producto"
-              name="commonName"
+              name="description"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -175,7 +182,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
         </Row>
@@ -184,14 +191,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           <Col span={12}>
             <Form.Item<Product>
               label="Empaque"
-              name="presentation"
+              name="packaging"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -204,7 +211,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
         </Row>
@@ -220,20 +227,20 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<Product>
               label="Molde"
-              name="quantityPerUnit"
+              name="mold"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
         </Row>

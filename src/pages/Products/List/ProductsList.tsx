@@ -1,3 +1,4 @@
+import { EyeOutlined } from "@ant-design/icons";
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +72,31 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               columns={productListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
+              editActionConditionEval={(record) => {
+                const product = record as Product;
+                return product.deletedAt === null;
+              }}
+              rowClassName={(_record) => {
+                const record = _record as Product;
+                if (record.deletedAt) return "cancelled-row";
+                if (record.isDraft) return "draft-row";
+
+                return "";
+              }}
               perPage={20}
+              additionalActions={[
+                {
+                  className: "bg-green-600 text-white hover:bg-green-50",
+                  icon: <EyeOutlined className="mr-[-7px]" />,
+                  onClick: (record) => {
+                    navigate(`/admin/products/inspect/product/${record.id}`);
+                  },
+                  conditionEval: (_record) => {
+                    const record = _record as Product;
+                    return record.isDraft === false;
+                  },
+                },
+              ]}
               queryParameters={{
                 withDeleted: "true",
                 nameSearch,

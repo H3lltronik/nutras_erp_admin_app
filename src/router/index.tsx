@@ -93,6 +93,20 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/admin/products/inspect/product/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<ProductsHeader />}
+        headerTitle={`Inspeccion de producto`}>
+        <ProductsManage
+          formMode="view"
+          formType="produccion"
+          listPath="/admin/products/pp"
+        />
+      </DefaultLayout>
+    ),
+  },
+  {
     path: "/admin/products/manage/pp/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
@@ -158,11 +172,25 @@ const router = createBrowserRouter([
         headerTitle="Productos (INSUMOS)">
         <ProductsList
           buildNewProductPath={({ id }) =>
-            "/admin/products/insumos/manage" + id
+            "/admin/products/insumos/manage/" + id
           }
           defaultFilters={{
             department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
           }}
+        />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/products/inspect/insumo/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<ProductsHeader />}
+        headerTitle={`Inspeccion de producto`}>
+        <ProductsManage
+          formMode="view"
+          formType="compras"
+          listPath="/admin/products/pp"
         />
       </DefaultLayout>
     ),

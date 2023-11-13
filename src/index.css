@@ -34,3 +34,11 @@ body {
 .table-striped-rows tr:hover td {
   background-color: #ccc !important;
 }
+
+.cancelled-row .ant-table-cell {
+  @apply bg-red-100 !important;
+}
+
+.draft-row .ant-table-cell {
+  @apply bg-yellow-100 !important;
+}

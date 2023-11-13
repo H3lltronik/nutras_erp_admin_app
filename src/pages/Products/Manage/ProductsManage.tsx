@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Layout, Modal } from "antd";
+import { Layout } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductAPI } from "../../../api";
@@ -20,12 +20,12 @@ import {
   unformatProductForm,
 } from "../lib/formatProductForm";
 
-const { confirm } = Modal;
 const { Content } = Layout;
 
 type ProductsManageProps = {
   formType: "compras" | "produccion" | "admin";
   listPath: string;
+  formMode?: FormMode;
 };
 
 export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
@@ -112,16 +112,6 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
     <>
       <Content className="relative mx-4">
         <ProductsManageBreadcrumb />
-        <div className="flex">
-          <div className="">
-            entity
-            <pre>{JSON.stringify(entity, null, 2)}</pre>
-          </div>
-          <div className="">
-            entityData
-            <pre>{JSON.stringify(entityData, null, 2)}</pre>
-          </div>
-        </div>
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
             {props.formType === "compras" &&
@@ -132,7 +122,11 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
               <>
                 <h2 className="text-2xl">Formulario de compras</h2>
                 <hr className="mt-2 mb-5" />
-                <ProductFormCompras ref={productFormRef} entity={entityData} />
+                <ProductFormCompras
+                  formMode={props.formMode}
+                  ref={productFormRef}
+                  entity={entityData}
+                />
               </>
             ) : props.formType === "produccion" &&
               ability.can(
@@ -143,6 +137,7 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
                 <h2 className="text-2xl">Formulario de produccion</h2>
                 <hr className="mt-2 mb-5" />
                 <ProductFormProduccion
+                  formMode={props.formMode}
                   ref={productFormRef}
                   entity={entityData}
                 />
@@ -151,26 +146,39 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
               <>Not valid</>
             )}
 
-            <button
-              type="button"
-              onClick={() => submitForm(false)}
-              className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
-              Procesar
-            </button>
-            {!entityData?.isPublished && (
-              <button
-                type="button"
-                onClick={() => submitForm(true)}
-                className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
-                Borrador
-              </button>
+            {props.formMode === "view" ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
+                  Regresar
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => submitForm(false)}
+                  className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
+                  Procesar
+                </button>
+                {!entityData?.isPublished && (
+                  <button
+                    type="button"
+                    onClick={() => submitForm(true)}
+                    className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
+                    Borrador
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={doCancel}
+                  className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
+                  Cancelar
+                </button>
+              </>
             )}
-            <button
-              type="button"
-              onClick={doCancel}
-              className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
-              Cancelar
-            </button>
           </section>
         </div>
         <AppLoader isLoading={loading} />

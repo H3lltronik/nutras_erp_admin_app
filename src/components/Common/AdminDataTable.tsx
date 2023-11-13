@@ -18,6 +18,7 @@ export type Action<TData> = {
   onClick: (record: TData) => void;
   icon?: React.ReactNode;
   className?: string;
+  conditionEval?: (record: TData) => boolean;
 };
 
 interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
@@ -31,7 +32,10 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   ) => Promise<{ id: string | number } | APIError>;
   editAction: (id: string | number) => Promise<void>;
   perPage?: number;
+  rowClassName?: (record: TData, index: number) => string;
   queryParameters?: Record<string, string | number | undefined>;
+  deleteActionConditionEval?: (record: TData) => boolean;
+  editActionConditionEval?: (record: TData) => boolean;
 }
 
 export interface IDataWithID {
@@ -47,8 +51,11 @@ const _AdminDataTable = <
   columns,
   additionalActions = [],
   deleteAction,
+  deleteActionConditionEval,
   editAction,
+  editActionConditionEval,
   queryParameters = {},
+  rowClassName,
   perPage = 5,
 }: AdminDataTableProps<TData, TResponse>) => {
   const navigate = useNavigate();
@@ -120,14 +127,19 @@ const _AdminDataTable = <
     setCurrentPage(pagination.current as number);
   };
 
-  const defaultActions: Action<TData>[] = [
-    {
+  const defaultActions: Action<TData>[] = [];
+
+  if (editAction != null)
+    defaultActions.push({
       icon: <EditOutlined className="mr-[-6px]" />,
       className: "bg-blue-600 text-white hover:bg-blue-50",
       onClick: async (record) => await editAction(record.id as string),
-    },
-    {
-      icon: <CloseOutlined className="mr-[-6px]" />,
+      conditionEval: editActionConditionEval,
+    });
+
+  if (deleteAction != null)
+    defaultActions.push({
+      icon: <CloseOutlined className="mr-[-7px]" />,
       className: "bg-red-600 text-white hover:bg-red-50",
       onClick: async (record) => {
         confirm({
@@ -142,8 +154,8 @@ const _AdminDataTable = <
           },
         });
       },
-    },
-  ];
+      conditionEval: deleteActionConditionEval,
+    });
 
   const combinedActions = [...defaultActions, ...additionalActions];
   const combinedColumns = [
@@ -153,16 +165,21 @@ const _AdminDataTable = <
       key: "action",
       render: (_: unknown, record: TData) => (
         <Space size="small">
-          {combinedActions.map((action, index) => (
-            <Button
-              className={`flex items-center justify-center ${action.className}`}
-              key={index}
-              onClick={() => action.onClick(record)}
-              size="small"
-              icon={action.icon}>
-              <span>{action.label}</span>
-            </Button>
-          ))}
+          {combinedActions
+            .filter((item) => {
+              if (!item.conditionEval) return true;
+              return item.conditionEval(record);
+            })
+            .map((action, index) => (
+              <Button
+                className={`flex items-center justify-center ${action.className}`}
+                key={index}
+                onClick={() => action.onClick(record)}
+                size="small"
+                icon={action.icon}>
+                <span>{action.label}</span>
+              </Button>
+            ))}
         </Space>
       ),
     },
@@ -181,6 +198,7 @@ const _AdminDataTable = <
           total: totalItems as number,
           pageSize: perPage,
         }}
+        rowClassName={rowClassName}
       />
     </>
   );
