@@ -1,5 +1,8 @@
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Input, Row, Select } from "antd";
+const { Option } = Select;
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+
+import { banks } from "../Common/Constants"
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -45,6 +48,12 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
     }, [form, _props.entity]);
+
+    var writeOnlyNumbers = (event: any) => {
+      if (!/[0-9]/.test(event.key)) {
+        event.preventDefault();
+      }
+    }
 
     return (
       <Form
@@ -120,13 +129,13 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               label="Teléfono"
               name="phone"
               rules={[
-                { required: true, message: "Este campo es obligatorio" },
+                { pattern: /^\d+$/, message: "Solo se aceptan números" },
                 {
-                  pattern: /^\d{8,12}$/,
+                  min: 8,
                   message: "El teléfono debe tener entre 8 y 12 dígitos",
                 },
               ]}>
-              <Input />
+              <Input maxLength={12} onKeyPress={writeOnlyNumbers} />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -134,7 +143,6 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               label="Correo"
               name="email"
               rules={[
-                { required: true, message: "Este campo es obligatorio" },
                 {
                   type: "email",
                   message: "El formato del correo no es válido",
@@ -148,7 +156,6 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               label="Correo de pagos"
               name="paymentEmail"
               rules={[
-                { required: true, message: "Este campo es obligatorio" },
                 {
                   type: "email",
                   message: "El formato del correo no es válido",
@@ -165,11 +172,17 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               name="bank"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Select style={{ width: '100%' }} placeholder="Select a bank">
+                {banks.map((bank) => (
+                  <Option key={bank} value={bank}>
+                    {bank}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -183,7 +196,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "La cuenta CLABE debe tener 18 dígitos exactos",
                 },
               ]}>
-              <Input />
+              <Input maxLength={18} onKeyPress={writeOnlyNumbers} />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -191,7 +204,6 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               label="Número de cuenta"
               name="accountNumber"
               rules={[
-                { required: true, message: "Este campo es obligatorio" },
                 {
                   min: 10,
                   message:
@@ -203,7 +215,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                     "El número de cuenta no puede exceder los 20 caracteres",
                 },
               ]}>
-              <Input />
+              <Input maxLength={20} onKeyPress={writeOnlyNumbers} />
             </Form.Item>
           </Col>
         </Row>

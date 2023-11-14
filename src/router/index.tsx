@@ -218,7 +218,7 @@ const router = createBrowserRouter([
     path: "/admin/providers/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
-        <ProvidersManage />
+        <ProvidersManage enableRedirect={true} />
       </DefaultLayout>
     ),
   },
@@ -250,7 +250,7 @@ const router = createBrowserRouter([
     path: "/admin/providers/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
-        <ProvidersManage />
+        <ProvidersManage enableRedirect={true} />
       </DefaultLayout>
     ),
   },
