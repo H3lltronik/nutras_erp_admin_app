@@ -92,3 +92,11 @@ export const banks: Array<any> = [
     "INDEVAL",
     "LIBERTAD",
 ];
+
+export const countriesWithLada = [
+    { img: 'United_States_of_America.png', name: "USA", lada: "1" },
+    { img: 'Mexico.png', name: "Mexico", lada: "52" },
+    { img: 'Canada.png', name: "Canada", lada: "1" },
+    { img: 'United_Kingdom.png', name: "United Kingdom", lada: "44" },
+    { img: 'Germany.png', name: "Germany", lada: "49" },
+  ];

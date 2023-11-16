@@ -1,8 +1,9 @@
-import { Col, Form, Input, Row, Select } from "antd";
+import { Col, Form, Image, Input, Row, Select } from "antd";
 const { Option } = Select;
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-
-import { banks } from "../Common/Constants"
+import InputMask from "react-input-mask";
+import { flags } from '../../../assets/flags/index.ts';
+import { banks, countriesWithLada } from "../Common/Constants"
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -11,6 +12,7 @@ const onFinish = (values: unknown) => {
 const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
+
 
 interface GetFormData {
   draftMode: boolean;
@@ -28,6 +30,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
+    const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
 
     useImperativeHandle(
       ref,
@@ -125,18 +128,49 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
         </Row>
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item<Provider>
-              label="Teléfono"
-              name="phone"
-              rules={[
-                { pattern: /^\d+$/, message: "Solo se aceptan números" },
-                {
-                  min: 8,
-                  message: "El teléfono debe tener entre 8 y 12 dígitos",
-                },
-              ]}>
-              <Input maxLength={12} onKeyPress={writeOnlyNumbers} />
-            </Form.Item>
+            <Row gutter={8}>
+              <Col>
+                <Form.Item<Provider>
+                  label="Teléfono"
+                  name="lada"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Porfavor selecciona una lada",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{minWidth: 90}}
+                    onChange={(value) => setSelectedCountry(value)}
+                  >
+                    {countriesWithLada.map((country) => {
+                      return (
+                        <Option key={country.name} value={country.lada}>
+                          <Image src={flags[country.img]} width={24}/>
+                          {` +${country.lada}`}
+                        </Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col style={{flex: 1}}>
+                <Form.Item<Provider>
+                  name="phone"
+                  rules={[
+                    { pattern: /^\d+\-\d+\-\d+$/, message: "Solo se aceptan números" },
+                    {
+                      min: 8,
+                      message: "El teléfono debe tener entre 8 y 12 dígitos",
+                    },
+                  ]}>
+                    <InputMask mask="999-999-999999" maskChar={null}>
+                      {(inputProps: any) => <Input {...inputProps} maxLength={14} onKeyPress={writeOnlyNumbers} />}
+                    </InputMask>
+                </Form.Item>
+              </Col>
+            </Row>
           </Col>
           <Col span={8}>
             <Form.Item<Provider>
@@ -176,7 +210,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Select style={{ width: '100%' }} placeholder="Select a bank">
+              <Select style={{ width: '100%' }} placeholder="Selecciona un banco">
                 {banks.map((bank) => (
                   <Option key={bank} value={bank}>
                     {bank}
