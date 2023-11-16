@@ -165,8 +165,8 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                       message: "El teléfono debe tener entre 8 y 12 dígitos",
                     },
                   ]}>
-                    <InputMask mask="999-999-9999" maskChar={null}>
-                      {(inputProps: any) => <Input {...inputProps} maxLength={12} onKeyPress={writeOnlyNumbers} />}
+                    <InputMask mask="999-999-999999" maskChar={null}>
+                      {(inputProps: any) => <Input {...inputProps} maxLength={14} onKeyPress={writeOnlyNumbers} />}
                     </InputMask>
                 </Form.Item>
               </Col>
