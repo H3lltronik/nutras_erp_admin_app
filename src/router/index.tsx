@@ -25,6 +25,8 @@ import { WorkOrdersList, WorkOrdersManage } from "../pages/WorkOrders";
 import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
 import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
 import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
+import { BatchesList, BatchesManage } from "../pages/Batches";
+import { BatchesHeader } from "../pages/Batches/Common/BatchHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -307,6 +309,22 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
         <WorkOrdersManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/batches",
+    element: (
+      <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
+        <BatchesList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/batches/manage/:id?",
+    element: (
+      <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
+        <BatchesManage />
       </DefaultLayout>
     ),
   },

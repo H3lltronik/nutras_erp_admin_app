@@ -11,6 +11,7 @@ import BasePurchaseOrderAPI from "./purchaseOrder/purchaseOrder.api";
 import BaseUserAPI from "./user/user.api";
 import BaseWorkOrderAPI from "./workOrder/workOrder.api";
 import BaseWorkRequestAPI from "./workRequest/workRequest.api";
+import BaseBatchAPI from "./batches/batches.api";
 
 const BASE_URL = import.meta.env.VITE_API_PATH;
 
@@ -26,6 +27,7 @@ export const WorkOrderAPI = new BaseWorkOrderAPI(`${BASE_URL}/${ENTITIES_ENDPOIN
 export const UserAPI = new BaseUserAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.users}`);
 export const ProfileAPI = new BaseProfilesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.profiles}`);
 export const DepartmentsAPI = new BaseDepartmentsAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.departments}`);
+export const BatchAPI = new BaseBatchAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.batches}`);
 
 export const AuthAPI = new BaseAuthAPI({
     forgotPasswordUrl: `${BASE_URL}/`,

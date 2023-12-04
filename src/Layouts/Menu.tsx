@@ -1,6 +1,7 @@
 import {
   BarcodeOutlined,
   CodeSandboxOutlined,
+  DatabaseOutlined,
   OrderedListOutlined,
   PieChartOutlined,
   ProfileOutlined,
@@ -69,6 +70,13 @@ const items: MenuItem[] = [
       "Inventario",
       "/admin/inventory",
       <CodeSandboxOutlined />,
+      [],
+      roles.Inventory.roles.read.role
+    ),
+    getItem(
+      "Lotes",
+      "/admin/batches",
+      <DatabaseOutlined />,
       [],
       roles.Inventory.roles.read.role
     ),
