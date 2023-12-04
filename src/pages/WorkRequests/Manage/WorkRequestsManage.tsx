@@ -9,11 +9,13 @@ import WorkRequestForm, {
 } from "../../../components/Forms/WorkRequest/WorkRequestForm";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { WorkRequestsManageBreadcrumb } from "../Common/Breadcrums";
+import useAuth from "../../../hooks/useAuth";
 
 const { confirm } = Modal;
 const { Content } = Layout;
 
 export const WorkRequestsManage: React.FC = () => {
+  const user = useAuth().user;
   const workRequestFormRef = useRef<WorkRequestFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
@@ -42,6 +44,7 @@ export const WorkRequestsManage: React.FC = () => {
   const submitForm = async (isDraft = false) => {
     const workRequestFormData = (await workRequestFormRef.current?.getFormData({
       draftMode: isDraft,
+      user
     })) as CreateWorkRequestRequest;
     console.log("workRequestFormData", workRequestFormData);
 

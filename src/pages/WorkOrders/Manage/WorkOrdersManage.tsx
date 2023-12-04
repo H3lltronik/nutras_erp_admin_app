@@ -11,11 +11,13 @@ import WorkOrderForm, {
 import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { WorkOrdersManageBreadcrumb } from "../Common/Breadcrums";
+import useAuth from "../../../hooks/useAuth";
 
 const { confirm } = Modal;
 const { Content } = Layout;
 
 export const WorkOrdersManage: React.FC = () => {
+  const user = useAuth().user;
   const workOrderFormRef = useRef<WorkOrderFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
@@ -41,6 +43,7 @@ export const WorkOrdersManage: React.FC = () => {
   const submitForm = async (isDraft = false) => {
     const workOrderFormData = (await workOrderFormRef.current?.getFormData({
       draftMode: isDraft,
+      user
     })) as CreateWorkOrderRequest;
     console.log("workOrderFormData", workOrderFormData);
 

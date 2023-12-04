@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Col, Form, Input, InputNumber, Row, Select } from "antd";
+import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from "antd";
 import {
   forwardRef,
   useEffect,
@@ -7,7 +7,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import { MeasurementAPI } from "../../../api";
+import { MeasurementAPI, ProductAPI, WorkRequestAPI } from "../../../api";
+import useAuth from "../../../hooks/useAuth";
+import { GenericSelect } from "../Common/GenericSelect";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -19,6 +21,7 @@ const onFinishFailed = (errorInfo: unknown) => {
 
 interface GetFormData {
   draftMode: boolean;
+  user: any | undefined;
 }
 
 export type WorkOrderFormHandle = {
@@ -45,8 +48,11 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
           setIsDraft(!!params?.draftMode);
 
           const valid = await form.validateFields();
-          return { 
-            ...form.getFieldsValue(), 
+          const formData = form.getFieldsValue();
+          return {
+            ...formData,
+            userId: params?.user?.id,
+            user: params?.user,
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -72,7 +78,8 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete="off">
+        autoComplete="off"
+      >
         <Form.Item<WorkOrder> name="id" style={{ display: "none" }}>
           <Input />
         </Form.Item>
@@ -80,56 +87,35 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
-              label="Nombre Común"
-              name="commonName"
+              label="Solicitud de trabajo"
+              name="stId"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}>
-              <Input />
+              ]}
+            >
+              <GenericSelect
+                fetcher={() => WorkRequestAPI.getWorkRequests()}
+                placeholder="Selecciona una unidad de medida"
+                optionLabel="folio"
+                optionKey={"id"}
+                queryKey={["workRequests"]}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<WorkOrder>
-              label="Descripción del Proveedor"
-              name="vendorDescription"
+              label="Folio"
+              name="folio"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Código"
-              name="code"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Estado"
-              name="status"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
+              ]}
+            >
               <Input />
             </Form.Item>
           </Col>
@@ -138,57 +124,30 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
-              label="Proveedor"
-              name="provider"
+              label="Fecha de entrega solicitada por cliente"
+              name="clientRequestDate"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}>
-              <Input />
+              ]}
+            >
+              <DatePicker />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<WorkOrder>
-              label="Código Alternativo"
-              name="codeAlt"
+              label="Fecha de entrega interna"
+              name="internDueDate"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Presentación"
-              name="presentation"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Cantidad"
-              name="quantity"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <InputNumber />
+              ]}
+            >
+              <DatePicker />
             </Form.Item>
           </Col>
         </Row>
@@ -196,107 +155,55 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
-              label="Unidad de Medida"
-              name="unitId"
+              label="Producto"
+              name="product"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}>
-              <Select
-                placeholder="Select a measurement unit"
-                allowClear
-                loading={loadingMeasurements}>
-                {measurements.map((measurement) => (
-                  <option key={measurement.id} value={measurement.id}>
-                    {measurement.name}
-                  </option>
-                ))}
+              ]}
+            >
+              <GenericSelect
+                fetcher={() => ProductAPI.getProducts()}
+                placeholder="Selecciona una un producto"
+                optionLabel="commonName"
+                optionKey={"id"}
+                queryKey={["products"]}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<WorkOrder>
+              label="Notas"
+              name="notes"
+              rules={[]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item<WorkOrder>
+              label="Tipo de servicio"
+              name="serviceType"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}
+            >
+              <Select placeholder="Selecciona un tipo de servicio">
+                <Select.Option value="Desarrollo">Desarrollo</Select.Option>
+                <Select.Option value="Producción">Producción</Select.Option>
+                <Select.Option value="Maquila">Maquila</Select.Option>
               </Select>
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Alérgeno"
-              name="allergen"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
         </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Agencia Kosher"
-              name="kosherAgency"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Vendedor"
-              name="vendor"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Form.Item<WorkOrder>
-          label="Nombre del Ingrediente de la Empresa"
-          name="companyIngredientName"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item<WorkOrder>
-          label="Nombre del Certificado"
-          name="certificateName"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item<WorkOrder>
-          label="Nota"
-          name="note"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input.TextArea />
-        </Form.Item>
-
-        {/* Add other form controls like Submit button, etc. if needed */}
       </Form>
     );
   }
