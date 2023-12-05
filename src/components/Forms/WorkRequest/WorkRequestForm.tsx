@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { MeasurementAPI } from "../../../api";
+import useAuth from "../../../hooks/useAuth";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -19,6 +20,7 @@ const onFinishFailed = (errorInfo: unknown) => {
 
 interface GetFormData {
   draftMode: boolean;
+  user: any;
 }
 
 export type WorkRequestFormHandle = {
@@ -34,10 +36,6 @@ const WorkRequestForm = forwardRef<WorkRequestFormHandle, WorkRequestFormProps>(
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
 
-    const { data: measurementsData, isLoading: loadingMeasurements } = useQuery<
-      GetMeasurementsResponse | APIError
-    >(["measurements"], () => MeasurementAPI.getMeasurements());
-
     useImperativeHandle(
       ref,
       (): WorkRequestFormHandle => ({
@@ -46,7 +44,9 @@ const WorkRequestForm = forwardRef<WorkRequestFormHandle, WorkRequestFormProps>(
 
           const valid = await form.validateFields();
           return { 
-            ...form.getFieldsValue(), 
+            ...form.getFieldsValue(),
+            userId: params?.user?.id,
+            user: params?.user,
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -58,18 +58,11 @@ const WorkRequestForm = forwardRef<WorkRequestFormHandle, WorkRequestFormProps>(
       if (_props.entity) form.setFieldsValue(_props.entity);
     }, [form, _props.entity]);
 
-    const measurements = useMemo(() => {
-      if (loadingMeasurements || !measurementsData) return [];
-      if ("data" in measurementsData) return measurementsData.data;
-
-      return [];
-    }, [measurementsData, loadingMeasurements]);
-
     return (
       <Form
         form={form}
         name="WorkRequestForm"
-        initialValues={{ remember: true }}
+        initialValues={{ remember: true, userId: useAuth().user?.id }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off">
@@ -77,204 +70,9 @@ const WorkRequestForm = forwardRef<WorkRequestFormHandle, WorkRequestFormProps>(
           <Input />
         </Form.Item>
 
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Nombre Común"
-              name="commonName"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Descripción del Proveedor"
-              name="vendorDescription"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Código"
-              name="code"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Estado"
-              name="status"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Proveedor"
-              name="provider"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Código Alternativo"
-              name="codeAlt"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Presentación"
-              name="presentation"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Cantidad"
-              name="quantity"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <InputNumber />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Unidad de Medida"
-              name="unitId"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Select
-                placeholder="Select a measurement unit"
-                allowClear
-                loading={loadingMeasurements}>
-                {measurements.map((measurement) => (
-                  <option key={measurement.id} value={measurement.id}>
-                    {measurement.name}
-                  </option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Alérgeno"
-              name="allergen"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Agencia Kosher"
-              name="kosherAgency"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item<WorkRequest>
-              label="Vendedor"
-              name="vendor"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-
         <Form.Item<WorkRequest>
-          label="Nombre del Ingrediente de la Empresa"
-          name="companyIngredientName"
-          rules={[
-            {
-              required: true && !isDraft,
-              message: "Este campo es obligatorio",
-            },
-          ]}>
-          <Input />
-        </Form.Item>
-
-        <Form.Item<WorkRequest>
-          label="Nombre del Certificado"
-          name="certificateName"
+          label="Folio"
+          name="folio"
           rules={[
             {
               required: true && !isDraft,

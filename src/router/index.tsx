@@ -3,10 +3,10 @@ import { DefaultLayout } from "../Layouts/DefaultLayout";
 import { jsonToUrlWithGetKey } from "../lib/entity.utils";
 import { BatchesList } from "../pages/Batch/List/BatchesList";
 import { BatchesManage } from "../pages/Batch/Manage/BatchesManage";
+import { BatchesHeader } from "../pages/Batches/Common/BatchHeader";
 import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
-import { InventoryManage } from "../pages/Inventory/Manage/InventoryManage";
 import Login from "../pages/Login/Login";
 import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
@@ -314,25 +314,17 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/inventory",
-    element: (
-      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
-        <InventoryManage />
-      </DefaultLayout>
-    ),
-  },
-  {
     path: "/admin/lotes",
     element: (
-      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+      <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
         <BatchesList />
       </DefaultLayout>
     ),
   },
   {
-    path: "/admin/lote/manage",
+    path: "/admin/lotes/manage/:id?",
     element: (
-      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+      <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
         <BatchesManage />
       </DefaultLayout>
     ),

@@ -19,8 +19,8 @@ export const WorkOrderListColumns: ColumnsType<WorkOrder> = [
   },
   {
     title: "Solicitud de trabajo",
-    dataIndex: "purchaseOrders",
-    key: "purchaseOrders",
+    dataIndex: "st",
+    key: "st",
     render(_value, record) {
       return record.st?.folio;
     },
