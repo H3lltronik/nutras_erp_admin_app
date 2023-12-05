@@ -343,6 +343,32 @@ export const roles = defineRoles({
       },
     },
   },
+  Batch: {
+    entity: "batch",
+    label: "Lotes",
+    roles: {
+      read: {
+        role: "batch:read",
+        action: "read",
+        description: "Leer lote",
+      },
+      update: {
+        role: "batch:update",
+        action: "update",
+        description: "Actualizar lote",
+      },
+      create: {
+        role: "batch:create",
+        action: "create",
+        description: "Crear lote",
+      },
+      delete: {
+        role: "batch:delete",
+        action: "delete",
+        description: "Eliminar lote",
+      },
+    },
+  },
   Administration: {
     entity: "administration",
     label: "Administración",

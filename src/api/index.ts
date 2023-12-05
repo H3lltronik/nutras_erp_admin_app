@@ -1,4 +1,6 @@
 import BaseAuthAPI from "./auth/auth.api";
+import BaseBatchAPI from "./batch/batch.api";
+import BaseBatchEntryTypesAPI from "./batch/batch_entry_types.api";
 import { ENTITIES_ENDPOINTS } from "./constants";
 import BaseDepartmentsAPI from "./departments/departments.api";
 import * as END_POINTS from './endpoints';
@@ -9,6 +11,7 @@ import BaseProfilesAPI from "./profiles/profiles.api";
 import BaseProviderAPI from "./provider/provider.api";
 import BasePurchaseOrderAPI from "./purchaseOrder/purchaseOrder.api";
 import BaseUserAPI from "./user/user.api";
+import BaseWarehouseAPI from "./warehouse/warehouse.api";
 import BaseWorkOrderAPI from "./workOrder/workOrder.api";
 import BaseWorkRequestAPI from "./workRequest/workRequest.api";
 
@@ -26,6 +29,9 @@ export const WorkOrderAPI = new BaseWorkOrderAPI(`${BASE_URL}/${ENTITIES_ENDPOIN
 export const UserAPI = new BaseUserAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.users}`);
 export const ProfileAPI = new BaseProfilesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.profiles}`);
 export const DepartmentsAPI = new BaseDepartmentsAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.departments}`);
+export const WarehousesAPI = new BaseWarehouseAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.warehouse}`);
+export const BatchAPI = new BaseBatchAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.batch}`);
+export const BatchTypesAPI = new BaseBatchEntryTypesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.batchEntryType}`);
 
 export const AuthAPI = new BaseAuthAPI({
     forgotPasswordUrl: `${BASE_URL}/`,

@@ -72,6 +72,13 @@ const items: MenuItem[] = [
       [],
       roles.Inventory.roles.read.role
     ),
+    getItem(
+      "Lotes",
+      "/admin/lotes",
+      <CodeSandboxOutlined />,
+      [],
+      roles.Batch.roles.read.role
+    ),
   ]),
   getItem("Administración", "1", null, [
     getItem(

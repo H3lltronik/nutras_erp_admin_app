@@ -23,7 +23,10 @@ export const WorkOrdersManageBreadcrumb = () => {
     },
   ];
   return (
-    <Breadcrumb style={{ margin: "16px 0" }} items={workOrdersManageBreadcrumb} />
+    <Breadcrumb
+      style={{ margin: "16px 0" }}
+      items={workOrdersManageBreadcrumb}
+    />
   );
 };
 

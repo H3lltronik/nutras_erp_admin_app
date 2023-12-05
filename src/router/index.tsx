@@ -1,9 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import { DefaultLayout } from "../Layouts/DefaultLayout";
 import { jsonToUrlWithGetKey } from "../lib/entity.utils";
+import { BatchesList } from "../pages/Batch/List/BatchesList";
+import { BatchesManage } from "../pages/Batch/Manage/BatchesManage";
 import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
+import { InventoryManage } from "../pages/Inventory/Manage/InventoryManage";
 import Login from "../pages/Login/Login";
 import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
@@ -307,6 +310,30 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
         <WorkOrdersManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/inventory",
+    element: (
+      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+        <InventoryManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/lotes",
+    element: (
+      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+        <BatchesList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/lote/manage",
+    element: (
+      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
+        <BatchesManage />
       </DefaultLayout>
     ),
   },
