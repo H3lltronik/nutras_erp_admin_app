@@ -14,9 +14,9 @@ export const BatchesManageBreadcrumb = () => {
       className:
         "cursor-pointer hover:text-blue-500 transition-all duration-300",
       onClick: () => {
-        navigate("/admin/batches");
+        navigate("/admin/lotes");
       },
-      href: "/admin/batches",
+      href: "/admin/lotes",
     },
     {
       title: "Crear - Editar producto",

@@ -33,7 +33,7 @@ export const BatchesList: React.FC<BatchesListProps> = (props) => {
     BatchAPI.deleteBatch(id as string);
 
   const doEdit = async (id: string | number) => {
-    let url = `/admin/lote/manage/${id}`;
+    let url = `/admin/lotes/manage/${id}`;
     if (props.buildNewBatchPath) {
       url = props.buildNewBatchPath({ id: id + "" });
     }
@@ -42,7 +42,7 @@ export const BatchesList: React.FC<BatchesListProps> = (props) => {
   };
 
   const handleNewBatchClick = () => {
-    let url = "/admin/lote/manage";
+    let url = "/admin/lotes/manage";
     if (props.buildNewBatchPath) {
       url = props.buildNewBatchPath({ id: "" });
     }
@@ -88,7 +88,7 @@ export const BatchesList: React.FC<BatchesListProps> = (props) => {
                   className: "bg-green-600 text-white hover:bg-green-50",
                   icon: <EyeOutlined className="mr-[-7px]" />,
                   onClick: (record) => {
-                    navigate(`/admin/lote/inspect/batch/${record.id}`);
+                    navigate(`/admin/lotes/inspect/batch/${record.id}`);
                   },
                   conditionEval: (_record) => {
                     const record = _record as Batch;

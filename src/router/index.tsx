@@ -7,6 +7,7 @@ import { BatchesHeader } from "../pages/Batches/Common/BatchHeader";
 import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
+import { InventoryManage } from "../pages/Inventory/Manage/InventoryManage";
 import Login from "../pages/Login/Login";
 import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
@@ -326,6 +327,14 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
         <BatchesManage />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/inventory",
+    element: (
+      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Inventario">
+        <InventoryManage />
       </DefaultLayout>
     ),
   },

@@ -21,7 +21,7 @@ export const BatchesList: React.FC = () => {
     BatchAPI.deleteBatch(id as string);
 
   const doEdit = async (id: string | number) =>
-    navigate(`/admin/batches/manage/${id}`);
+    navigate(`/admin/lotes/manage/${id}`);
 
   return (
     <>
@@ -30,7 +30,7 @@ export const BatchesList: React.FC = () => {
           <BatchesListBreadcrumb />
 
           <Button
-            onClick={() => navigate("/admin/batches/manage")}
+            onClick={() => navigate("/admin/lotes/manage")}
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
             Nuevo lote

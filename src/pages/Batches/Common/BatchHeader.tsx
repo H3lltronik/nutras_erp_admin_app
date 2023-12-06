@@ -18,18 +18,18 @@ export const BatchesHeader: React.FC = () => {
   const items: MenuProps["items"] = [
     {
       label: "Listado de lotes",
-      key: "/admin/batches",
+      key: "/admin/lotes",
       icon: <OrderedListOutlined />,
       onClick: () => {
-        navigate("/admin/batches");
+        navigate("/admin/lotes");
       },
     },
     {
       label: "Crear lote",
-      key: "/admin/batches/manage",
+      key: "/admin/lotes/manage",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/batches/manage");
+        navigate("/admin/lotes/manage");
       },
     },
   ];

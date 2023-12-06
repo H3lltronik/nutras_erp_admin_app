@@ -1,6 +1,15 @@
-import { Col, Form, Input, Row, Select } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { WarehousesAPI } from "../../../api";
+import { Col, Form, Input, Row, Select, Typography } from "antd";
+import {
+  Ref,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import { ProductAPI, WarehousesAPI } from "../../../api";
+import BatchForm, { BatchFormHandle } from "../Batch/BatchForm";
+import { FormList, FormListHandle } from "../Common/FormList";
 import { GenericSelect } from "../Common/GenericSelect";
 
 const onFinish = (values: unknown) => {
@@ -29,14 +38,19 @@ const InventoryMovementForm = forwardRef<
 >((_props, ref) => {
   const [form] = Form.useForm();
   const [isDraft, setIsDraft] = useState<boolean>(false);
+  const formListRef = useRef<FormListHandle>(null);
 
   useImperativeHandle(
     ref,
     (): InventoryMovementFormHandle => ({
       getFormData: async (params) => {
+        console.log("getFormData", params);
         setIsDraft(!!params?.draftMode);
 
         const valid = await form.validateFields();
+        const allValid = await formListRef.current?.getAllFormsData();
+        console.log("allValid", allValid);
+
         return {
           ...form.getFieldsValue(),
           isDraft: !!params?.draftMode,
@@ -77,6 +91,25 @@ const InventoryMovementForm = forwardRef<
               </Select.Option>
               <Select.Option key={"recolocacion"}>Recolocacion</Select.Option>
             </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Producto"
+            name="productId"
+            rules={[
+              {
+                required: true && !isDraft,
+                message: "Este campo es obligatorio",
+              },
+            ]}>
+            <GenericSelect
+              fetcher={() => ProductAPI.getProducts()}
+              placeholder="Selecciona un producto catalogo"
+              optionLabel="commonName"
+              optionKey={"id"}
+              queryKey={["products"]}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -121,6 +154,21 @@ const InventoryMovementForm = forwardRef<
           </Form.Item>
         </Col>
       </Row>
+
+      <Row gutter={16} className="mt-5">
+        <Col span={24}>
+          <hr />
+        </Col>
+        <Col span={24}>
+          <Typography.Title level={3}>Seccion de lotes</Typography.Title>
+        </Col>
+      </Row>
+
+      <FormList
+        ref={formListRef}
+        renderForm={(ref: Ref<BatchFormHandle>) => <BatchForm ref={ref} />}
+        getFormData={(formHandle: BatchFormHandle) => formHandle.getFormData()}
+      />
     </Form>
   );
 });
