@@ -6,7 +6,7 @@ import { ProductAPI } from "../../../api";
 import { GetProductsParams } from "../../../api/product/product.api";
 import { AdminDataTable } from "../../../components/Common/AdminDataTable";
 import { ProductsListBreadcrumb } from "../Common/Breadcrums";
-import ProductFilters from "./ProductFilters";
+import { AvailableProductFilters, ProductFilters } from "./ProductFilters";
 import { productListColumns } from "./productsTableColumns";
 import { useProductsListPageStore } from "./products_list_page.store";
 
@@ -17,9 +17,17 @@ type PathProps = {
 
 type ProductsListProps = {
   defaultFilters?: GetProductsParams;
+  disabledFilters?: AvailableProductFilters;
   buildNewProductPath?: (params: PathProps) => string;
+  mode?: "full" | "selection-only";
+  enableSelection?: boolean;
+  onSelectionChange?: (selectedRows: Product[]) => void;
+  selectionLimit?: number;
 };
+const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
+
 export const ProductsList: React.FC<ProductsListProps> = (props) => {
+  if (!props.mode) props.mode = "full";
   const navigate = useNavigate();
   const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
     useProductsListPageStore();
@@ -64,14 +72,22 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
           </Button>
         </div>
         <div className="p-[24px] bg-white">
-          <ProductFilters />
+          <ProductFilters
+            disabledFilters={props.disabledFilters}
+            defaultFilters={props.defaultFilters}
+          />
           <section className="mx-auto">
             <AdminDataTable
+              enableSelection={props.enableSelection}
+              selectionLimit={props.selectionLimit}
+              onSelectionChange={props.onSelectionChange}
               queryKey="users"
               fetchData={fetchData}
               columns={productListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
+              deleteDisabled={isSelectionOnly(props.mode)}
+              editDisabled={isSelectionOnly(props.mode)}
               editActionConditionEval={(record) => {
                 const product = record as Product;
                 return product.deletedAt === null;
@@ -89,7 +105,13 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                   className: "bg-green-600 text-white hover:bg-green-50",
                   icon: <EyeOutlined className="mr-[-7px]" />,
                   onClick: (record) => {
-                    navigate(`/admin/products/inspect/product/${record.id}`);
+                    if (isSelectionOnly(props.mode))
+                      window.open(
+                        `/admin/products/inspect/product/${record.id}`,
+                        "_blank"
+                      );
+                    else
+                      navigate(`/admin/products/inspect/product/${record.id}`);
                   },
                   conditionEval: (_record) => {
                     const record = _record as Product;

@@ -36,6 +36,11 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   queryParameters?: Record<string, string | number | undefined>;
   deleteActionConditionEval?: (record: TData) => boolean;
   editActionConditionEval?: (record: TData) => boolean;
+  deleteDisabled?: boolean;
+  editDisabled?: boolean;
+  enableSelection?: boolean;
+  selectionLimit?: number;
+  onSelectionChange?: (selectedRows: TData[]) => void;
 }
 
 export interface IDataWithID {
@@ -46,6 +51,9 @@ const _AdminDataTable = <
   TData extends IDataWithID,
   TResponse extends { data: TData[]; pagination: Pagination },
 >({
+  enableSelection = false,
+  selectionLimit = 1,
+  onSelectionChange = () => {},
   queryKey,
   fetchData,
   columns,
@@ -56,12 +64,15 @@ const _AdminDataTable = <
   editActionConditionEval,
   queryParameters = {},
   rowClassName,
+  editDisabled = false,
+  deleteDisabled = false,
   perPage = 5,
 }: AdminDataTableProps<TData, TResponse>) => {
   const navigate = useNavigate();
   const locationQuery = useLocationQuery();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageLoading, setPageLoading] = useState<boolean>(false);
+  const [selectedRows, setSelectedRows] = useState<TData[]>([]);
 
   useEffect(() => {
     const _page = locationQuery.get("page");
@@ -129,7 +140,7 @@ const _AdminDataTable = <
 
   const defaultActions: Action<TData>[] = [];
 
-  if (editAction != null)
+  if (editAction != null && !editDisabled)
     defaultActions.push({
       icon: <EditOutlined className="mr-[-6px]" />,
       className: "bg-blue-600 text-white hover:bg-blue-50",
@@ -137,7 +148,7 @@ const _AdminDataTable = <
       conditionEval: editActionConditionEval,
     });
 
-  if (deleteAction != null)
+  if (deleteAction != null && !deleteDisabled)
     defaultActions.push({
       icon: <CloseOutlined className="mr-[-7px]" />,
       className: "bg-red-600 text-white hover:bg-red-50",
@@ -193,12 +204,23 @@ const _AdminDataTable = <
         dataSource={dataSource as AnyObject[]}
         columns={combinedColumns as unknown as ColumnsType<TData>}
         onChange={handleTableChange}
+        rowKey={"id"}
         pagination={{
           current: currentPage,
           total: totalItems as number,
           pageSize: perPage,
         }}
         rowClassName={rowClassName}
+        rowSelection={{
+          type: selectionLimit > 1 ? "checkbox" : "radio",
+          selectedRowKeys: selectedRows.map((row) => row.id),
+          onChange: (selectedRowKeys, selectedRows) => {
+            if (selectedRowKeys.length > selectionLimit) return;
+            setSelectedRows(selectedRows);
+            onSelectionChange(selectedRows);
+          },
+          hideSelectAll: true,
+        }}
       />
     </>
   );

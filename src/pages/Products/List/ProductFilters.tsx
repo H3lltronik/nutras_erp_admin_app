@@ -1,10 +1,25 @@
 import { Input, Select } from "antd";
 import debounce from "lodash.debounce";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { GetProductsParams } from "../../../api/product/product.api";
 import { entityStatuses } from "../../../lib/entity.utils";
 import { useProductsListPageStore } from "./products_list_page.store";
 
-export default function ProductFilters() {
+export type AvailableProductFilters = {
+  name?: boolean;
+  code?: boolean;
+  provider?: boolean;
+  status?: boolean;
+};
+type ProductFiltersProps = {
+  disabledFilters?: AvailableProductFilters;
+  defaultFilters?: GetProductsParams;
+};
+export const ProductFilters: React.FC<ProductFiltersProps> = (
+  props: ProductFiltersProps
+) => {
+  const disabledFilters = props.disabledFilters || {};
+
   const {
     setNameSearch,
     setCodeSearch,
@@ -12,6 +27,20 @@ export default function ProductFilters() {
     setDraftMode,
     setPublished,
   } = useProductsListPageStore((state) => state);
+
+  useEffect(() => {
+    if (props.defaultFilters) {
+      if (props.defaultFilters.draftMode !== undefined)
+        setDraftMode(props.defaultFilters.draftMode);
+    }
+  }, [
+    props.defaultFilters,
+    setCodeSearch,
+    setDraftMode,
+    setNameSearch,
+    setProviderSearch,
+    setPublished,
+  ]);
 
   const debouncedSetNameSearch = useMemo(
     () => debounce(setNameSearch, 300),
@@ -56,6 +85,7 @@ export default function ProductFilters() {
         <div className="flex flex-col">
           <small>Busqueda por nombre</small>
           <Input
+            disabled={disabledFilters.name}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleNameChange}
@@ -66,6 +96,7 @@ export default function ProductFilters() {
         <div className="flex flex-col">
           <small>Busqueda por codigo</small>
           <Input
+            disabled={disabledFilters.code}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleCodeChange}
@@ -76,6 +107,7 @@ export default function ProductFilters() {
         <div className="flex flex-col">
           <small>Busqueda por proveedor</small>
           <Input
+            disabled={disabledFilters.provider}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleProviderChange}
@@ -86,6 +118,7 @@ export default function ProductFilters() {
         <div className="flex flex-col">
           <small>Busqueda por status</small>
           <Select
+            disabled={disabledFilters.status}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleStatusChange}
@@ -102,4 +135,4 @@ export default function ProductFilters() {
       </>
     </section>
   );
-}
+};
