@@ -127,7 +127,6 @@ const BatchForm = forwardRef<BatchFormHandle, BatchFormProps>((_props, ref) => {
       <Row gutter={16}>
         {selectedProduct && (
           <Col span={24}>
-            {/* show selected product */}
             <span className="text-xl">Seleccionado: </span>
             <span className="font-bold text-xl">
               {selectedProduct.commonName}

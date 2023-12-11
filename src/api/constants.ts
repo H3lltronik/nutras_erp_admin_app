@@ -7,6 +7,8 @@ export const ENTITIES_ENDPOINTS = {
   warehouse: "warehouse",
   batch: "lote",
   batchEntryType: "lote-entry-type",
+  movementType: "movement_type",
+  movementConcept: "movement_concept",
   products: "products",
   product_types: "product-types",
   provider: "providers",

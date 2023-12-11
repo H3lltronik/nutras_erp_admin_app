@@ -1,14 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import {
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Row,
-  Select,
-  Typography,
-} from "antd";
+import { Col, DatePicker, Form, Input, Row, Typography } from "antd";
 import {
   Ref,
   forwardRef,
@@ -18,11 +8,17 @@ import {
   useRef,
   useState,
 } from "react";
-import { WarehousesAPI } from "../../../api";
+import {
+  MovementConceptAPI,
+  MovementTypeAPI,
+  WarehousesAPI,
+} from "../../../api";
 import { defaultRequiredRules } from "../../../lib/common/forms";
+import { BatchesList } from "../../../pages/Batches";
 import BatchForm, { BatchFormHandle } from "../Batch/BatchForm";
 import { FormList, FormListHandle } from "../Common/FormList";
 import { GenericSelect } from "../Common/GenericSelect";
+import { movementTypeMapping, section2ModeMapping } from "./mappings";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -51,10 +47,8 @@ const InventoryMovementForm = forwardRef<
   const [form] = Form.useForm();
   const [isDraft, setIsDraft] = useState<boolean>(false);
   const formListRef = useRef<FormListHandle>(null);
-  const movementTypeId = Form.useWatch("productId", form);
-  const exitWarehouseId = Form.useWatch("fromId", form);
-  const entryWarehouseId = Form.useWatch("toId", form);
-  const validatedUnderstood = Form.useWatch("understood", form);
+  const movementConceptId = Form.useWatch("movementConcept", form);
+  const [movementTypeId, setMovementTypeId] = useState<string | null>(null);
 
   useImperativeHandle(
     ref,
@@ -63,7 +57,7 @@ const InventoryMovementForm = forwardRef<
         console.log("getFormData", params);
         setIsDraft(!!params?.draftMode);
 
-        const valid = await form.validateFields();
+        // const valid = await form.validateFields();
         const allValid = await formListRef.current?.getAllFormsData();
         console.log("allValid", allValid);
 
@@ -82,46 +76,17 @@ const InventoryMovementForm = forwardRef<
     form.setFieldValue("understood", false);
   }, [form, _props.entity]);
 
-  const handleMovementTypeChange = (value: string) => {
-    console.log("value", value);
-  };
-
-  const { data: warehousesData } = useQuery(["rawWarehouses"], () =>
-    WarehousesAPI.getWarehouses()
-  );
-
-  const exitWarehouse = useMemo(() => {
-    if (!warehousesData) return "";
-    if ("statusCode" in warehousesData) return "";
-    console.log("warehousesData", warehousesData);
-
-    const warehouse = warehousesData.data.find(
-      (warehouse) => warehouse.id === exitWarehouseId
-    );
-    return warehouse?.name;
-  }, [warehousesData, exitWarehouseId]);
-
-  const entryWarehouse = useMemo(() => {
-    if (!warehousesData) return "";
-    if ("statusCode" in warehousesData) return "";
-
-    const warehouse = warehousesData.data.find(
-      (warehouse) => warehouse.id === entryWarehouseId
-    );
-    return warehouse?.name;
-  }, [warehousesData, entryWarehouseId]);
-
-  const movementType = useMemo(() => {
-    switch (movementTypeId) {
-      case "entrada":
-        return "Entrada";
-      case "salida":
-        return "Salida";
-      case "recolocacion":
-        return "Recolocacion";
-      default:
-        return "Entrada";
+  useEffect(() => {
+    if (movementConceptId) {
+      setMovementTypeId(movementTypeMapping[movementConceptId]);
     }
+  }, [movementConceptId]);
+
+  type section2ModeType = "entry" | "exit" | null;
+  const section2Mode: section2ModeType = useMemo(() => {
+    if (!movementTypeId) return null;
+
+    return section2ModeMapping[movementTypeId] as section2ModeType;
   }, [movementTypeId]);
 
   return (
@@ -172,46 +137,26 @@ const InventoryMovementForm = forwardRef<
             label="Concepto de movimiento"
             rules={defaultRequiredRules(isDraft)}
             name="movementConcept">
-            <Select
-              onChange={handleMovementTypeChange}
-              defaultValue={"merchandise-acquisition"}>
-              <Select.Option key={"merchandise-acquisition"}>
-                Adquisición de Mercancía
-              </Select.Option>
-              <Select.Option key={"production-output"}>
-                Salida a producción
-              </Select.Option>
-              <Select.Option key={"sale"}>Venta</Select.Option>
-              <Select.Option key={"merchandise-return"}>
-                Devolución de mercancía
-              </Select.Option>
-              <Select.Option key={"production-reception"}>
-                Recepción de producción
-              </Select.Option>
-              <Select.Option key={"external-sample-delivery"}>
-                Entrega de Muestra a externo
-              </Select.Option>
-              <Select.Option key={"human-donation"}>
-                Donación humana
-              </Select.Option>
-              <Select.Option key={"waste"}>Desecho</Select.Option>
-              <Select.Option key={"forage-livestock"}>
-                Forrajero / Ganadero
-              </Select.Option>
-            </Select>
+            <GenericSelect
+              fetcher={() => MovementConceptAPI.getAll()}
+              optionKey="id"
+              optionLabel="name"
+              queryKey={["movementConcepts"]}
+              placeholder="Selecciona un concepto de movimiento"
+            />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label="Tipo de movimiento">
-            <Select
+            <GenericSelect
+              fetcher={() => MovementTypeAPI.getAll()}
+              optionKey="id"
+              optionLabel="name"
+              queryKey={["movementTypes"]}
+              placeholder="Selecciona un tipo de movimiento"
+              value={movementTypeId}
               disabled={true}
-              onChange={handleMovementTypeChange}
-              defaultValue={"entry-authorization"}>
-              <Select.Option key={"entry-authorization"}>
-                Autorización de Entrada
-              </Select.Option>
-              <Select.Option key={"exit-voucher"}>Vale de salida</Select.Option>
-            </Select>
+            />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -271,42 +216,14 @@ const InventoryMovementForm = forwardRef<
           </Form.Item>
         </Col>
       </Row>
-      <div className="text-lg">
-        <strong>Resumen:</strong> <br />
-        Se hace un movimiento de tipo{" "}
-        <i>
-          <strong>{movementType} </strong>
-        </i>
-        Desde el almacen de salida{" "}
-        <i>
-          <strong>{exitWarehouse} </strong>
-        </i>{" "}
-        Hacia el almacen de entrada{" "}
-        <i>
-          <strong>{entryWarehouse} </strong>
-        </i>
-      </div>
-      <div className="mt-5">
-        <Form.Item
-          name="understood"
-          label="Esta de acuerdo con esa frase?"
-          valuePropName="checked"
-          rules={defaultRequiredRules(isDraft)}>
-          <Checkbox className="ml-3" />
-        </Form.Item>
-        <div>Debe aceptar para continuar</div>
-      </div>
-      {validatedUnderstood && (
-        <>
-          <Row gutter={16} className="mt-5">
-            <Col span={24}>
-              <hr />
-            </Col>
-            <Col span={24}>
-              <Typography.Title level={3}>Seccion de lotes</Typography.Title>
-            </Col>
-          </Row>
 
+      <Row gutter={16} className="mt-5">
+        <Col span={24}>
+          <Typography.Title level={3}>Seccion de lotes</Typography.Title>
+        </Col>
+      </Row>
+      {section2Mode === "entry" && (
+        <>
           <FormList
             ref={formListRef}
             renderForm={(ref: Ref<BatchFormHandle>) => <BatchForm ref={ref} />}
@@ -314,6 +231,15 @@ const InventoryMovementForm = forwardRef<
               formHandle.getFormData()
             }
           />
+        </>
+      )}
+
+      {section2Mode === "exit" && (
+        <>
+          <div className="">
+            Seleccionando Lotes del almacen: <strong>General</strong>
+          </div>
+          <BatchesList />
         </>
       )}
     </Form>
