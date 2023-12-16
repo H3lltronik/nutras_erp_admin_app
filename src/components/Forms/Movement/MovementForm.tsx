@@ -1,4 +1,4 @@
-import { Col, DatePicker, Form, Input, InputNumber, Row, Switch } from "antd";
+import { Col, DatePicker, Form, Input, InputNumber, Row, Select, Switch } from "antd";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { ProductsList } from "../../../pages/Products";
@@ -56,98 +56,73 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     if (selectedRows.length > 0) setSelectedProduct(selectedRows[0]);
   };
 
+  const handleOCSelection = () => {
+    // Open modal to select OC
+    // Update selectedOC based on modal selection
+  };
+
+  // Function to handle Requisition selection
+  const handleRequisitionSelection = () => {
+    // Open modal to select Requisition
+    // Update selectedRequisition based on modal selection
+  };
+
   return (
     <Form
-      form={form}
       name="MovementForm"
       initialValues={{ remember: true, userId: useAuth().user?.id }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
-      autoComplete="off">
-      <Form.Item<Movement> name="id" style={{ display: "none" }}>
-        <Input />
+      autoComplete="off"
+    >
+      {/* ... Existing ProductList code ... */}
+
+      {/* New Fields */}
+      <Form.Item label="Concepto de movimiento" name="concept">
+        <Select>
+          <Select.Option value="adquisicion">Adquisición de Mercancía</Select.Option>
+          <Select.Option value="salidaProduccion">Salida a producción</Select.Option>
+          <Select.Option value="venta">Venta</Select.Option>
+          <Select.Option value="Vale de salida" >Salida a producción</Select.Option>
+          <Select.Option value="Autorización de Salida" >Venta</Select.Option>
+          <Select.Option value="Autorización de Entrada" >Devolución de mercancía</Select.Option>
+          <Select.Option value="Vale de entrada" >Recepción de producción</Select.Option>
+          <Select.Option value="Autorización de salida" >Entrega de Muestra a externo</Select.Option>
+          <Select.Option value="Autorización de Salida" >Donación humana</Select.Option>
+          <Select.Option value="Autorización de Salida" >Desecho</Select.Option>
+          <Select.Option value="Autorización de Salida" >Forrajero / Ganadero</Select.Option>
+        </Select>
       </Form.Item>
 
-      <Row gutter={16}>
-        <Col span={6}>
-          <Form.Item<Movement>
-            label="Código"
-            name="code"
-            rules={[
-              {
-                required: true && !isDraft,
-                message: "Este campo es obligatorio",
-              },
-            ]}>
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item<Movement>
-            label="Cantidad"
-            name="quantity"
-            rules={[
-              {
-                required: true && !isDraft,
-                message: "Este campo es obligatorio",
-              },
-            ]}>
-            <InputNumber className="w-full" />
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item<Movement>
-            label="Fecha de expiracion"
-            name="expirationDate"
-            rules={[
-              {
-                required: true && !isDraft,
-                message: "Este campo es obligatorio",
-              },
-            ]}>
-            <DatePicker className="w-full" />
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item<Movement>
-            label="Activo"
-            name="isActive"
-            valuePropName="checked"
-            rules={[
-              {
-                required: true && !isDraft,
-                message: "Este campo es obligatorio",
-              },
-            ]}>
-            <Switch />
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item label="Tipo de movimiento" name="movementType" shouldUpdate>
+        <Input readOnly />
+      </Form.Item>
 
-      <Row gutter={16}>
-        {selectedProduct && (
-          <Col span={24}>
-            <span className="text-xl">Seleccionado: </span>
-            <span className="font-bold text-xl">
-              {selectedProduct.commonName}
-            </span>
-          </Col>
-        )}
-        <Col span={24}>
-          <ProductsList
-            mode="selection-only"
-            enableSelection={true}
-            selectionLimit={1}
-            onSelectionChange={onSelectionChange}
-            defaultFilters={{
-              published: true,
-            }}
-            disabledFilters={{
-              status: true,
-            }}
-          />
-        </Col>
-      </Row>
+      <Form.Item label="OC Relacionada" name="relatedOC" shouldUpdate>
+        <Select
+          disabled={form.getFieldValue("concept") === "adquisicion"}
+          onClick={handleOCSelection}
+        >
+          {/* ... Options based on OCs ... */}
+        </Select>
+      </Form.Item>
+
+      <Form.Item label="Requisición Relacionada" name="relatedRequisition" shouldUpdate>
+        <Select
+          disabled={form.getFieldValue("concept") === "envioProduccion"}
+          onClick={handleRequisitionSelection}
+        >
+          {/* ... Options based on Requisitions ... */}
+        </Select>
+      </Form.Item>
+
+      <Form.Item label="Origen" name="movementOrigin" shouldUpdate>
+        <Input readOnly />
+      </Form.Item>
+
+      <Form.Item label="Destino" name="movementDestination" shouldUpdate>
+        <Input readOnly />
+      </Form.Item>
     </Form>
   );
 });
