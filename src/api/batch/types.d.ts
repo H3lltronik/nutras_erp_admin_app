@@ -20,8 +20,8 @@ type UpdateBatchRequest = Batch;
 type GetBatchResponse = Batch;
 
 type GetBatchesResponse = {
-  data: Batch[];
-  pagination: Pagination;
+  items: Batch[];
+  paginationMetadata: Pagination;
 };
 
 type UpdatedBatchResponse = Batch;

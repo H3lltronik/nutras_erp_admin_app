@@ -33,7 +33,7 @@ class BaseBatchAPI extends BaseAPI {
     console.log("[getBatches] params: ", params);
     try {
       const batches = await this.get<GetBatchesResponse>("", params);
-      const batchesWithStatus = batches.data.map((batch) =>
+      const batchesWithStatus = batches.items.map((batch) =>
         Object.assign({}, batch, {
           status: statusParser(batch),
         })
@@ -41,7 +41,7 @@ class BaseBatchAPI extends BaseAPI {
 
       return {
         data: batchesWithStatus,
-        pagination: batches.pagination,
+        pagination: batches.paginationMetadata,
       };
     } catch (error) {
       return handleAPIError(error);

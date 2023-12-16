@@ -16,5 +16,4 @@ export const ENTITIES_ENDPOINTS = {
   workRequests: "workRequests",
   workOrders: "workOrders",
   measurements: "measure-unit",
-  batches: "batches",
 };
