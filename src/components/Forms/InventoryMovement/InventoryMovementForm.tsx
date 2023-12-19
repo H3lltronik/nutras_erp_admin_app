@@ -15,7 +15,9 @@ import {
 } from "../../../api";
 import { defaultRequiredRules } from "../../../lib/common/forms";
 import { BatchesList } from "../../../pages/Batches";
-import BatchForm, { BatchFormHandle } from "../Batch/BatchForm";
+import ProductBatchesForm, {
+  ProductBatchesFormHandle,
+} from "../Batch/ProductBatchesForm";
 import { FormList, FormListHandle } from "../Common/FormList";
 import { GenericSelect } from "../Common/GenericSelect";
 import { movementTypeMapping, section2ModeMapping } from "./mappings";
@@ -104,7 +106,7 @@ const InventoryMovementForm = forwardRef<
         <Col span={8}>
           <Form.Item
             label="Folio"
-            name="requisitionId"
+            name="folio"
             rules={defaultRequiredRules(isDraft)}>
             <Input placeholder="Generado al procesar..." disabled />
           </Form.Item>
@@ -112,7 +114,7 @@ const InventoryMovementForm = forwardRef<
         <Col span={12}>
           <Form.Item
             label="OT Relacionada"
-            name="requisitionId"
+            name="otId"
             rules={defaultRequiredRules(isDraft)}>
             <GenericSelect
               fetcher={() => WarehousesAPI.getWarehouses()}
@@ -126,7 +128,7 @@ const InventoryMovementForm = forwardRef<
         <Col span={4}>
           <Form.Item
             label="Fecha"
-            name="requisitionId"
+            name="date"
             rules={defaultRequiredRules(isDraft)}>
             <DatePicker className="w-full" placeholder="Fecha" />
           </Form.Item>
@@ -225,9 +227,12 @@ const InventoryMovementForm = forwardRef<
       {section2Mode === "entry" && (
         <>
           <FormList
+            title="Agregar productos"
             ref={formListRef}
-            renderForm={(ref: Ref<BatchFormHandle>) => <BatchForm ref={ref} />}
-            getFormData={(formHandle: BatchFormHandle) =>
+            renderForm={(ref: Ref<ProductBatchesFormHandle>) => (
+              <ProductBatchesForm ref={ref} />
+            )}
+            getFormData={(formHandle: ProductBatchesFormHandle) =>
               formHandle.getFormData()
             }
           />

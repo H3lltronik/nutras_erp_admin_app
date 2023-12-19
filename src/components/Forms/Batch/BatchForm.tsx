@@ -1,7 +1,6 @@
 import { Col, DatePicker, Form, Input, InputNumber, Row, Switch } from "antd";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
-import { ProductsList } from "../../../pages/Products";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -28,7 +27,6 @@ type BatchFormProps = {
 const BatchForm = forwardRef<BatchFormHandle, BatchFormProps>((_props, ref) => {
   const [form] = Form.useForm();
   const [isDraft, setIsDraft] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useImperativeHandle(
     ref,
@@ -51,10 +49,6 @@ const BatchForm = forwardRef<BatchFormHandle, BatchFormProps>((_props, ref) => {
   useEffect(() => {
     if (_props.entity) form.setFieldsValue(_props.entity);
   }, [form, _props.entity]);
-
-  const onSelectionChange = (selectedRows: Product[]) => {
-    if (selectedRows.length > 0) setSelectedProduct(selectedRows[0]);
-  };
 
   return (
     <Form
@@ -121,31 +115,6 @@ const BatchForm = forwardRef<BatchFormHandle, BatchFormProps>((_props, ref) => {
             ]}>
             <Switch />
           </Form.Item>
-        </Col>
-      </Row>
-
-      <Row gutter={16}>
-        {selectedProduct && (
-          <Col span={24}>
-            <span className="text-xl">Seleccionado: </span>
-            <span className="font-bold text-xl">
-              {selectedProduct.commonName}
-            </span>
-          </Col>
-        )}
-        <Col span={24}>
-          <ProductsList
-            mode="selection-only"
-            enableSelection={true}
-            selectionLimit={1}
-            onSelectionChange={onSelectionChange}
-            defaultFilters={{
-              published: true,
-            }}
-            disabledFilters={{
-              status: true,
-            }}
-          />
         </Col>
       </Row>
     </Form>
