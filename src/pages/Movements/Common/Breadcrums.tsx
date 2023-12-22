@@ -19,7 +19,7 @@ export const MovementsManageBreadcrumb = () => {
       href: "/admin/movements",
     },
     {
-      title: "Crear - Editar lote",
+      title: "Crear movimiento",
     },
   ];
   return (

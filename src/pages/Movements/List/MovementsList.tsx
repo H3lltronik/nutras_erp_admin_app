@@ -33,7 +33,7 @@ export const MovementsList: React.FC = () => {
             onClick={() => navigate("/admin/movements/manage")}
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
-            Nuevo lote
+            Nuevo movimiento
           </Button>
         </div>
         <div className="p-[24px] bg-white">
