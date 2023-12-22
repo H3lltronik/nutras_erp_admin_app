@@ -17,10 +17,10 @@ interface MovementType {
 type GetMovementConceptsResponse = MovementConcept[];
 type GetMovementTypesResponse = MovementType[];
 
-type GetMovementConceptsResponseWData = {
+type GetMovementConceptsResponseData = {
   data: GetMovementConceptsResponse;
 };
 
-type GetMovementTypesResponseWData = {
+type GetMovementTypesResponseData = {
   data: GetMovementTypesResponse;
 };

@@ -7,6 +7,7 @@ import * as END_POINTS from './endpoints';
 import BaseMovementConceptAPI from "./inventory/movement_concept.api";
 import BaseMovementTypeAPI from "./inventory/movement_type.api";
 import BaseMeasurementAPI from "./measurement/measurement.api";
+import BaseMovementAPI from "./movement/movement.api";
 import BaseProductAPI from "./product/product.api";
 import BaseProductTypesAPI from "./product/product_types.api";
 import BaseProfilesAPI from "./profiles/profiles.api";
@@ -36,6 +37,7 @@ export const BatchAPI = new BaseBatchAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.batch
 export const BatchTypesAPI = new BaseBatchEntryTypesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.batchEntryType}`);
 export const MovementTypeAPI = new BaseMovementTypeAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementType}`);
 export const MovementConceptAPI = new BaseMovementConceptAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementConcept}`);
+export const MovementAPI = new BaseMovementAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movement}`);
 
 export const AuthAPI = new BaseAuthAPI({
     forgotPasswordUrl: `${BASE_URL}/`,

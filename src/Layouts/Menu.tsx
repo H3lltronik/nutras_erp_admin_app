@@ -74,8 +74,8 @@ const items: MenuItem[] = [
       roles.Inventory.roles.read.role
     ),
     getItem(
-      "Lotes",
-      "/admin/lotes",
+      "Movimientos",
+      "/admin/movements",
       <DatabaseOutlined />,
       [],
       roles.Inventory.roles.read.role

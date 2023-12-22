@@ -1,9 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { DefaultLayout } from "../Layouts/DefaultLayout";
 import { jsonToUrlWithGetKey } from "../lib/entity.utils";
-import { BatchesList } from "../pages/Batch/List/BatchesList";
-import { BatchesManage } from "../pages/Batch/Manage/BatchesManage";
-import { BatchesHeader } from "../pages/Batches/Common/BatchHeader";
 import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
@@ -30,6 +27,8 @@ import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
 import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
 import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { MovementsHeader } from "../pages/Movements/Common/MovementsHeader";
+import { MovementsList, MovementsManage } from "../pages/Movements";
 import { routesList } from "./routes";
 
 const router = createBrowserRouter([
@@ -315,18 +314,18 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/lotes",
+    path: "/admin/movements",
     element: (
-      <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
-        <BatchesList />
+      <DefaultLayout navContent={<MovementsHeader />} headerTitle="Movimientos">
+        <MovementsList />
       </DefaultLayout>
     ),
   },
   {
-    path: "/admin/lotes/manage/:id?",
+    path: "/admin/movements/manage/:id?",
     element: (
-      <DefaultLayout navContent={<BatchesHeader />} headerTitle="Lotes">
-        <BatchesManage />
+      <DefaultLayout navContent={<MovementsHeader />} headerTitle="Movimientos">
+        <MovementsManage />
       </DefaultLayout>
     ),
   },
