@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { ProductsList } from "../../../pages/Products";
 import { MovementConceptAPI, MovementTypeAPI } from "../../../api";
+import moment from "moment-timezone";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -32,6 +33,17 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [movementConcepts, setMovementConcepts] = useState<GetMovementConceptsResponseData[]>([]);
   const [movementTypes, setMovementTypes] = useState<GetMovementTypesResponseData[]>([]);
+  const [date, setDate] = useState<moment.Moment>(moment());
+
+  const showOcSelector = (movementConceptId: string): boolean => {
+    const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
+    return movementConcept?.name?.toLowerCase() == "Adquisición de mercancía".toLowerCase();
+  }
+
+  const showRequisitionRelatedOcSelector = (movementConceptId: string): boolean => {
+    const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
+    return movementConcept?.name?.toLowerCase() == "Recepción de producción".toLowerCase();
+  }
 
   useImperativeHandle(
     ref,
@@ -57,7 +69,6 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     const getMovementsConcept = async () => {
       try {
         const movementsConcept = await MovementConceptAPI.getAll();
-        console.log("movement concepts", movementsConcept);
         setMovementConcepts(movementsConcept.data);
       } catch (error) {
         console.error("Error getting MovementConcepts");
@@ -67,7 +78,6 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     const getMovementsType = async () => {
       try {
         const movementsType = await MovementTypeAPI.getAll();
-        console.log( movementsType);
         setMovementTypes(movementsType.data);
       } catch (error) {
         console.error("Error getting MovementTypes");
@@ -89,14 +99,27 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     <Form
       form={form}
       name="MovementForm"
-      initialValues={{ remember: true, userId: useAuth().user?.id }}
+      initialValues={{ remember: true, userId: useAuth().user?.id, date: date.format('YYYY-MM-DD') }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item label="Concepto de movimiento" name="concept">
+          <Form.Item label="Fecha" name="date">
+            <Input disabled type="date"></Input>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="Folio" name="folio">
+            <Input disabled type="text"></Input>
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={24}>
+        <Col span={12}>
+          <Form.Item label="Concepto de movimiento" name="movementConceptId">
             <Select onChange={onMovementConceptSelected}>
               {
                 movementConcepts.map((concept) => {
@@ -113,29 +136,41 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
         </Col>
       </Row>
 
+      {
+        showOcSelector(form.getFieldValue('movementConceptId')) ?
+          <Row gutter={24}>
+            <Col span={24}>
+              <Form.Item label="Orden de compra relacionada" name="ocId" shouldUpdate>
+                <Select>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        :
+        showRequisitionRelatedOcSelector(form.getFieldValue('movementConceptId')) ?
+        <Row gutter={24}>
+          <Col span={24}>
+            <Form.Item label="Requisición relacionada" name="requisitionId" shouldUpdate>
+              <Select>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+        : null
+      }
 
-      <Form.Item label="OC Relacionada" name="relatedOC" shouldUpdate>
-        <Select
-          disabled={form.getFieldValue("concept") === "adquisicion"}
-        >
-          {/* ... Options based on OCs ... */}
-        </Select>
-      </Form.Item>
-
-      <Form.Item label="Requisición Relacionada" name="relatedRequisition" shouldUpdate>
-        <Select
-          disabled={form.getFieldValue("concept") === "envioProduccion"}
-        >
-        </Select>
-      </Form.Item>
-
-      <Form.Item label="Origen" name="movementOrigin" shouldUpdate>
-        <Input readOnly />
-      </Form.Item>
-
-      <Form.Item label="Destino" name="movementDestination" shouldUpdate>
-        <Input readOnly />
-      </Form.Item>
+      <Row gutter={24}>
+        <Col span={12}>
+          <Form.Item label="Origen" name="movementOrigin" shouldUpdate>
+            <Input readOnly />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="Destino" name="movementDestination" shouldUpdate>
+            <Input readOnly />
+          </Form.Item>
+        </Col>
+      </Row>
     </Form>
   );
 });
