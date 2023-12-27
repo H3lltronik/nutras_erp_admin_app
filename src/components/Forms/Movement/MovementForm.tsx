@@ -41,13 +41,11 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
   const onMovementConceptSelected = (value: string) => {
     const movementConcept = movementConcepts.find((concept) => concept.id === value);
     const movementType = movementTypes.find((type) => type.id === movementConcept?.movementTypeId);
-    console.log("movementconcept", movementConcept);
     setDisableOriginWarehouse(!!movementConcept.originWarehouseId);
     const filteredWarehouses = warehouses.filter((warehouse) => {
       if(!!movementConcept.originWarehouseId) return true;
       return !warehouse.hidden;
     });
-    console.log("filteredWarehouses", filteredWarehouses);
     setWarehousesToShow(filteredWarehouses);
     form.setFieldsValue({
       movementType: movementType?.name,
@@ -108,7 +106,6 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     const getWarehouses = async () => {
       try {
         const warehouses = await WarehousesAPI.getWarehouses();
-        console.log(warehouses.data);
         setWarehouses(warehouses.data);
       } catch (error) {
         console.error("Error getting Warehouses");

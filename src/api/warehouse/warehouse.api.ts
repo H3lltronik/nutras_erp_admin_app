@@ -7,9 +7,6 @@ class BaseWarehousesAPI extends BaseAPI {
   ): Promise<GetWarehousesResponse | APIError> {
     try {
       const result = await this.get<Warehouse[]>("", params);
-      console.log("[BaseWarehousesAPI] getWarehouses: ", {
-        data: result,
-      });
 
       return {
         data: result,
