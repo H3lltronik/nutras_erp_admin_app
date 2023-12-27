@@ -2,7 +2,7 @@ import { Col, DatePicker, Form, Input, InputNumber, Row, Select, Switch } from "
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { ProductsList } from "../../../pages/Products";
-import { MovementConceptAPI, MovementTypeAPI } from "../../../api";
+import { MovementConceptAPI, MovementTypeAPI, WarehousesAPI } from "../../../api";
 import moment from "moment-timezone";
 
 const onFinish = (values: unknown) => {
@@ -33,8 +33,29 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [movementConcepts, setMovementConcepts] = useState<GetMovementConceptsResponseData[]>([]);
   const [movementTypes, setMovementTypes] = useState<GetMovementTypesResponseData[]>([]);
+  const [warehouses, setWarehouses] = useState<GetWarehousesResponse[]>([]);
+  const [warehousesToShow, setWarehousesToShow] = useState<GetWarehousesResponse[]>([]);
+  const [disableOriginWarehouse, setDisableOriginWarehouse] = useState<boolean>(true);
   const [date, setDate] = useState<moment.Moment>(moment());
 
+  const onMovementConceptSelected = (value: string) => {
+    const movementConcept = movementConcepts.find((concept) => concept.id === value);
+    const movementType = movementTypes.find((type) => type.id === movementConcept?.movementTypeId);
+    console.log("movementconcept", movementConcept);
+    setDisableOriginWarehouse(!!movementConcept.originWarehouseId);
+    const filteredWarehouses = warehouses.filter((warehouse) => {
+      if(!!movementConcept.originWarehouseId) return true;
+      return !warehouse.hidden;
+    });
+    console.log("filteredWarehouses", filteredWarehouses);
+    setWarehousesToShow(filteredWarehouses);
+    form.setFieldsValue({
+      movementType: movementType?.name,
+      destinyWarehouseId: movementConcept.destinyWarehouseId,
+      originWarehouseId: movementConcept.originWarehouseId,
+    });
+  }
+  
   const showOcSelector = (movementConceptId: string): boolean => {
     const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
     return movementConcept?.name?.toLowerCase() == "Adquisición de mercancía".toLowerCase();
@@ -84,16 +105,20 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
       }
     }
 
+    const getWarehouses = async () => {
+      try {
+        const warehouses = await WarehousesAPI.getWarehouses();
+        console.log(warehouses.data);
+        setWarehouses(warehouses.data);
+      } catch (error) {
+        console.error("Error getting Warehouses");
+      }
+    }
+
     getMovementsConcept();
     getMovementsType();
+    getWarehouses();
   }, [form, _props.entity]);
-
-  const onMovementConceptSelected = (value: string) => {
-    const moevemtnConcept = movementConcepts.find((concept) => concept.id === value);
-    const movementType = movementTypes.find((type) => type.id === moevemtnConcept?.movementTypeId);
-    console.log("movementType", movementType);
-    form.setFieldsValue({ movementType: movementType?.name });
-  }
 
   return (
     <Form
@@ -161,13 +186,25 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
 
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item label="Origen" name="movementOrigin" shouldUpdate>
-            <Input readOnly />
+          <Form.Item label="Origen" name="originWarehouseId" shouldUpdate>
+            <Select disabled={disableOriginWarehouse}>
+              {
+                warehousesToShow.map((warehouse) => {
+                  return <Select.Option key={warehouse.id} value={warehouse.id}>{warehouse.name}</Select.Option>
+                })
+              }
+            </Select>
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Destino" name="movementDestination" shouldUpdate>
-            <Input readOnly />
+          <Form.Item label="Destino" name="destinyWarehouseId" shouldUpdate>
+            <Select disabled>
+              {
+                warehouses.map((warehouse) => {
+                  return <Select.Option key={warehouse.id} value={warehouse.id}>{warehouse.name}</Select.Option>
+                })
+              }
+            </Select>
           </Form.Item>
         </Col>
       </Row>
