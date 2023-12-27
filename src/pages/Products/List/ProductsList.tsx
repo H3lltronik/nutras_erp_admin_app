@@ -22,7 +22,7 @@ type ProductsListProps = {
   mode?: "full" | "selection-only";
   enableSelection?: boolean;
   onSelectionChange?: (selectedRows: Product[]) => void;
-  selectionLimit?: number;
+  selectionLimit?: number | undefined | null;
 };
 const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
 
@@ -61,16 +61,19 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
-        <div className="flex justify-between items-center">
-          <ProductsListBreadcrumb />
-
-          <Button
-            onClick={handleNewProductClick}
-            className="bg-green-600 text-white hover:bg-green-50"
-            type="default">
-            Nuevo producto
-          </Button>
-        </div>
+          {
+            props.mode !== "selection-only" ?
+              <div className="flex justify-between items-center">
+                <ProductsListBreadcrumb />
+                <Button
+                  onClick={handleNewProductClick}
+                  className="bg-green-600 text-white hover:bg-green-50"
+                  type="default">
+                  Nuevo producto
+                </Button>
+              </div>
+              : null
+          }
         <div className="p-[24px] bg-white">
           <ProductFilters
             disabledFilters={props.disabledFilters}
@@ -79,7 +82,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
           <section className="mx-auto">
             <AdminDataTable
               enableSelection={props.enableSelection}
-              selectionLimit={props.selectionLimit}
+              selectionLimit={props.selectionLimit ? props.selectionLimit : 1004}
               onSelectionChange={props.onSelectionChange}
               queryKey="users"
               fetchData={fetchData}
