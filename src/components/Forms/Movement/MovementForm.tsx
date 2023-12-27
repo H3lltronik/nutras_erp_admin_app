@@ -25,6 +25,7 @@ export type MovementFormHandle = {
 type MovementFormProps = {
   entity?: Movement | null;
   disableProductSelection?: boolean;
+  onMovementConpetChange?: (movementConcept: MovementConcept) => void;
 };
 
 const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, ref) => {
@@ -40,6 +41,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
 
   const onMovementConceptSelected = (value: string) => {
     const movementConcept = movementConcepts.find((concept) => concept.id === value);
+    _props.onMovementConpetChange ? _props.onMovementConpetChange(movementConcept as MovementConcept) : null;
     const movementType = movementTypes.find((type) => type.id === movementConcept?.movementTypeId);
     setDisableOriginWarehouse(!!movementConcept.originWarehouseId);
     const filteredWarehouses = warehouses.filter((warehouse) => {
@@ -48,7 +50,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     });
     setWarehousesToShow(filteredWarehouses);
     form.setFieldsValue({
-      movementType: movementType?.name,
+      movementTypeId: movementType?.id,
       destinyWarehouseId: movementConcept.destinyWarehouseId,
       originWarehouseId: movementConcept.originWarehouseId,
     });
@@ -152,8 +154,14 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Tipo de movimiento" name="movementType" shouldUpdate>
-            <Input disabled></Input>
+          <Form.Item label="Tipo de movimiento" name="movementTypeId" shouldUpdate>
+            <Select disabled>
+              {
+                movementTypes.map((type) => {
+                  return <Select.Option key={type.id} value={type.id}>{type.name}</Select.Option>
+                })
+              }
+            </Select>
           </Form.Item>
         </Col>
       </Row>
