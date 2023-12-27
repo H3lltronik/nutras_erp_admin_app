@@ -7,9 +7,9 @@ import { AppLoader } from "../../../components/Common/AppLoader";
 import WorkRequestForm, {
   WorkRequestFormHandle,
 } from "../../../components/Forms/WorkRequest/WorkRequestForm";
+import useAuth from "../../../hooks/useAuth";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { WorkRequestsManageBreadcrumb } from "../Common/Breadcrums";
-import useAuth from "../../../hooks/useAuth";
 
 const { confirm } = Modal;
 const { Content } = Layout;
@@ -19,10 +19,14 @@ export const WorkRequestsManage: React.FC = () => {
   const workRequestFormRef = useRef<WorkRequestFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation<unknown>(
-    (id: string, data: WorkRequest) =>
-      WorkRequestAPI.updateWorkRequest(id, data)
+  const { mutateAsync } = useMutation<
+    unknown,
+    unknown,
+    { id: string; data: WorkRequest }
+  >(["updateWorkRequest"], (variables) =>
+    WorkRequestAPI.updateWorkRequest(variables.id, variables.data)
   );
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -44,7 +48,7 @@ export const WorkRequestsManage: React.FC = () => {
   const submitForm = async (isDraft = false) => {
     const workRequestFormData = (await workRequestFormRef.current?.getFormData({
       draftMode: isDraft,
-      user
+      user,
     })) as CreateWorkRequestRequest;
     console.log("workRequestFormData", workRequestFormData);
 
@@ -65,14 +69,14 @@ export const WorkRequestsManage: React.FC = () => {
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(workRequestFormData);
+        result = await WorkRequestAPI.createWorkRequest(workRequestFormData);
         message = "workRequesto creado correctamente";
       }
 
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          navigate("/admin/WorkRequests");
+          navigate("/admin/work-requests");
         }
       }
     } catch (error) {
@@ -84,7 +88,7 @@ export const WorkRequestsManage: React.FC = () => {
 
   const doCancel = () => {
     cancelModal({
-      onOk: () => navigate("/admin/WorkRequests"),
+      onOk: () => navigate("/admin/work-requests"),
     });
   };
 

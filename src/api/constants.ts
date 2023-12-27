@@ -17,4 +17,5 @@ export const ENTITIES_ENDPOINTS = {
   workRequests: "workRequests",
   workOrders: "workOrders",
   measurements: "measure-unit",
+  workOrderServiceType: "work-order-service-types",
 };

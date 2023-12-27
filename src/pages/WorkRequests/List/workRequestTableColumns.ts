@@ -14,7 +14,8 @@ export const WorkRequestListColumns: ColumnsType<WorkRequest> = [
     title: "Folio",
     dataIndex: "folio",
     key: "folio",
-    sorter: (a, b) => (a.folio && b.folio ? alphabetically(a.folio, b.folio) : 0),
+    sorter: (a, b) =>
+      a.folio && b.folio ? alphabetically(a.folio, b.folio) : 0,
     showSorterTooltip: false,
   },
   {
@@ -27,13 +28,16 @@ export const WorkRequestListColumns: ColumnsType<WorkRequest> = [
     showSorterTooltip: false,
   },
   {
-    title: "Ordenes de trabajo",
-    dataIndex: "purchaseOrders",
-    key: "purchaseOrders",
+    title: "Nota",
+    dataIndex: "note",
+    key: "note",
+    width: 300,
     render(_value, record) {
-      return record.ots.length;
+      return record.note.length > 30
+        ? record.note.substring(0, 30) + "..."
+        : record.note;
     },
-    sorter: (a, b) => Number(a.ots.length) - Number(b.ots.length),
+    sorter: (a, b) => (a.note && b.note ? alphabetically(a.note, b.note) : 0),
     showSorterTooltip: false,
   },
   {

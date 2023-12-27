@@ -16,6 +16,7 @@ import BasePurchaseOrderAPI from "./purchaseOrder/purchaseOrder.api";
 import BaseUserAPI from "./user/user.api";
 import BaseWarehouseAPI from "./warehouse/warehouse.api";
 import BaseWorkOrderAPI from "./workOrder/workOrder.api";
+import BaseWorkOrderServiceTypeAPI from "./workOrder/workOrderServiceTypes.api";
 import BaseWorkRequestAPI from "./workRequest/workRequest.api";
 
 const BASE_URL = import.meta.env.VITE_API_PATH;
@@ -38,6 +39,7 @@ export const BatchTypesAPI = new BaseBatchEntryTypesAPI(`${BASE_URL}/${ENTITIES_
 export const MovementTypeAPI = new BaseMovementTypeAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementType}`);
 export const MovementConceptAPI = new BaseMovementConceptAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementConcept}`);
 export const MovementAPI = new BaseMovementAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movement}`);
+export const WorkOrderServiceTypeAPI = new BaseWorkOrderServiceTypeAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.workOrderServiceType}`);
 
 export const AuthAPI = new BaseAuthAPI({
     forgotPasswordUrl: `${BASE_URL}/`,
