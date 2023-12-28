@@ -20,7 +20,7 @@ const ProductBatchForm: React.FC<ProductBatchFormProps> = (props) => {
     return (
         <>
             <h1 className='font-semibold mb-3' style={{fontSize: "1rem"}}>{product.commonName}</h1>
-            <Form form={form}>
+            <Form form={form} initialValues={{quantity: product.quantity ? product.quantity : null }}>
                 <Row gutter={24}>
                     <Col span={8}>
                         <Form.Item label="Código del lote" name="code">

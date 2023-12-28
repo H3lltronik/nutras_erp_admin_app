@@ -12,6 +12,8 @@ import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import useAuth from "../../../hooks/useAuth";
 import { ProductsList } from "../../Products";
 import ProductBatchForm from "../Common/ProductBatchForm";
+import { WorkOrder } from "../../../api/workOrder/types";
+import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
 
 const { Content } = Layout;
 
@@ -47,13 +49,27 @@ export const MovementsManage: React.FC = () => {
     [isLoading, pageLoading, isFetching, id]
   );
 
-  const onChildChange = (data: any) => {
-    console.log("onChildChange", data);
+  const onMovementConceptSelected = (movementConcept: MovementConcept) => {
+    setMovementConcept(movementConcept);
+    if(movementConcept.name == 'Recepción de producción') {
+      setSelectingProducts(false);
+    }
+    console.log(movementConcept);
   }
 
-  const onMovementConpetSelected = (movementConcept: MovementConcept) => {
-    setMovementConcept(movementConcept);
-    console.log(movementConcept);
+  const onWorkOrderChange = (workOrder: WorkOrder) => {
+    console.log(workOrder);
+  }
+
+  const onPurchaseRequisitionChange = (purchaseRequisition: PurchaseRequisition) => {
+    if(purchaseRequisition) {
+      const productsList = purchaseRequisition.purchase_requisition_products;
+      setFormRefs(productsList.map(() => createRef<any>()));
+      setSelectedProducts(productsList.map((product) => {
+        product.product.quantity = product.quantity;
+        return product.product;
+      }));
+    }
   }
 
   const onProductSelectionDone = () => {
@@ -67,9 +83,15 @@ export const MovementsManage: React.FC = () => {
       user
     })) as CreateMovementRequest;
     let movement: any = {...MovementFormData};
-    movement.batches = formRefs.map((formRef) => formRef.current?.getFieldsValue());
+    movement.batches = formRefs.map((formRef, index) => {
+      let batch = formRef.current?.getFieldsValue();
+      batch.product = selectedProducts[index];
+      batch.productId = batch.product.id;
+      return batch;
+    });
+    movement.fromId = movement.originWarehouseId;
+    movement.toId = movement.destinyWarehouseId;
     console.log("MovementFormData", movement);
-    return;
 
     setPageLoading(true);
     try {
@@ -130,10 +152,15 @@ export const MovementsManage: React.FC = () => {
 
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            <MovementForm ref={MovementFormRef} entity={entityData} onMovementConpetChange={onMovementConpetSelected} />
+            <MovementForm
+              ref={MovementFormRef}
+              entity={entityData}
+              onMovementConpetChange={onMovementConceptSelected}
+              onWorkOrderChange={onWorkOrderChange}
+              onPurchaseRequisitionChange={onPurchaseRequisitionChange}/>
             {
               !!movementConcept ? (
-                !selectingProducts ?
+                !selectingProducts || movementConcept.name == 'Adquisición de mercancía' ?
                 (
                   <>
                     <div className="flex justify-between">

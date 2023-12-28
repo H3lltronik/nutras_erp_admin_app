@@ -2,8 +2,10 @@ import { Col, DatePicker, Form, Input, InputNumber, Row, Select, Switch } from "
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { ProductsList } from "../../../pages/Products";
-import { MovementConceptAPI, MovementTypeAPI, WarehousesAPI } from "../../../api";
+import { MovementConceptAPI, MovementTypeAPI, WarehousesAPI, WorkOrderAPI, PurchaseRequisitionAPI } from "../../../api";
 import moment from "moment-timezone";
+import { GetWorkOrdersResponse, WorkOrder } from "../../../api/workOrder/types";
+import { GetPurchaseRequisitionsResponse, PurchaseRequisition } from "../../../api/purchaseRequisition/types";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -26,12 +28,15 @@ type MovementFormProps = {
   entity?: Movement | null;
   disableProductSelection?: boolean;
   onMovementConpetChange?: (movementConcept: MovementConcept) => void;
+  onWorkOrderChange?: (workOrder: WorkOrder) => void;
+  onPurchaseRequisitionChange?: (purchaseRequisition: PurchaseRequisition) => void;
 };
 
 const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, ref) => {
   const [form] = Form.useForm();
   const [isDraft, setIsDraft] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [purchasesRequisitions, setPurchasesRequisitions] = useState<GetPurchaseRequisitionsResponse[]>([]);
+  const [workOrders, setWorkOrders] = useState<GetWorkOrdersResponse[]>([]);
   const [movementConcepts, setMovementConcepts] = useState<GetMovementConceptsResponseData[]>([]);
   const [movementTypes, setMovementTypes] = useState<GetMovementTypesResponseData[]>([]);
   const [warehouses, setWarehouses] = useState<GetWarehousesResponse[]>([]);
@@ -41,13 +46,13 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
 
   const onMovementConceptSelected = (value: string) => {
     const movementConcept = movementConcepts.find((concept) => concept.id === value);
-    _props.onMovementConpetChange ? _props.onMovementConpetChange(movementConcept as MovementConcept) : null;
+    _props.onMovementConpetChange ? _props.onMovementConpetChange(movementConcept) : null;
     const movementType = movementTypes.find((type) => type.id === movementConcept?.movementTypeId);
-    setDisableOriginWarehouse(!!movementConcept.originWarehouseId);
     const filteredWarehouses = warehouses.filter((warehouse) => {
       if(!!movementConcept.originWarehouseId) return true;
       return !warehouse.hidden;
     });
+    setDisableOriginWarehouse(!!movementConcept.originWarehouseId);
     setWarehousesToShow(filteredWarehouses);
     form.setFieldsValue({
       movementTypeId: movementType?.id,
@@ -56,7 +61,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     });
   }
   
-  const showOcSelector = (movementConceptId: string): boolean => {
+  const showWorkOrderSelector = (movementConceptId: string): boolean => {
     const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
     return movementConcept?.name?.toLowerCase() == "Adquisición de mercancía".toLowerCase();
   }
@@ -64,6 +69,16 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
   const showRequisitionRelatedOcSelector = (movementConceptId: string): boolean => {
     const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
     return movementConcept?.name?.toLowerCase() == "Recepción de producción".toLowerCase();
+  }
+
+  const onWorkOrderSelected = (value: string) => {
+    const workOrder = workOrders.find((workOrder) => workOrder.id === value);
+    _props.onWorkOrderChange ? _props.onWorkOrderChange(workOrder) : null;
+  }
+
+  const onPurchaseRequisitionSelected = (value: string) => {
+    const purchaseRequisition = purchasesRequisitions.find((purchaseRequisition) => purchaseRequisition.id === value);
+    _props.onPurchaseRequisitionChange ? _props.onPurchaseRequisitionChange(purchaseRequisition) : null;
   }
 
   useImperativeHandle(
@@ -114,9 +129,29 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
       }
     }
 
+    const getWorkOrders = async () => {
+      try {
+        const workOrders = await WorkOrderAPI.findWorkOrders();
+        setWorkOrders(workOrders.data);
+      } catch (error) {
+        console.error("Error getting WorkOrders");
+      }
+    }
+
+    const getPurchasesRequisitions = async () => {
+      try {
+        const purchasesRequisitions = await PurchaseRequisitionAPI.findPurchaseRequisitions();
+        setPurchasesRequisitions(purchasesRequisitions.data);
+      } catch (error) {
+        console.error("Error getting PurchasesRequisitions");
+      }
+    }
+
     getMovementsConcept();
     getMovementsType();
     getWarehouses();
+    getWorkOrders();
+    getPurchasesRequisitions();
   }, [form, _props.entity]);
 
   return (
@@ -135,8 +170,14 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Folio" name="folio">
-            <Input disabled type="text"></Input>
+          <Form.Item label="Orden de trabajo" name="ot_id">
+            <Select onChange={onWorkOrderSelected}>
+              {
+                workOrders.map((workOrder) => {
+                  return <Select.Option key={workOrder.id} value={workOrder.id}>{workOrder.folio}</Select.Option>
+                })
+              }
+            </Select>
           </Form.Item>
         </Col>
       </Row>
@@ -167,11 +208,11 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
       </Row>
 
       {
-        showOcSelector(form.getFieldValue('movementConceptId')) ?
+        showWorkOrderSelector(form.getFieldValue('movementConceptId')) ?
           <Row gutter={24}>
             <Col span={24}>
               <Form.Item label="Orden de compra relacionada" name="ocId" shouldUpdate>
-                <Select>
+                <Select allowClear>
                 </Select>
               </Form.Item>
             </Col>
@@ -181,7 +222,12 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item label="Requisición relacionada" name="requisitionId" shouldUpdate>
-              <Select>
+              <Select allowClear onChange={onPurchaseRequisitionSelected}>
+                {
+                  purchasesRequisitions.map((requisition) => {
+                    return <Select.Option key={requisition.id} value={requisition.id}>{requisition.folio}</Select.Option>
+                  })
+                }
               </Select>
             </Form.Item>
           </Col>
