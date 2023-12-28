@@ -1,6 +1,16 @@
+import dayjs from "dayjs";
 import { statusParser } from "../../lib/entity.utils";
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
+import {
+  CreateWorkOrderRequest,
+  DeleteWorkOrderResponse,
+  GetWorkOrderResponse,
+  GetWorkOrdersResponse,
+  GetWorkOrdersResponseWithStatus,
+  UpdatedWorkOrderResponse,
+  WorkOrderCreatedResponse,
+} from "./types";
 
 class BaseWorkOrderAPI extends BaseAPI {
   async createWorkOrder<CreateWorkOrderRequest>(
@@ -27,6 +37,10 @@ class BaseWorkOrderAPI extends BaseAPI {
           status: statusParser(WorkOrder),
         })
       );
+      WorkOrdersWithStatus.forEach((WorkOrder) => {
+        WorkOrder.clientRequestDate = dayjs(WorkOrder.clientRequestDate);
+        WorkOrder.internDueDate = dayjs(WorkOrder.internDueDate);
+      });
 
       return {
         data: WorkOrdersWithStatus,
@@ -42,7 +56,16 @@ class BaseWorkOrderAPI extends BaseAPI {
     params?: QueryParams
   ): Promise<GetWorkOrderResponse | APIError> {
     try {
-      return await this.get<GetWorkOrderResponse>(`/${userId}`, params);
+      const WorkOrder = await this.get<GetWorkOrderResponse>(
+        `/${userId}`,
+        params
+      );
+
+      WorkOrder.clientRequestDate = dayjs(WorkOrder.clientRequestDate);
+      WorkOrder.internDueDate = dayjs(WorkOrder.internDueDate);
+      console.log("WorkOrder", WorkOrder);
+
+      return WorkOrder;
     } catch (error) {
       return handleAPIError(error);
     }

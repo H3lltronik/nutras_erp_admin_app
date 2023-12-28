@@ -137,7 +137,7 @@ const items: MenuItem[] = [
     ),
     getItem(
       "Requisición de compras",
-      "/admin/purchase-order",
+      "/admin/purchase-requisition",
       <PieChartOutlined />,
       [],
       roles.PurchaseRequisition.roles.read.role

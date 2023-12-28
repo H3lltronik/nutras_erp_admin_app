@@ -19,6 +19,7 @@ type ProductsListProps = {
   defaultFilters?: GetProductsParams;
   disabledFilters?: AvailableProductFilters;
   buildNewProductPath?: (params: PathProps) => string;
+  
   mode?: "full" | "selection-only";
   enableSelection?: boolean;
   onSelectionChange?: (selectedRows: Product[]) => void;

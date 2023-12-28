@@ -13,8 +13,9 @@ export const ENTITIES_ENDPOINTS = {
   products: "products",
   product_types: "product-types",
   provider: "providers",
-  purchaseOrders: "purchaseOrders",
   workRequests: "workRequests",
   workOrders: "workOrders",
   measurements: "measure-unit",
+  workOrderServiceType: "work-order-service-types",
+  purchaseRequisition: "purchaseRequisitions",
 };

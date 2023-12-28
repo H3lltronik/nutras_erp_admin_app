@@ -7,9 +7,10 @@ interface WorkRequest {
   isPublished: boolean;
   partidaId: number;
   folio: string;
+  note: string;
   userId: string;
   user: User;
-  ots: Array<PurchaseOrder>;
+  work_orders?: Array<PurchaseOrder>;
 }
 
 type CreateWorkRequestRequest = Omit<WorkRequest, "id">;
@@ -33,6 +34,6 @@ type WorkRequestCreatedResponse = WorkRequest;
 type WorkRequestWithStatus = WorkRequest & { status: string };
 type WorkRequestsWithStatus = WorkRequestWithStatus[];
 type GetWorkRequestsResponseWithStatus = {
-    data: WorkRequestsWithStatus;
-    pagination: Pagination;
+  data: WorkRequestsWithStatus;
+  pagination: Pagination;
 };

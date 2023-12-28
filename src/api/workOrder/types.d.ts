@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 interface WorkOrder {
   createdAt: string;
   updatedAt: string;
@@ -7,16 +9,17 @@ interface WorkOrder {
   isPublished: boolean;
   partidaId: number;
   folio: string;
-  clientRequestDate: string;
-  internDueDate: string;
+  clientRequestDate: dayjs.Dayjs;
+  internDueDate: dayjs.Dayjs;
   userId: string;
   user: User;
   productId: string;
   product: Product;
-  stId: string;
-  st: WorkOrder;
+  work_request_id: string;
+  work_request: WorkRequest;
   notes: string;
-  serviceType: string;
+  service_type_id: string;
+  service_type: WorkOrderServiceType;
 }
 
 type CreateWorkOrderRequest = Omit<WorkOrder, "id">;
@@ -40,6 +43,32 @@ type WorkOrderCreatedResponse = WorkOrder;
 type WorkOrderWithStatus = WorkOrder & { status: string };
 type WorkOrdersWithStatus = WorkOrderWithStatus[];
 type GetWorkOrdersResponseWithStatus = {
-    data: WorkOrdersWithStatus;
-    pagination: Pagination;
+  data: WorkOrdersWithStatus;
+  pagination: Pagination;
 };
+
+// -----------------------------------------------
+
+type WorkOrderServiceType = {
+  id: string;
+  name: string;
+  partidaId: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+};
+
+type WorkOrderServiceTypeCreatedResponse = WorkOrderServiceType;
+
+type CreateWorkOrderServiceTypeRequest = Omit<WorkOrderServiceType, "id">;
+type UpdateWorkOrderServiceTypeRequest = WorkOrderServiceType;
+
+type GetWorkOrderServiceTypeResponse = WorkOrderServiceType;
+
+type GetWorkOrderServiceTypesResponse = {
+  data: WorkOrderServiceType[];
+};
+
+type UpdatedWorkOrderServiceTypeResponse = WorkOrderServiceType;
+
+type DeleteWorkOrderServiceTypeResponse = WorkOrderServiceType;

@@ -133,6 +133,24 @@ const _AdminDataTable = <
     return [];
   }, [data, isLoading]);
 
+  const rowSelectionConfig = useMemo(() => {
+    if (enableSelection === false) return undefined;
+
+    return {
+      type: selectionLimit > 1 ? "checkbox" : "radio",
+      selectedRowKeys: selectedRows.map((row) => row.id),
+      onChange: (
+        selectedRowKeys: (string | number)[],
+        selectedRows: TData[]
+      ) => {
+        if (selectedRowKeys.length > selectionLimit) return;
+        setSelectedRows(selectedRows);
+        onSelectionChange(selectedRows);
+      },
+      hideSelectAll: true,
+    };
+  }, [enableSelection, onSelectionChange, selectedRows, selectionLimit]);
+
   const handleTableChange = (pagination: TablePaginationConfig) => {
     navigate(`?page=${pagination.current}`);
     setCurrentPage(pagination.current as number);
@@ -211,16 +229,7 @@ const _AdminDataTable = <
           pageSize: perPage,
         }}
         rowClassName={rowClassName}
-        rowSelection={{
-          type: selectionLimit > 1 ? "checkbox" : "radio",
-          selectedRowKeys: selectedRows.map((row) => row.id),
-          onChange: (selectedRowKeys, selectedRows) => {
-            if (selectedRowKeys.length > selectionLimit) return;
-            setSelectedRows(selectedRows);
-            onSelectionChange(selectedRows);
-          },
-          hideSelectAll: true,
-        }}
+        rowSelection={rowSelectionConfig}
       />
     </>
   );

@@ -9,6 +9,8 @@ import Login from "../pages/Login/Login";
 import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
 import { MeasurementsManage } from "../pages/MeasurementTypes/MeasurementsManage";
+import { MovementsList, MovementsManage } from "../pages/Movements";
+import { MovementsHeader } from "../pages/Movements/Common/MovementsHeader";
 import { ProductsHeader } from "../pages/Products/Common/ProductsHeader";
 import { ProductsList } from "../pages/Products/List/ProductsList";
 import { ProductsManage } from "../pages/Products/Manage/ProductsManage";
@@ -16,9 +18,9 @@ import { ProfilesList, ProfilesManage } from "../pages/Profiles";
 import { ProfilesHeader } from "../pages/Profiles/Common/ProfilesHeader";
 import { ProvidersList, ProvidersManage } from "../pages/Providers";
 import { ProvidersHeader } from "../pages/Providers/Common/ProvidersHeader";
-import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchasesOrderHeader";
-import { PurchaseOrdersList } from "../pages/PurchaseOrders/List/PurchaseOrdersList";
-import { PurchaseOrdersManage } from "../pages/PurchaseOrders/Manage/PurchaseOrdersManage";
+import { PurchaseRequisitionHeader } from "../pages/PurchaseRequisitions/Common/PurchaseRequisitionHeader";
+import { PurchaseRequisitionList } from "../pages/PurchaseRequisitions/List/PurchaseRequisitionList";
+import { PurchaseRequisitionManage } from "../pages/PurchaseRequisitions/Manage/PurchaseRequisitionManage";
 import { UsersManage } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/Common/UsersHeader";
 import { UsersList } from "../pages/Users/List/UsersList";
@@ -27,8 +29,6 @@ import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
 import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
 import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { MovementsHeader } from "../pages/Movements/Common/MovementsHeader";
-import { MovementsList, MovementsManage } from "../pages/Movements";
 import { routesList } from "./routes";
 
 const router = createBrowserRouter([
@@ -130,6 +130,7 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsList
+          mode="full"
           buildNewProductPath={({ id }) =>
             jsonToUrlWithGetKey(
               `/admin/products/manage/pp/${id}`,
@@ -151,6 +152,7 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsList
+          mode="full"
           buildNewProductPath={({ id }) =>
             jsonToUrlWithGetKey(
               `/admin/products/manage/pt/${id}`,
@@ -174,6 +176,7 @@ const router = createBrowserRouter([
         navContent={<ProductsHeader />}
         headerTitle="Productos (INSUMOS)">
         <ProductsList
+          mode="full"
           buildNewProductPath={({ id }) =>
             "/admin/products/insumos/manage/" + id
           }
@@ -258,22 +261,22 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/purchase-orders",
+    path: "/admin/purchase-requisition",
     element: (
       <DefaultLayout
-        navContent={<PurchaseOrdersHeader />}
+        navContent={<PurchaseRequisitionHeader />}
         headerTitle="Productos">
-        <PurchaseOrdersList />
+        <PurchaseRequisitionList />
       </DefaultLayout>
     ),
   },
   {
-    path: "/admin/purchase-orders/manage/:id?",
+    path: "/admin/purchase-requisition/manage/:id?",
     element: (
       <DefaultLayout
-        navContent={<PurchaseOrdersHeader />}
+        navContent={<PurchaseRequisitionHeader />}
         headerTitle="Productos">
-        <PurchaseOrdersManage />
+        <PurchaseRequisitionManage />
       </DefaultLayout>
     ),
   },
