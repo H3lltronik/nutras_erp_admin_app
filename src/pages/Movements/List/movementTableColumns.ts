@@ -10,7 +10,7 @@ export const MovementListColumns: ColumnsType<Movement> = [
     showSorterTooltip: false,
   },
   {
-    title: "ID movimiento",
+    title: "Folio",
     dataIndex: "code",
     key: "code",
     showSorterTooltip: false,
@@ -35,18 +35,27 @@ export const MovementListColumns: ColumnsType<Movement> = [
     dataIndex: "type",
     key: "type",
     showSorterTooltip: false,
+    render(_value, record) {
+      return record.movementConcept?.movementType?.name;
+    },
   },
   {
     title: "Origen",
     dataIndex: "origin",
     key: "origin",
     showSorterTooltip: false,
+    render(_value, record) {
+      return record.fromWarehouse?.name;
+    }
   },
   {
     title: "Destino",
     dataIndex: "destination",
     key: "destination",
     showSorterTooltip: false,
+    render(_value, record) {
+      return record.toWarehouse?.name;
+    }
   },
   {
     title: "Estatus",

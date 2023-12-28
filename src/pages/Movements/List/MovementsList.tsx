@@ -40,7 +40,7 @@ export const MovementsList: React.FC = () => {
           <MovementFilters />
           <section className="mx-auto">
             <AdminDataTable
-              queryKey="users"
+              queryKey="inventory-movement"
               fetchData={fetchData}
               columns={MovementListColumns}
               deleteAction={doDelete}
