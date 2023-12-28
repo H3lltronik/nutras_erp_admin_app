@@ -1,48 +1,48 @@
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { PurchaseOrderAPI } from "../../../api";
+import { PurchaseRequisitionAPI } from "../../../api";
 import { AdminDataTable } from "../../../components/Common/AdminDataTable";
-import { PurchaseOrdersListBreadcrumb } from "../Common/Breadcrums";
-import PurchaseOrderFilters from "./PurchaseOrderFilters";
-import { purchaseOrderListColumns } from "./purchaseOrdersTableColumns";
-import { usePurchaseOrdersListPageStore } from "./purchase_orders_list_page.store";
+import { PurchaseRequisitionManageBreadcrumb } from "../Common/Breadcrums";
+import PurchaseRequisitionFilters from "./PurchaseRequisitionFilters";
+import { PurchaseRequisitionListColumns } from "./purchaseRequisitionTableColumns";
+import { usePurchaseRequisitionListPageStore } from "./purchase_requisition_list_page.store";
 
 const { Content } = Layout;
 
-export const PurchaseOrdersList: React.FC = () => {
+export const PurchaseRequisitionList: React.FC = () => {
   const navigate = useNavigate();
-  const { getDraftMode, getPublished } =
-    usePurchaseOrdersListPageStore();
+  const { getDraftMode, getPublished } = usePurchaseRequisitionListPageStore();
 
-  const fetchData = (params: object) => PurchaseOrderAPI.getPurchaseOrders(params);
+  const fetchData = (params: object) =>
+    PurchaseRequisitionAPI.getPurchaseRequisitions(params);
 
   const doDelete = async (id: string | number) =>
-    PurchaseOrderAPI.deletePurchaseOrder(id as string);
+    PurchaseRequisitionAPI.deletePurchaseRequisition(id as string);
 
   const doEdit = async (id: string | number) =>
-    navigate(`/admin/purchase-orders/manage/${id}`);
+    navigate(`/admin/purchase-requisition/manage/${id}`);
 
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
         <div className="flex justify-between items-center">
-          <PurchaseOrdersListBreadcrumb />
+          <PurchaseRequisitionManageBreadcrumb />
 
           <Button
-            onClick={() => navigate("/admin/purchase-orders/manage")}
+            onClick={() => navigate("/admin/purchase-requisition/manage")}
             className="bg-green-600 text-white hover:bg-green-50"
             type="default">
-            Nueva orden de compra
+            Nueva orden de trabajo
           </Button>
         </div>
         <div className="p-[24px] bg-white">
-          <PurchaseOrderFilters />
+          <PurchaseRequisitionFilters />
           <section className="mx-auto">
             <AdminDataTable
               queryKey="users"
               fetchData={fetchData}
-              columns={purchaseOrderListColumns}
+              columns={PurchaseRequisitionListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
               perPage={20}

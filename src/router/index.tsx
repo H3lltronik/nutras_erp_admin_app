@@ -18,9 +18,9 @@ import { ProfilesList, ProfilesManage } from "../pages/Profiles";
 import { ProfilesHeader } from "../pages/Profiles/Common/ProfilesHeader";
 import { ProvidersList, ProvidersManage } from "../pages/Providers";
 import { ProvidersHeader } from "../pages/Providers/Common/ProvidersHeader";
-import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchasesOrderHeader";
-import { PurchaseOrdersList } from "../pages/PurchaseOrders/List/PurchaseOrdersList";
-import { PurchaseOrdersManage } from "../pages/PurchaseOrders/Manage/PurchaseOrdersManage";
+import { PurchaseRequisitionHeader } from "../pages/PurchaseRequisitions/Common/PurchaseRequisitionHeader";
+import { PurchaseRequisitionList } from "../pages/PurchaseRequisitions/List/PurchaseRequisitionList";
+import { PurchaseRequisitionManage } from "../pages/PurchaseRequisitions/Manage/PurchaseRequisitionManage";
 import { UsersManage } from "../pages/Users";
 import { UsersHeader } from "../pages/Users/Common/UsersHeader";
 import { UsersList } from "../pages/Users/List/UsersList";
@@ -261,22 +261,22 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/purchase-orders",
+    path: "/admin/purchase-requisition",
     element: (
       <DefaultLayout
-        navContent={<PurchaseOrdersHeader />}
+        navContent={<PurchaseRequisitionHeader />}
         headerTitle="Productos">
-        <PurchaseOrdersList />
+        <PurchaseRequisitionList />
       </DefaultLayout>
     ),
   },
   {
-    path: "/admin/purchase-orders/manage/:id?",
+    path: "/admin/purchase-requisition/manage/:id?",
     element: (
       <DefaultLayout
-        navContent={<PurchaseOrdersHeader />}
+        navContent={<PurchaseRequisitionHeader />}
         headerTitle="Productos">
-        <PurchaseOrdersManage />
+        <PurchaseRequisitionManage />
       </DefaultLayout>
     ),
   },

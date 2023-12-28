@@ -1,25 +1,26 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Layout, Modal } from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { Layout } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { PurchaseOrderAPI } from "../../../api";
+import { PurchaseRequisitionAPI } from "../../../api";
+import {
+  CreatePurchaseRequisitionRequest,
+  GetPurchaseRequisitionResponse,
+} from "../../../api/purchaseRequisition/types";
 import { AppLoader } from "../../../components/Common/AppLoader";
-import PurchaseOrderForm, {
-  PurchaseOrderFormHandle,
-} from "../../../components/Forms/PurchaseOrder/PurchaseOrderForm";
-import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
+import PurchaseRequisitionForm, {
+  PurchaseRequisitionFormHandle,
+} from "../../../components/Forms/PurchaseRequisition/PurchaseRequisitionForm";
 import { cancelModal, showToast } from "../../../lib/notify";
-import { PurchaseOrdersManageBreadcrumb } from "../Common/Breadcrums";
+import { PurchaseRequisitionManageBreadcrumb } from "../Common/Breadcrums";
 
-const { confirm } = Modal;
 const { Content } = Layout;
 
-export const PurchaseOrdersManage: React.FC = () => {
-  const purchaseOrderFormRef = useRef<PurchaseOrderFormHandle | null>(null);
+export const PurchaseRequisitionManage: React.FC = () => {
+  const purchaseRequisitionFormRef =
+    useRef<PurchaseRequisitionFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation<unknown>((id: string, data: PurchaseOrder) => PurchaseOrderAPI.updatePurchaseOrder(id, data));
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -27,9 +28,9 @@ export const PurchaseOrdersManage: React.FC = () => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetPurchaseOrderResponse | APIError>(
-    ["purchaseOrder", { id }],
-    () => PurchaseOrderAPI.getPurchaseOrder(id as string),
+  } = useQuery<GetPurchaseRequisitionResponse | APIError>(
+    ["purchaseRequisition", { id }],
+    () => PurchaseRequisitionAPI.getPurchaseRequisition(id as string),
     { enabled: !!id, refetchOnWindowFocus: false }
   );
 
@@ -39,10 +40,11 @@ export const PurchaseOrdersManage: React.FC = () => {
   );
 
   const submitForm = async (isDraft = false) => {
-    const purchaseOrderFormData = (await purchaseOrderFormRef.current?.getFormData({
-      draftMode: isDraft,
-    })) as CreatePurchaseOrderRequest;
-    console.log("purchaseOrderFormData", purchaseOrderFormData);
+    const purchaseRequisitionFormData =
+      (await purchaseRequisitionFormRef.current?.getFormData({
+        draftMode: isDraft,
+      })) as CreatePurchaseRequisitionRequest;
+    console.log("purchaseRequisitionFormData", purchaseRequisitionFormData);
 
     setPageLoading(true);
     try {
@@ -51,21 +53,26 @@ export const PurchaseOrdersManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await PurchaseOrderAPI.updatePurchaseOrder(entity.id, purchaseOrderFormData);
-          message = "PurchaseOrdero actualizado correctamente";
+          result = await PurchaseRequisitionAPI.updatePurchaseRequisition(
+            entity.id,
+            purchaseRequisitionFormData
+          );
+          message = "purchaseRequisitiono actualizado correctamente";
         } else {
-          alert("No se puede actualizar el purchaseOrdero");
+          alert("No se puede actualizar el PurchaseRequisitiono");
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(purchaseOrderFormData);
-        message = "PurchaseOrdero creado correctamente";
+        result = await PurchaseRequisitionAPI.createPurchaseRequisition(
+          purchaseRequisitionFormData
+        );
+        message = "Orden de trabajo creada correctamente";
       }
 
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          navigate("/admin/purchaseOrders");
+          navigate("/admin/purchase-requisition/");
         }
       }
     } catch (error) {
@@ -77,7 +84,7 @@ export const PurchaseOrdersManage: React.FC = () => {
 
   const doCancel = () => {
     cancelModal({
-      onOk: () => navigate("/admin/purchaseOrders"),
+      onOk: () => navigate("/admin/purchase-requisition/"),
     });
   };
 
@@ -91,11 +98,14 @@ export const PurchaseOrdersManage: React.FC = () => {
   return (
     <>
       <Content className="relative mx-4">
-        <PurchaseOrdersManageBreadcrumb />
+        <PurchaseRequisitionManageBreadcrumb />
 
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            <PurchaseOrderForm ref={purchaseOrderFormRef} entity={entityData} />
+            <PurchaseRequisitionForm
+              ref={purchaseRequisitionFormRef}
+              entity={entityData}
+            />
 
             <button
               type="button"
