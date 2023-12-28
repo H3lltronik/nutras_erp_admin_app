@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row } from 'antd';
+import { Col, DatePicker, Form, Input, Row } from 'antd';
 import React, { MutableRefObject, useEffect } from 'react';
 
 interface ProductBatchFormProps {
@@ -29,7 +29,7 @@ const ProductBatchForm: React.FC<ProductBatchFormProps> = (props) => {
                     </Col>
                     <Col span={8}>
                         <Form.Item label="Caducidad" name="expirationDate">
-                            <Input type='date' />
+                            <DatePicker></DatePicker>
                         </Form.Item>
                     </Col>
                     <Col span={8}>

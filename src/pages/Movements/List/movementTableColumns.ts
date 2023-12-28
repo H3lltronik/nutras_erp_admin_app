@@ -25,12 +25,6 @@ export const MovementListColumns: ColumnsType<Movement> = [
     showSorterTooltip: false,
   },
   {
-    title: "Concepto",
-    dataIndex: "concept",
-    key: "concept",
-    showSorterTooltip: false,
-  },
-  {
     title: "Tipo de movimiento",
     dataIndex: "type",
     key: "type",
