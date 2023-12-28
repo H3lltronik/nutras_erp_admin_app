@@ -4,7 +4,7 @@ import { Menu } from "antd";
 import React, { useEffect, useState } from "react"; // Import useEffect
 import { useLocation, useNavigate } from "react-router-dom";
 
-export const PurchaseOrdersHeader: React.FC = () => {
+export const PurchaseRequisitionHeader: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,19 +17,19 @@ export const PurchaseOrdersHeader: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Listado de ordenes de compra",
-      key: "/admin/purchase-orders",
+      label: "Listado de ordenes de trabajo",
+      key: "/admin/work-orders",
       icon: <OrderedListOutlined />,
       onClick: () => {
-        navigate("/admin/purchase-orders");
+        navigate("/admin/work-orders");
       },
     },
     {
-      label: "Crear orden de compra",
-      key: "/admin/purchase-orders/manage",
+      label: "Crear orden de trabajo",
+      key: "/admin/work-orders/manage",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/purchase-orders/manage");
+        navigate("/admin/work-orders/manage");
       },
     },
   ];

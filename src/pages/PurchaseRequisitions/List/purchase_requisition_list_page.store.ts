@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type PurchaseOrdersListPageState = {
+type PurchaseRequisitionListPageState = {
   loading: boolean;
   setLoading: (value: boolean) => void;
 
@@ -13,7 +13,7 @@ type PurchaseOrdersListPageState = {
   getPublished: () => string | undefined;
 };
 
-export const usePurchaseOrdersListPageStore = create<PurchaseOrdersListPageState>(
+export const usePurchaseRequisitionListPageStore = create<PurchaseRequisitionListPageState>(
   (set, get) => ({
     draftMode: undefined,
     setDraftMode: (value: boolean | undefined) => set({ draftMode: value }),

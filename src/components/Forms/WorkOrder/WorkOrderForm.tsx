@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from "antd";
+import { Col, DatePicker, Form, Input, Row } from "antd";
 import {
   forwardRef,
   useEffect,
@@ -7,8 +7,12 @@ import {
   useMemo,
   useState,
 } from "react";
-import { MeasurementAPI, ProductAPI, WorkRequestAPI } from "../../../api";
-import useAuth from "../../../hooks/useAuth";
+import {
+  MeasurementAPI,
+  ProductAPI,
+  WorkOrderServiceTypeAPI,
+  WorkRequestAPI,
+} from "../../../api";
 import { GenericSelect } from "../Common/GenericSelect";
 
 const onFinish = (values: unknown) => {
@@ -36,6 +40,8 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
+    // watch date
+    const date = Form.useWatch("clientRequestDate", form);
 
     const { data: measurementsData, isLoading: loadingMeasurements } = useQuery<
       GetMeasurementsResponse | APIError
@@ -78,24 +84,23 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
+        autoComplete="off">
         <Form.Item<WorkOrder> name="id" style={{ display: "none" }}>
           <Input />
         </Form.Item>
-
+        {/* date: {date}
+        date: {_props.entity?.clientRequestDate} */}
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
               label="Solicitud de trabajo"
-              name="stId"
+              name="work_request_id"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}
-            >
+              ]}>
               <GenericSelect
                 fetcher={() => WorkRequestAPI.getWorkRequests()}
                 placeholder="Selecciona una unidad de medida"
@@ -114,13 +119,11 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}
-            >
+              ]}>
               <Input />
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
@@ -131,8 +134,7 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}
-            >
+              ]}>
               <DatePicker />
             </Form.Item>
           </Col>
@@ -145,25 +147,22 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}
-            >
+              ]}>
               <DatePicker />
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
               label="Producto"
-              name="product"
+              name="productId"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}
-            >
+              ]}>
               <GenericSelect
                 fetcher={() => ProductAPI.getProducts()}
                 placeholder="Selecciona una un producto"
@@ -174,33 +173,29 @@ const WorkOrderForm = forwardRef<WorkOrderFormHandle, WorkOrderFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<WorkOrder>
-              label="Notas"
-              name="notes"
-              rules={[]}
-            >
+            <Form.Item<WorkOrder> label="Notas" name="notes" rules={[]}>
               <Input.TextArea />
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item<WorkOrder>
               label="Tipo de servicio"
-              name="serviceType"
+              name="service_type_id"
               rules={[
                 {
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
-              ]}
-            >
-              <Select placeholder="Selecciona un tipo de servicio">
-                <Select.Option value="Desarrollo">Desarrollo</Select.Option>
-                <Select.Option value="Producción">Producción</Select.Option>
-                <Select.Option value="Maquila">Maquila</Select.Option>
-              </Select>
+              ]}>
+              <GenericSelect
+                fetcher={() => WorkOrderServiceTypeAPI.getWorkOrdersTypes()}
+                placeholder="Selecciona un tipo de servicio"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["workOrderServiceTypes"]}
+              />
             </Form.Item>
           </Col>
         </Row>

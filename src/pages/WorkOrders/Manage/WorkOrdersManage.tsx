@@ -1,4 +1,3 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
@@ -8,10 +7,10 @@ import { AppLoader } from "../../../components/Common/AppLoader";
 import WorkOrderForm, {
   WorkOrderFormHandle,
 } from "../../../components/Forms/WorkOrder/WorkOrderForm";
-import useAdminMutation from "../../../hooks/useAdminAPI/useAdminMutation";
+import useAuth from "../../../hooks/useAuth";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { WorkOrdersManageBreadcrumb } from "../Common/Breadcrums";
-import useAuth from "../../../hooks/useAuth";
+import { WorkOrder, GetWorkOrderResponse, CreateWorkOrderRequest } from "../../../api/workOrder/types";
 
 const { confirm } = Modal;
 const { Content } = Layout;
@@ -21,7 +20,13 @@ export const WorkOrdersManage: React.FC = () => {
   const workOrderFormRef = useRef<WorkOrderFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation<unknown>((id: string, data: WorkOrder) => WorkOrderAPI.updateWorkOrder(id, data));
+  const { mutateAsync } = useMutation<
+    unknown,
+    unknown,
+    { id: string; data: WorkOrder }
+  >(["updateWorkOrder"], (variables) =>
+    WorkOrderAPI.updateWorkOrder(variables.id, variables.data)
+  );
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -43,7 +48,7 @@ export const WorkOrdersManage: React.FC = () => {
   const submitForm = async (isDraft = false) => {
     const workOrderFormData = (await workOrderFormRef.current?.getFormData({
       draftMode: isDraft,
-      user
+      user,
     })) as CreateWorkOrderRequest;
     console.log("workOrderFormData", workOrderFormData);
 
@@ -54,21 +59,24 @@ export const WorkOrdersManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await WorkOrderAPI.updateWorkOrder(entity.id, workOrderFormData);
+          result = await WorkOrderAPI.updateWorkOrder(
+            entity.id,
+            workOrderFormData
+          );
           message = "workOrdero actualizado correctamente";
         } else {
           alert("No se puede actualizar el WorkOrdero");
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(workOrderFormData);
-        message = "workOrdero creado correctamente";
+        result = await WorkOrderAPI.createWorkOrder(workOrderFormData);
+        message = "Orden de trabajo creada correctamente";
       }
 
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          navigate("/admin/WorkOrders");
+          navigate("/admin/work-orders");
         }
       }
     } catch (error) {
@@ -80,7 +88,7 @@ export const WorkOrdersManage: React.FC = () => {
 
   const doCancel = () => {
     cancelModal({
-      onOk: () => navigate("/admin/WorkOrders"),
+      onOk: () => navigate("/admin/work-orders"),
     });
   };
 

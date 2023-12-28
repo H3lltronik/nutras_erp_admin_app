@@ -1,4 +1,5 @@
 import type { ColumnsType } from "antd/es/table";
+import { WorkOrder } from "../../../api/workOrder/types";
 import { alphabetically } from "../../../lib/sorters";
 
 export const WorkOrderListColumns: ColumnsType<WorkOrder> = [
@@ -14,31 +15,47 @@ export const WorkOrderListColumns: ColumnsType<WorkOrder> = [
     title: "Folio",
     dataIndex: "folio",
     key: "folio",
-    sorter: (a, b) => (a.folio && b.folio ? alphabetically(a.folio, b.folio) : 0),
+    sorter: (a, b) =>
+      a.folio && b.folio ? alphabetically(a.folio, b.folio) : 0,
     showSorterTooltip: false,
   },
   {
     title: "Solicitud de trabajo",
-    dataIndex: "st",
-    key: "st",
+    dataIndex: "work_request",
+    key: "work_request",
     render(_value, record) {
-      return record.st?.folio;
+      return record.work_request?.folio;
     },
-    sorter: (a, b) => (a.st?.folio && b.st?.folio ? alphabetically(a.st?.folio, b.st?.folio) : 0),
+    sorter: (a, b) =>
+      a.work_request?.folio && b.work_request?.folio
+        ? alphabetically(a.work_request?.folio, b.work_request?.folio)
+        : 0,
     showSorterTooltip: false,
   },
   {
     title: "Fecha de cliente",
     dataIndex: "clientRequestDate",
     key: "clientRequestDate",
-    sorter: (a, b) => (a.clientRequestDate && b.clientRequestDate ? alphabetically(a.clientRequestDate, b.clientRequestDate) : 0),
+    render(_value, record) {
+      return record.internDueDate?.format("DD/MM/YYYY");
+    },
+    sorter: (a, b) =>
+      a.clientRequestDate && b.clientRequestDate
+        ? a.clientRequestDate.unix() - b.clientRequestDate.unix()
+        : 0,
     showSorterTooltip: false,
   },
   {
     title: "Fecha interna",
     dataIndex: "internDueDate",
     key: "internDueDate",
-    sorter: (a, b) => (a.internDueDate && b.internDueDate ? alphabetically(a.internDueDate, b.internDueDate) : 0),
+    render(_value, record) {
+      return record.internDueDate?.format("DD/MM/YYYY");
+    },
+    sorter: (a, b) =>
+      a.internDueDate && b.internDueDate
+        ? a.internDueDate.unix() - b.internDueDate.unix()
+        : 0,
     showSorterTooltip: false,
   },
   {
@@ -67,9 +84,15 @@ export const WorkOrderListColumns: ColumnsType<WorkOrder> = [
   },
   {
     title: "Tipo de servicio",
-    dataIndex: "serviceType",
-    key: "serviceType",
-    sorter: (a, b) => (a.serviceType && b.serviceType ? alphabetically(a.serviceType, b.serviceType) : 0),
+    dataIndex: "service_type",
+    key: "service_type",
+    sorter: (a, b) =>
+      a.service_type && b.service_type
+        ? alphabetically(a.service_type.name, a.service_type.name)
+        : 0,
+    render(_value, record) {
+      return record.service_type?.name;
+    },
     showSorterTooltip: false,
   },
   {

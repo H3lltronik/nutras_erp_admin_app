@@ -4,6 +4,7 @@ interface MovementConcept {
   deletedAt: string | null;
   id: string;
   name: string;
+  movementType: MovementType;
 }
 
 interface MovementType {
