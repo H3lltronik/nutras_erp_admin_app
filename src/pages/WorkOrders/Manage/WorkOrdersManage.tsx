@@ -69,7 +69,7 @@ export const WorkOrdersManage: React.FC = () => {
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(workOrderFormData);
+        result = await WorkOrderAPI.createWorkOrder(workOrderFormData);
         message = "Orden de trabajo creada correctamente";
       }
 

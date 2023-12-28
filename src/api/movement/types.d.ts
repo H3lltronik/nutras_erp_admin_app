@@ -12,6 +12,9 @@ interface Movement {
   date: string;
   concept: string;
   type: string;
+  movementConcept: MovementConcept;
+  fromWarehouse: Warehouse;
+  toWarehouse: Warehouse;
   oc: any | null;
   ocId: number | null;
   origin: string;

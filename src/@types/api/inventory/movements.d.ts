@@ -4,6 +4,7 @@ interface MovementConcept {
   deletedAt: string | null;
   id: string;
   name: string;
+  movementType: MovementType;
 }
 
 interface MovementType {
@@ -17,10 +18,10 @@ interface MovementType {
 type GetMovementConceptsResponse = MovementConcept[];
 type GetMovementTypesResponse = MovementType[];
 
-type GetMovementConceptsResponseWData = {
+type GetMovementConceptsResponseData = {
   data: GetMovementConceptsResponse;
 };
 
-type GetMovementTypesResponseWData = {
+type GetMovementTypesResponseData = {
   data: GetMovementTypesResponse;
 };

@@ -2,25 +2,24 @@ import { DeleteFilled, PlusCircleFilled } from "@ant-design/icons";
 import { Button, Col, Row } from "antd";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 
-interface FormListProps {
-  renderForm: (ref: React.RefObject<any>) => React.ReactNode;
-  getFormData: (formHandle: any) => Promise<any>;
+interface FormListProps<T> {
+  renderForm: (ref: React.RefObject<never>) => React.ReactNode;
+  getFormData: (formHandle: T) => Promise<any>;
   title?: string;
   itemClassName?: string;
 }
 
-export interface FormListHandle {
-  getAllFormsData: () => Promise<any[]>;
+export interface FormListHandle<T> {
+  getAllFormsData: () => Promise<T[]>;
 }
 
-export const FormList = forwardRef<FormListHandle, FormListProps>(
-  (props: FormListProps, ref: React.Ref<any> | undefined) => {
+export const FormList = forwardRef<FormListHandle<any>, FormListProps<any>>(
+  (props: FormListProps<any>, ref: React.Ref<any> | undefined) => {
     const { renderForm, getFormData } = props;
     const [formRefs, setFormRefs] = useState<React.RefObject<any>[]>([]);
 
     useImperativeHandle(ref, () => ({
       getAllFormsData: async () => {
-        console.log("get all forms data");
         return await Promise.all(
           formRefs.map((ref) =>
             ref.current ? getFormData(ref.current) : Promise.resolve(null)

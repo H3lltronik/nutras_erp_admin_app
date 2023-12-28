@@ -1,14 +1,11 @@
-import { Input, Select } from "antd";
-import debounce from "lodash.debounce";
-import { useMemo } from "react";
+import { Select } from "antd";
 import { entityStatuses } from "../../../lib/entity.utils";
-import { usePurchaseOrdersListPageStore } from "./purchase_orders_list_page.store";
+import { usePurchaseRequisitionListPageStore } from "./purchase_requisition_list_page.store";
 
-export default function PurchaseOrderFilters() {
-  const {
-    setDraftMode,
-    setPublished,
-  } = usePurchaseOrdersListPageStore((state) => state);
+export default function PurchaseRequisitionFilters() {
+  const { setDraftMode, setPublished } = usePurchaseRequisitionListPageStore(
+    (state) => state
+  );
 
   const handleStatusChange = (value: string[]) => {
     if (value.includes(entityStatuses.DRAFT)) setDraftMode(true);
