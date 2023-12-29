@@ -17,6 +17,14 @@ import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
 
 const { Content } = Layout;
 
+const generateFolio = (n: number = 8): string => {
+  let result = "";
+  for (let i = 0; i < n; i++) {
+    result += Math.floor(Math.random() * 10);
+  }
+  return result;
+};
+
 export const MovementsManage: React.FC = () => {
   const user = useAuth().user;
   const MovementFormRef = useRef<MovementFormHandle | null>(null);
@@ -59,7 +67,8 @@ export const MovementsManage: React.FC = () => {
 
   const onMovementConceptSelected = (movementConcept: MovementConcept) => {
     resetFormVariables();
-    if(movementConcept.name == 'Recepción de producción') {
+    setMovementConcept(movementConcept);
+    if(movementConcept.name == 'Salida a producción') {
       setSelectingProducts(false);
     } else {
       setSelectedProducts([]);
@@ -100,6 +109,7 @@ export const MovementsManage: React.FC = () => {
     });
     movement.fromId = movement.originWarehouseId;
     movement.toId = movement.destinyWarehouseId;
+    movement.folio = generateFolio();
     console.log("MovementFormData", movement);
 
     setPageLoading(true);
@@ -175,7 +185,7 @@ export const MovementsManage: React.FC = () => {
                     <div className="flex justify-between">
                       <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>
                         {
-                          movementConcept.name == 'Recepción de producción' && !selectedProducts.length ?
+                          movementConcept.name == 'Salida a producción' && !selectedProducts.length ?
                           'Selecciona una requisición de compra'
                           :
                           'Captura los lotes de los productos'

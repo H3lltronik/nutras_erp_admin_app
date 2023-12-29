@@ -68,7 +68,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
 
   const showRequisitionRelatedOcSelector = (movementConceptId: string): boolean => {
     const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
-    return movementConcept?.name?.toLowerCase() == "Recepción de producción".toLowerCase();
+    return movementConcept?.name?.toLowerCase() == "Salida a producción".toLowerCase();
   }
 
   const onWorkOrderSelected = (value: string) => {
