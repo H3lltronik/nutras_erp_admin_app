@@ -33,16 +33,19 @@ class BaseMovementAPI extends BaseAPI {
     console.log("[getMovements] params: ", params);
     try {
       const Movements = await this.get<GetMovementsResponse>("", params);
+      console.log("[getMovements] Movements: ", Movements)
       const MovementsWithStatus = Movements.items.map((Movement) =>
         Object.assign({}, Movement, {
           status: statusParser(Movement),
         })
       );
 
-      return {
+      const result = {
         data: MovementsWithStatus,
         pagination: Movements.paginationMetadata,
       };
+      console.log("[getMovements] result: ", result)
+      return result;
     } catch (error) {
       return handleAPIError(error);
     }

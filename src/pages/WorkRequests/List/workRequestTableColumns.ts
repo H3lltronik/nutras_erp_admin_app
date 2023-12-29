@@ -33,6 +33,7 @@ export const WorkRequestListColumns: ColumnsType<WorkRequest> = [
     key: "note",
     width: 300,
     render(_value, record) {
+      if (!record.note) return "No disponible";
       return record.note.length > 30
         ? record.note.substring(0, 30) + "..."
         : record.note;
