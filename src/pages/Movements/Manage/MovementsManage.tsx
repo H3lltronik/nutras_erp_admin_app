@@ -49,16 +49,25 @@ export const MovementsManage: React.FC = () => {
     [isLoading, pageLoading, isFetching, id]
   );
 
-  const onMovementConceptSelected = (movementConcept: MovementConcept) => {
+  const resetFormVariables = () => {
+    MovementFormRef.current?.resetField('requisitionId');
     setMovementConcept(movementConcept);
+    setSelectedProducts([]);
+    setSelectingProducts(false);
+    setFormRefs([]);
+  }
+
+  const onMovementConceptSelected = (movementConcept: MovementConcept) => {
+    resetFormVariables();
     if(movementConcept.name == 'Recepción de producción') {
       setSelectingProducts(false);
+    } else {
+      setSelectedProducts([]);
+      setSelectingProducts(true);
     }
-    console.log(movementConcept);
   }
 
   const onWorkOrderChange = (workOrder: WorkOrder) => {
-    console.log(workOrder);
   }
 
   const onPurchaseRequisitionChange = (purchaseRequisition: PurchaseRequisition) => {
@@ -121,7 +130,7 @@ export const MovementsManage: React.FC = () => {
         }
       }
     } catch (error) {
-      console.log("error", error);
+      console.error("error", error);
     }
 
     setPageLoading(false);
@@ -160,11 +169,18 @@ export const MovementsManage: React.FC = () => {
               onPurchaseRequisitionChange={onPurchaseRequisitionChange}/>
             {
               !!movementConcept ? (
-                !selectingProducts || movementConcept.name == 'Adquisición de mercancía' ?
+                !selectingProducts ?
                 (
                   <>
                     <div className="flex justify-between">
-                      <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>Creación de lotes</h1>
+                      <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>
+                        {
+                          movementConcept.name == 'Recepción de producción' && !selectedProducts.length ?
+                          'Selecciona una requisición de compra'
+                          :
+                          'Captura los lotes de los productos'
+                        }
+                      </h1>
                     </div>
                     {
                       selectedProducts.map((product, index) => (

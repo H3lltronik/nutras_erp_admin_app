@@ -22,6 +22,7 @@ interface GetFormData {
 
 export type MovementFormHandle = {
   getFormData: (params?: GetFormData) => Promise<Movement>;
+  resetField: (fieldName: string) => void;
 };
 
 type MovementFormProps = {
@@ -95,6 +96,9 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
           isDraft: !!params?.draftMode,
           isPublished: !params?.draftMode,
         };
+      },
+      resetField: (fieldName) => {
+        form.setFieldValue(fieldName, null);
       },
     })
   );
