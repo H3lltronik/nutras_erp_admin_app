@@ -3,17 +3,17 @@ import { Layout } from "antd";
 import React, { MutableRefObject, createRef, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MovementAPI } from "../../../api";
+import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
+import { WorkOrder } from "../../../api/workOrder/types";
 import { AppLoader } from "../../../components/Common/AppLoader";
 import MovementForm, {
   MovementFormHandle,
 } from "../../../components/Forms/Movement/MovementForm";
-import { cancelModal, showToast } from "../../../lib/notify";
-import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import useAuth from "../../../hooks/useAuth";
+import { cancelModal, showToast } from "../../../lib/notify";
 import { ProductsList } from "../../Products";
+import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import ProductBatchForm from "../Common/ProductBatchForm";
-import { WorkOrder } from "../../../api/workOrder/types";
-import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
 
 const { Content } = Layout;
 
@@ -31,13 +31,14 @@ export const MovementsManage: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
   const [selectedProducts, setSelectedProducts] = React.useState<Product[]>([]);
-  const [selectingProducts, setSelectingProducts] = React.useState<boolean>(true);
-  const [movementConcept, setMovementConcept] = React.useState<MovementConcept | null>(null);
+  const [selectingProducts, setSelectingProducts] =
+    React.useState<boolean>(true);
+  const [movementConcept, setMovementConcept] =
+    React.useState<MovementConcept | null>(null);
   const [formRefs, setFormRefs] = React.useState<MutableRefObject<any>[]>([]);
 
-  const { mutateAsync } = useMutation<unknown>(
-    (id: string, data: Movement) =>
-      MovementAPI.updateMovement(id, data)
+  const { mutateAsync } = useMutation<unknown>((id: string, data: Movement) =>
+    MovementAPI.updateMovement(id, data)
   );
   const navigate = useNavigate();
   const { id } = useParams();
@@ -58,49 +59,52 @@ export const MovementsManage: React.FC = () => {
   );
 
   const resetFormVariables = () => {
-    MovementFormRef.current?.resetField('requisitionId');
+    MovementFormRef.current?.resetField("requisitionId");
     setMovementConcept(movementConcept);
     setSelectedProducts([]);
     setSelectingProducts(false);
     setFormRefs([]);
-  }
+  };
 
   const onMovementConceptSelected = (movementConcept: MovementConcept) => {
     resetFormVariables();
     setMovementConcept(movementConcept);
-    if(movementConcept.name == 'Salida a producción') {
+    if (movementConcept.name == "Salida a producción") {
       setSelectingProducts(false);
     } else {
       setSelectedProducts([]);
       setSelectingProducts(true);
     }
-  }
+  };
 
-  const onWorkOrderChange = (workOrder: WorkOrder) => {
-  }
+  const onWorkOrderChange = (workOrder: WorkOrder) => {};
 
-  const onPurchaseRequisitionChange = (purchaseRequisition: PurchaseRequisition) => {
-    if(purchaseRequisition) {
+  const onPurchaseRequisitionChange = (
+    purchaseRequisition: PurchaseRequisition
+  ) => {
+    if (purchaseRequisition) {
       const productsList = purchaseRequisition.purchase_requisition_products;
       setFormRefs(productsList.map(() => createRef<any>()));
-      setSelectedProducts(productsList.map((product) => {
-        product.product.quantity = product.quantity;
-        return product.product;
-      }));
+      setSelectedProducts(
+        productsList.map((product) => {
+          product.product.quantity = product.quantity;
+          return product.product;
+        })
+      );
     }
-  }
+  };
 
   const onProductSelectionDone = () => {
     setFormRefs(selectedProducts.map(() => createRef<any>()));
     setSelectingProducts(false);
-  }
+  };
 
   const submitForm = async (isDraft = false) => {
     const MovementFormData = (await MovementFormRef.current?.getFormData({
       draftMode: isDraft,
-      user
+      user,
     })) as CreateMovementRequest;
-    let movement: any = {...MovementFormData};
+    let movement: any = { ...MovementFormData };
     movement.batches = formRefs.map((formRef, index) => {
       let batch = formRef.current?.getFieldsValue();
       batch.product = selectedProducts[index];
@@ -119,10 +123,7 @@ export const MovementsManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await MovementAPI.updateMovement(
-            entity.id,
-            movement
-          );
+          result = await MovementAPI.updateMovement(entity.id, movement);
           message = "Movement updated successfully";
         } else {
           alert("Cannot update the Movement");
@@ -164,6 +165,12 @@ export const MovementsManage: React.FC = () => {
     overflowY: "auto",
   };
 
+  const onLoteSelectionChange = (selectedRows: Batch[]) => {
+    if (selectedRows.length) {
+      console.log("selectedRows", selectedRows);
+    }
+  };
+
   return (
     <>
       <Content className="relative mx-4">
@@ -176,37 +183,37 @@ export const MovementsManage: React.FC = () => {
               entity={entityData}
               onMovementConpetChange={onMovementConceptSelected}
               onWorkOrderChange={onWorkOrderChange}
-              onPurchaseRequisitionChange={onPurchaseRequisitionChange}/>
-            {
-              !!movementConcept ? (
-                !selectingProducts ?
-                (
-                  <>
-                    <div className="flex justify-between">
-                      <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>
-                        {
-                          movementConcept.name == 'Salida a producción' && !selectedProducts.length ?
-                          'Selecciona una requisición de compra'
-                          :
-                          'Captura los lotes de los productos'
-                        }
-                      </h1>
-                    </div>
-                    {
-                      selectedProducts.map((product, index) => (
-                        <ProductBatchForm
-                          key={index}
-                          product={product}
-                          formRef={formRefs[index]}
-                        />
-                      ))
-                    }
-                  </>
-                )
-                :
+              onPurchaseRequisitionChange={onPurchaseRequisitionChange}
+            />
+            {!!movementConcept ? (
+              !selectingProducts ? (
                 <>
                   <div className="flex justify-between">
-                    <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>Selecciona los productos</h1>
+                    <h1
+                      className="font-semibold mb-4"
+                      style={{ fontSize: "1.75rem" }}>
+                      {movementConcept.name == "Salida a producción" &&
+                      !selectedProducts.length
+                        ? "Selecciona una requisición de compra"
+                        : "Captura los lotes de los productos"}
+                    </h1>
+                  </div>
+                  {selectedProducts.map((product, index) => (
+                    <ProductBatchForm
+                      key={index}
+                      product={product}
+                      formRef={formRefs[index]}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between">
+                    <h1
+                      className="font-semibold mb-4"
+                      style={{ fontSize: "1.75rem" }}>
+                      Selecciona los productos
+                    </h1>
                     <button
                       type="button"
                       onClick={onProductSelectionDone}
@@ -222,8 +229,18 @@ export const MovementsManage: React.FC = () => {
                     />
                   </div>
                 </>
-              ) : null
-            }
+              )
+            ) : null}
+
+            {/* <section>
+              <h1 className="text-2xl">Seleccion de lotes</h1>
+              <BatchesList
+                enableSelection={true}
+                mode="selection-only"
+                onSelectionChange={onLoteSelectionChange}
+                perPage={5}
+              />
+            </section> */}
 
             <button
               type="button"
