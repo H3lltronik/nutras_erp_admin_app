@@ -28,17 +28,26 @@ export const PurchaseOrderListColumns: ColumnsType<PurchaseOrder> = [
     showSorterTooltip: false,
   },
   {
-    title: "Nota",
-    dataIndex: "note",
-    key: "note",
+    title: "OT",
+    dataIndex: "workOrderFolio",
+    key: "workOrderFolio",
+    render(_value, record) {
+      return record.workOrder?.folio;
+    },
+    showSorterTooltip: false,
+  },
+  {
+    title: "Motivo",
+    dataIndex: "motive",
+    key: "motive",
     width: 300,
     render(_value, record) {
-      if (!record.note) return "No disponible";
-      return record.note.length > 30
-        ? record.note.substring(0, 30) + "..."
-        : record.note;
+      if (!record.motive) return "No disponible";
+      return record.motive.length > 30
+        ? record.motive.substring(0, 30) + "..."
+        : record.motive;
     },
-    sorter: (a, b) => (a.note && b.note ? alphabetically(a.note, b.note) : 0),
+    sorter: (a, b) => (a.motive && b.motive ? alphabetically(a.motive, b.motive) : 0),
     showSorterTooltip: false,
   },
   {

@@ -7,10 +7,11 @@ interface PurchaseOrder {
   isPublished: boolean;
   partidaId: number;
   folio: string;
-  note: string;
+  motive: string;
   userId: string;
   user: User;
-  work_orders?: Array<PurchaseOrder>;
+  workOrderId: string;
+  workOrder: WorkOrder;
 }
 
 type CreatePurchaseOrderRequest = Omit<PurchaseOrder, "id">;
@@ -19,8 +20,8 @@ type UpdatePurchaseOrderRequest = PurchaseOrder;
 type GetPurchaseOrderResponse = PurchaseOrder;
 
 type GetPurchaseOrdersResponse = {
-  data: PurchaseOrder[];
-  pagination: Pagination;
+  items: PurchaseOrder[];
+  paginationMetadata: Pagination;
 };
 
 type UpdatedPurchaseOrderResponse = PurchaseOrder;

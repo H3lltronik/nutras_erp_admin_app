@@ -22,18 +22,21 @@ class BasePurchaseOrderAPI extends BaseAPI {
   ): Promise<GetPurchaseOrdersResponseWithStatus | APIError> {
     try {
       const purchaseOrders = await this.get<GetPurchaseOrdersResponse>("", params);
-      console.log(purchaseOrders);
-      const PurchaseOrdersWithStatus = purchaseOrders.data.map((PurchaseOrder) =>
-        Object.assign({}, PurchaseOrder, {
-          status: statusParser(PurchaseOrder),
+      console.log("[getPurchaseOrders] purchaseOrders: ", purchaseOrders);
+      const purchaseOrdersWithStatus = purchaseOrders.items.map((purchaseOrder) =>
+        Object.assign({}, purchaseOrder, {
+          status: statusParser(purchaseOrder),
         })
       );
 
-      return {
-        data: PurchaseOrdersWithStatus,
-        pagination: purchaseOrders.pagination,
+      const result = {
+        data: purchaseOrdersWithStatus,
+        pagination: purchaseOrders.paginationMetadata,
       };
+      console.log("[getPurchaseOrders] result: ", result);
+      return result;
     } catch (error) {
+      console.log("Error getting purchaseOrders", error);
       return handleAPIError(error);
     }
   }
