@@ -11,7 +11,7 @@ import MovementForm, {
 } from "../../../components/Forms/Movement/MovementForm";
 import useAuth from "../../../hooks/useAuth";
 import { cancelModal, showToast } from "../../../lib/notify";
-import { MovementLotesList } from "../../MovementLotes/List/MovementLotesList";
+import { BatchesList } from "../../Batches";
 import { ProductsList } from "../../Products";
 import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import ProductBatchForm from "../Common/ProductBatchForm";
@@ -210,7 +210,7 @@ export const MovementsManage: React.FC = () => {
             {movementMode == "out" ? (
               <section>
                 <h1 className="text-2xl">Seleccion de lotes</h1>
-                <MovementLotesList
+                <BatchesList
                   enableSelection={true}
                   mode="selection-only"
                   onSelectionChange={onLoteSelectionChange}
