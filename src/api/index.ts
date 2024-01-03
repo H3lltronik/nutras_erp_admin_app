@@ -13,6 +13,7 @@ import BaseProductAPI from "./product/product.api";
 import BaseProductTypesAPI from "./product/product_types.api";
 import BaseProfilesAPI from "./profiles/profiles.api";
 import BaseProviderAPI from "./provider/provider.api";
+import BasePurchaseOrderAPI from "./purchaseOrder/purchaseOrder.api";
 import BasePurchaseRequisitionAPI from "./purchaseRequisition/workOrder.api";
 import BaseUserAPI from "./user/user.api";
 import BaseWarehouseAPI from "./warehouse/warehouse.api";
