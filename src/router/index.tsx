@@ -28,6 +28,8 @@ import { WorkOrdersList, WorkOrdersManage } from "../pages/WorkOrders";
 import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
 import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
 import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
+import { PurchaseOrdersList, PurchaseOrdersManage } from "../pages/PurchaseOrders";
+import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchaseOrdersHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -337,6 +339,27 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Inventario">
         <InventoryManage />
+      </DefaultLayout>
+    ),
+  },
+  // ************************* Compras ************************* //
+  {
+    path: "/admin/purchase-orders",
+    element: (
+      <DefaultLayout
+        navContent={<PurchaseOrdersHeader />}
+        headerTitle="Productos">
+        <PurchaseOrdersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/purchase-orders/manage/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<PurchaseOrdersHeader />}
+        headerTitle="Productos">
+        <PurchaseOrdersManage />
       </DefaultLayout>
     ),
   },

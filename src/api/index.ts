@@ -42,6 +42,7 @@ export const MovementAPI = new BaseMovementAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS
 export const MovementLotesAPI = new BaseMovementLotesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementLote}`);
 export const WorkOrderServiceTypeAPI = new BaseWorkOrderServiceTypeAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.workOrderServiceType}`);
 export const PurchaseRequisitionAPI = new BasePurchaseRequisitionAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.purchaseRequisition}`);
+export const PurchaseOrderAPI = new BasePurchaseOrderAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.purchaseOrder}`);
 
 export const AuthAPI = new BaseAuthAPI({
     forgotPasswordUrl: `${BASE_URL}/`,
