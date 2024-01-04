@@ -283,26 +283,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/work-requests",
-    element: (
-      <DefaultLayout
-        navContent={<WorkRequestsHeader />}
-        headerTitle="Productos">
-        <WorkRequestsList />
-      </DefaultLayout>
-    ),
-  },
-  {
-    path: "/admin/work-requests/manage/:id?",
-    element: (
-      <DefaultLayout
-        navContent={<WorkRequestsHeader />}
-        headerTitle="Productos">
-        <WorkRequestsManage />
-      </DefaultLayout>
-    ),
-  },
-  {
     path: "/admin/work-orders",
     element: (
       <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
@@ -368,6 +348,27 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout headerTitle="El recurso no se encontro...">
         <NotFound />
+      </DefaultLayout>
+    ),
+  },
+  // ***************** Direccion ***************** //
+  {
+    path: "/admin/work-requests",
+    element: (
+      <DefaultLayout
+        navContent={<WorkRequestsHeader />}
+        headerTitle="Productos">
+        <WorkRequestsList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/work-requests/manage/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<WorkRequestsHeader />}
+        headerTitle="Productos">
+        <WorkRequestsManage />
       </DefaultLayout>
     ),
   },
