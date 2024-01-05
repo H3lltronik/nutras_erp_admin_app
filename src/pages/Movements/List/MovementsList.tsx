@@ -7,6 +7,7 @@ import { MovementsListBreadcrumb } from "../Common/Breadcrums";
 import MovementFilters from "./MovementsFilters";
 import { MovementListColumns } from "./movementTableColumns";
 import { useMovementsListPageStore } from "./movements_list_page.store";
+import { EyeOutlined } from "@ant-design/icons";
 
 const { Content } = Layout;
 
@@ -43,8 +44,20 @@ export const MovementsList: React.FC = () => {
               queryKey="inventory-movement"
               fetchData={fetchData}
               columns={MovementListColumns}
-              deleteAction={doDelete}
-              editAction={doEdit}
+              additionalActions={
+                [
+                  {
+                    className: "bg-green-600 text-white hover:bg-green-50",
+                    icon: <EyeOutlined className="mr-[-7px]" />,
+                    onClick: (record) => {
+                      console.log("movement", record);
+                    },
+                    conditionEval: (_record) => {
+                      return true;
+                    },
+                  },
+                ]
+              }
               perPage={20}
               queryParameters={{
                 draftMode: getDraftMode(),
