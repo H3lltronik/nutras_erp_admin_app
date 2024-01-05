@@ -65,6 +65,15 @@ const items: MenuItem[] = [
       roles.Product.roles.read.role
     ),
   ]),
+  getItem("Dirección", "7", null, [
+    getItem(
+      "Solicitudes de trabajo",
+      "/admin/work-requests",
+      <OrderedListOutlined />,
+      [],
+      roles.WorkRequests.roles.read.role
+    ),
+  ]),
   getItem("Almacén", "2", null, [
     getItem(
       "Inventario",
@@ -121,13 +130,6 @@ const items: MenuItem[] = [
     ),
   ]),
   getItem("Producción", "4", null, [
-    getItem(
-      "Solicitudes de trabajo",
-      "/admin/work-requests",
-      <OrderedListOutlined />,
-      [],
-      roles.WorkRequests.roles.read.role
-    ),
     getItem(
       "Ordenes de trabajo",
       "/admin/work-orders",
