@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Layout } from "antd";
+import { Collapse, Layout } from "antd";
 import React, { MutableRefObject, createRef, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MovementAPI } from "../../../api";
@@ -14,6 +14,7 @@ import { ProductsList } from "../../Products";
 import ProductBatchForm from "../Common/ProductBatchForm";
 import { WorkOrder } from "../../../api/workOrder/types";
 import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
+import { DeleteOutlined, DownOutlined, RightOutlined, UpOutlined } from "@ant-design/icons";
 
 const { Content } = Layout;
 
@@ -160,7 +161,7 @@ export const MovementsManage: React.FC = () => {
   }, [entity]);
 
   const productsListContainerStyles: React.CSSProperties = {
-    maxHeight: "450px",
+    maxHeight: "400px",
     overflowY: "auto",
   };
 
@@ -177,51 +178,91 @@ export const MovementsManage: React.FC = () => {
               onMovementConpetChange={onMovementConceptSelected}
               onWorkOrderChange={onWorkOrderChange}
               onPurchaseRequisitionChange={onPurchaseRequisitionChange}/>
+            <Collapse accordion size="large" defaultActiveKey={1}>
+              <Collapse.Panel
+                key={1}
+                header={
+                  <h2 className="font-bold">Selecciona los productos</h2>
+                }
+              >
+                <ProductsList
+                  enableSelection={true}
+                  mode="selection-only"
+                  onSelectionChange={setSelectedProducts}
+                />
+              </Collapse.Panel>
+              <Collapse.Panel
+                key={2}
+                header={
+                  <h2 className="font-bold">Productos seleccionados</h2>
+                }
+              >
+                {
+                  !!selectedProducts && !!selectedProducts.length ? (
+                    <>
+                      <Collapse accordion size="middle">
+                        {
+                          selectedProducts.map((product, index) => (
+                            <Collapse.Panel
+                              key={index}
+                              header={
+                                <>
+                                  <span className="font-semibold">{product.commonName}</span>
+                                </>
+                              }
+                              extra={<DeleteOutlined
+                                style={{ color: 'red', fontSize: '1.1rem' }}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    console.log("deleted", index);
+                                  }
+                                }
+                                />
+                              }
+                              className="border-none"
+                              style={{ borderBottom: '1px solid #e8e8e8' }}
+                            >
+                              <ProductBatchForm
+                                key={index}
+                                product={product}
+                                formRef={formRefs[index]}
+                              />
+                            </Collapse.Panel>
+                          ))
+                        }
+                      </Collapse>
+                    </>
+                  ) : null
+                }
+              </Collapse.Panel>
+            </Collapse>
             {
               !!movementConcept ? (
-                !selectingProducts ?
-                (
-                  <>
-                    <div className="flex justify-between">
-                      <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>
-                        {
-                          movementConcept.name == 'Salida a producción' && !selectedProducts.length ?
-                          'Selecciona una requisición de compra'
-                          :
-                          'Captura los lotes de los productos'
-                        }
-                      </h1>
-                    </div>
-                    {
-                      selectedProducts.map((product, index) => (
-                        <ProductBatchForm
-                          key={index}
-                          product={product}
-                          formRef={formRefs[index]}
-                        />
-                      ))
-                    }
-                  </>
-                )
-                :
                 <>
-                  <div className="flex justify-between">
-                    <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>Selecciona los productos</h1>
-                    <button
-                      type="button"
-                      onClick={onProductSelectionDone}
-                      className="h-min bg-green-500 text-white px-4 py-2 rounded-md transition duration-500 ease select-none hover:bg-green-600 focus:outline-none focus:shadow-outline">
-                      Hecho
-                    </button>
-                  </div>
-                  <div style={productsListContainerStyles}>
-                    <ProductsList
-                      enableSelection={true}
-                      mode="selection-only"
-                      onSelectionChange={setSelectedProducts}
-                    />
-                  </div>
                 </>
+                // (
+                //   <>
+                //     <div className="flex justify-between">
+                //       <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>
+                //         {
+                //           movementConcept.name == 'Salida a producción' && !selectedProducts.length ?
+                //           'Selecciona una requisición de compra'
+                //           :
+                //           'Captura los lotes de los productos'
+                //         }
+                //       </h1>
+                //     </div>
+                //     {
+                //       selectedProducts.map((product, index) => (
+                //         <ProductBatchForm
+                //           key={index}
+                //           product={product}
+                //           formRef={formRefs[index]}
+                //         />
+                //       ))
+                //     }
+                //   </>
+                // )
               ) : null
             }
 
