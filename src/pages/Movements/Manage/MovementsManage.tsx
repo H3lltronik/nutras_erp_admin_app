@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Collapse, Layout } from "antd";
-import React, { MutableRefObject, createRef, useMemo, useRef } from "react";
+import React, { MutableRefObject, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MovementAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
@@ -14,27 +14,18 @@ import { ProductsList } from "../../Products";
 import ProductBatchForm from "../Common/ProductBatchForm";
 import { WorkOrder } from "../../../api/workOrder/types";
 import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
-import { DeleteOutlined, DownOutlined, RightOutlined, UpOutlined } from "@ant-design/icons";
+import { DeleteFilled, DeleteOutlined, PlusCircleFilled } from "@ant-design/icons";
 
 const { Content } = Layout;
-
-const generateFolio = (n: number = 8): string => {
-  let result = "";
-  for (let i = 0; i < n; i++) {
-    result += Math.floor(Math.random() * 10);
-  }
-  return result;
-};
 
 export const MovementsManage: React.FC = () => {
   const user = useAuth().user;
   const MovementFormRef = useRef<MovementFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const [selectedProducts, setSelectedProducts] = React.useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = React.useState<any[]>([]);
   const [selectingProducts, setSelectingProducts] = React.useState<boolean>(true);
   const [movementConcept, setMovementConcept] = React.useState<MovementConcept | null>(null);
-  const [formRefs, setFormRefs] = React.useState<MutableRefObject<any>[]>([]);
 
   const { mutateAsync } = useMutation<unknown>(
     (id: string, data: Movement) =>
@@ -63,7 +54,13 @@ export const MovementsManage: React.FC = () => {
     setMovementConcept(movementConcept);
     setSelectedProducts([]);
     setSelectingProducts(false);
-    setFormRefs([]);
+  }
+
+  const onProductSelectionChange = (products: Product[]) => {
+    setSelectedProducts(products.map((product: any) => {
+      product.batchesForms = [React.createRef()];
+      return product;
+    }));
   }
 
   const onMovementConceptSelected = (movementConcept: MovementConcept) => {
@@ -83,17 +80,13 @@ export const MovementsManage: React.FC = () => {
   const onPurchaseRequisitionChange = (purchaseRequisition: PurchaseRequisition) => {
     if(purchaseRequisition) {
       const productsList = purchaseRequisition.purchase_requisition_products;
-      setFormRefs(productsList.map(() => createRef<any>()));
       setSelectedProducts(productsList.map((product) => {
-        product.product.quantity = product.quantity;
-        return product.product;
+        let productMapped: any = product.product;
+        productMapped.quantity = product.quantity;
+        productMapped.batchesForms = [React.createRef()];
+        return productMapped;
       }));
     }
-  }
-
-  const onProductSelectionDone = () => {
-    setFormRefs(selectedProducts.map(() => createRef<any>()));
-    setSelectingProducts(false);
   }
 
   const submitForm = async (isDraft = false) => {
@@ -110,7 +103,6 @@ export const MovementsManage: React.FC = () => {
     });
     movement.fromId = movement.originWarehouseId;
     movement.toId = movement.destinyWarehouseId;
-    movement.folio = generateFolio();
     console.log("MovementFormData", movement);
 
     setPageLoading(true);
@@ -160,11 +152,6 @@ export const MovementsManage: React.FC = () => {
     return null;
   }, [entity]);
 
-  const productsListContainerStyles: React.CSSProperties = {
-    maxHeight: "400px",
-    overflowY: "auto",
-  };
-
   return (
     <>
       <Content className="relative mx-4">
@@ -188,9 +175,10 @@ export const MovementsManage: React.FC = () => {
                 <ProductsList
                   enableSelection={true}
                   mode="selection-only"
-                  onSelectionChange={setSelectedProducts}
+                  onSelectionChange={onProductSelectionChange}
                 />
               </Collapse.Panel>
+
               <Collapse.Panel
                 key={2}
                 header={
@@ -222,49 +210,59 @@ export const MovementsManage: React.FC = () => {
                               className="border-none"
                               style={{ borderBottom: '1px solid #e8e8e8' }}
                             >
-                              <ProductBatchForm
-                                key={index}
-                                product={product}
-                                formRef={formRefs[index]}
-                              />
+                              <div className="flex flex-col gap-3">
+                                {
+                                  product.batchesForms.map((batchForm: MutableRefObject<any>, index: number) => (
+                                    <>
+                                      {index > 0 && <hr className="w-full" />}
+                                      <div className="flex items-center justify-between gap-3">
+                                        <ProductBatchForm
+                                          key={index}
+                                          product={product}
+                                          formRef={batchForm}
+                                        />
+                                        {
+                                          product.batchesForms.length > 1 && (
+                                            <DeleteFilled
+                                              className="hover:cursor-pointer"
+                                              style={{ color: 'red', fontSize: '1.1rem' }}
+                                              onClick={() => {
+                                                product.batchesForms.splice(index, 1);
+                                                setSelectedProducts([...selectedProducts]);
+                                              }}
+                                            />
+                                          )
+                                        }
+                                      </div>
+                                    </>
+                                  ))
+                                }
+                                <div className="flex justify-end">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      product.batchesForms.push(React.createRef());
+                                      setSelectedProducts([...selectedProducts]);
+                                    }}
+                                    className="flex items-center gap-2 border border-green-600 bg-green-600 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-700 focus:outline-none focus:shadow-outline">
+                                    <PlusCircleFilled style={{fontSize: "1rem"}} />
+                                    Agregar lote
+                                  </button>
+                                </div>
+                              </div>
                             </Collapse.Panel>
                           ))
                         }
                       </Collapse>
                     </>
-                  ) : null
+                  ) : (
+                    <>
+                      <h2>No hay productos seleccionados</h2>
+                    </>
+                  )
                 }
               </Collapse.Panel>
             </Collapse>
-            {
-              !!movementConcept ? (
-                <>
-                </>
-                // (
-                //   <>
-                //     <div className="flex justify-between">
-                //       <h1 className="font-semibold mb-4" style={{fontSize: "1.75rem"}}>
-                //         {
-                //           movementConcept.name == 'Salida a producción' && !selectedProducts.length ?
-                //           'Selecciona una requisición de compra'
-                //           :
-                //           'Captura los lotes de los productos'
-                //         }
-                //       </h1>
-                //     </div>
-                //     {
-                //       selectedProducts.map((product, index) => (
-                //         <ProductBatchForm
-                //           key={index}
-                //           product={product}
-                //           formRef={formRefs[index]}
-                //         />
-                //       ))
-                //     }
-                //   </>
-                // )
-              ) : null
-            }
 
             <button
               type="button"
