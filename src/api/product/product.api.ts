@@ -33,6 +33,7 @@ class BaseProductAPI extends BaseAPI {
     console.log("[getProducts] params: ", params);
     try {
       const products = await this.get<GetProductsResponse>("", params);
+      console.log("[getProducts] products: ", products);
       const productsWithStatus = products.data.map((product) =>
         Object.assign({}, product, {
           status: statusParser(product),

@@ -34,6 +34,15 @@ export const MovementListColumns: ColumnsType<Movement> = [
     },
   },
   {
+    title: "Concepto de movimiento",
+    dataIndex: "type",
+    key: "type",
+    showSorterTooltip: false,
+    render(_value, record) {
+      return record.movementConcept?.name;
+    },
+  },
+  {
     title: "Origen",
     dataIndex: "origin",
     key: "origin",

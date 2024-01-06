@@ -28,6 +28,8 @@ import { WorkOrdersList, WorkOrdersManage } from "../pages/WorkOrders";
 import { WorkOrdersHeader } from "../pages/WorkOrders/Common/WorkOrderHeader";
 import { WorkRequestsList, WorkRequestsManage } from "../pages/WorkRequests";
 import { WorkRequestsHeader } from "../pages/WorkRequests/Common/WorkRequestHeader";
+import { PurchaseOrdersList, PurchaseOrdersManage } from "../pages/PurchaseOrders";
+import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchaseOrdersHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
 
@@ -281,26 +283,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/work-requests",
-    element: (
-      <DefaultLayout
-        navContent={<WorkRequestsHeader />}
-        headerTitle="Productos">
-        <WorkRequestsList />
-      </DefaultLayout>
-    ),
-  },
-  {
-    path: "/admin/work-requests/manage/:id?",
-    element: (
-      <DefaultLayout
-        navContent={<WorkRequestsHeader />}
-        headerTitle="Productos">
-        <WorkRequestsManage />
-      </DefaultLayout>
-    ),
-  },
-  {
     path: "/admin/work-orders",
     element: (
       <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Productos">
@@ -340,11 +322,53 @@ const router = createBrowserRouter([
       </DefaultLayout>
     ),
   },
+  // ************************* Compras ************************* //
+  {
+    path: "/admin/purchase-orders",
+    element: (
+      <DefaultLayout
+        navContent={<PurchaseOrdersHeader />}
+        headerTitle="Productos">
+        <PurchaseOrdersList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/purchase-orders/manage/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<PurchaseOrdersHeader />}
+        headerTitle="Productos">
+        <PurchaseOrdersManage />
+      </DefaultLayout>
+    ),
+  },
   {
     path: "*",
     element: (
       <DefaultLayout headerTitle="El recurso no se encontro...">
         <NotFound />
+      </DefaultLayout>
+    ),
+  },
+  // ***************** Direccion ***************** //
+  {
+    path: "/admin/work-requests",
+    element: (
+      <DefaultLayout
+        navContent={<WorkRequestsHeader />}
+        headerTitle="Productos">
+        <WorkRequestsList />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/work-requests/manage/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<WorkRequestsHeader />}
+        headerTitle="Productos">
+        <WorkRequestsManage />
       </DefaultLayout>
     ),
   },

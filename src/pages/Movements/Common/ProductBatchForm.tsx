@@ -19,26 +19,21 @@ const ProductBatchForm: React.FC<ProductBatchFormProps> = (props) => {
 
     return (
         <>
-            <h1 className='font-semibold mb-3' style={{fontSize: "1rem"}}>{product.commonName}</h1>
-            <Form form={form} initialValues={{quantity: product.quantity ? product.quantity : null }}>
-                <Row gutter={24}>
-                    <Col span={8}>
-                        <Form.Item label="Código del lote" name="code">
+            <div className='flex-auto'>
+                <Form form={form} initialValues={{quantity: product.quantity ? product.quantity : null }}>
+                    <div className="flex justify-between flex-wrap gap-4">
+                        <Form.Item className='min-w-fit self-stretch mb-0' label="Código del lote" name="code">
                             <Input type='text' />
                         </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item label="Caducidad" name="expirationDate">
+                        <Form.Item className='min-w-fit self-stretch mb-0' label="Caducidad" name="expirationDate">
                             <DatePicker></DatePicker>
                         </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item label="Cantidad" name="quantity">
+                        <Form.Item className='min-w-fit self-stretch mb-0' label="Cantidad" name="quantity">
                             <Input type='number' />
                         </Form.Item>
-                    </Col>
-                </Row>
-            </Form>
+                    </div>
+                </Form>
+            </div>
         </>
     );
 };

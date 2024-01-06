@@ -1,11 +1,10 @@
-import { Col, DatePicker, Form, Input, InputNumber, Row, Select, Switch } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
-import { ProductsList } from "../../../pages/Products";
-import { MovementConceptAPI, MovementTypeAPI, WarehousesAPI, WorkOrderAPI, PurchaseRequisitionAPI } from "../../../api";
+import { Col, Form, Input, Row, Select } from "antd";
 import moment from "moment-timezone";
-import { GetWorkOrdersResponse, WorkOrder } from "../../../api/workOrder/types";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { MovementConceptAPI, MovementTypeAPI, PurchaseRequisitionAPI, WarehousesAPI, WorkOrderAPI } from "../../../api";
 import { GetPurchaseRequisitionsResponse, PurchaseRequisition } from "../../../api/purchaseRequisition/types";
+import { GetWorkOrdersResponse, WorkOrder } from "../../../api/workOrder/types";
+import useAuth from "../../../hooks/useAuth";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -69,7 +68,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
 
   const showRequisitionRelatedOcSelector = (movementConceptId: string): boolean => {
     const movementConcept = movementConcepts.find((concept) => concept.id === movementConceptId);
-    return movementConcept?.name?.toLowerCase() == "Recepción de producción".toLowerCase();
+    return movementConcept?.name?.toLowerCase() == "Salida a producción".toLowerCase();
   }
 
   const onWorkOrderSelected = (value: string) => {
@@ -229,7 +228,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
               <Select allowClear onChange={onPurchaseRequisitionSelected}>
                 {
                   purchasesRequisitions.map((requisition) => {
-                    return <Select.Option key={requisition.id} value={requisition.id}>{requisition.folio}</Select.Option>
+                    return <Select.Option key={requisition.id} value={requisition.folio}>{requisition.folio}</Select.Option>
                   })
                 }
               </Select>
