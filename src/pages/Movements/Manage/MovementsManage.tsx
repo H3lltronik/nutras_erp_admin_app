@@ -95,16 +95,16 @@ export const MovementsManage: React.FC = () => {
       user
     })) as CreateMovementRequest;
     let movement: any = {...MovementFormData};
-    movement.batches = formRefs.map((formRef, index) => {
-      let batch = formRef.current?.getFieldsValue();
-      batch.product = selectedProducts[index];
-      batch.productId = batch.product.id;
-      return batch;
+    movement.products = selectedProducts.map((product) => {
+      product.batches = product.batchesForms.map((batchForm: MutableRefObject<any>) => {
+        return batchForm?.current?.getFieldsValue();
+      });
+      delete product.batchesForms;
+      return product;
     });
     movement.fromId = movement.originWarehouseId;
     movement.toId = movement.destinyWarehouseId;
     console.log("MovementFormData", movement);
-
     setPageLoading(true);
     try {
       let result = null;
@@ -202,7 +202,8 @@ export const MovementsManage: React.FC = () => {
                                 style={{ color: 'red', fontSize: '1.1rem' }}
                                 onClick={(event) => {
                                     event.stopPropagation();
-                                    console.log("deleted", index);
+                                    selectedProducts.splice(index, 1);
+                                    setSelectedProducts([...selectedProducts]);
                                   }
                                 }
                                 />
@@ -210,14 +211,13 @@ export const MovementsManage: React.FC = () => {
                               className="border-none"
                               style={{ borderBottom: '1px solid #e8e8e8' }}
                             >
-                              <div className="flex flex-col gap-3">
+                              <div className="flex flex-col gap-3" key={index + selectedProducts.length}>
                                 {
                                   product.batchesForms.map((batchForm: MutableRefObject<any>, index: number) => (
                                     <>
                                       {index > 0 && <hr className="w-full" />}
-                                      <div className="flex items-center justify-between gap-3">
+                                      <div className="flex items-center justify-between gap-3" key={index}>
                                         <ProductBatchForm
-                                          key={index}
                                           product={product}
                                           formRef={batchForm}
                                         />

@@ -1,4 +1,4 @@
-import { Col, DatePicker, Form, Input, Row } from 'antd';
+import { DatePicker, Form, Input } from 'antd';
 import React, { MutableRefObject, useEffect } from 'react';
 
 interface ProductBatchFormProps {
@@ -14,6 +14,7 @@ const ProductBatchForm: React.FC<ProductBatchFormProps> = (props) => {
     useEffect(() => {
         if (props.formRef) {
             props.formRef.current = form;
+            console.log('formRef', props.formRef);
         }
     }, [form, props.formRef]);
 
@@ -26,7 +27,9 @@ const ProductBatchForm: React.FC<ProductBatchFormProps> = (props) => {
                             <Input type='text' />
                         </Form.Item>
                         <Form.Item className='min-w-fit self-stretch mb-0' label="Caducidad" name="expirationDate">
-                            <DatePicker></DatePicker>
+                            <DatePicker
+                                allowClear={false}
+                            ></DatePicker>
                         </Form.Item>
                         <Form.Item className='min-w-fit self-stretch mb-0' label="Cantidad" name="quantity">
                             <Input type='number' />
