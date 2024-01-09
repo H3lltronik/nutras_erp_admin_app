@@ -13,6 +13,7 @@ interface MovementType {
   deletedAt: string | null;
   id: string;
   name: string;
+  action: 'input' | 'output' | 'move';
 }
 
 type GetMovementConceptsResponse = MovementConcept[];

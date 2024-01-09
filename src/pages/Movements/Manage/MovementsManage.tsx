@@ -24,7 +24,6 @@ export const MovementsManage: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
   const [selectedProducts, setSelectedProducts] = React.useState<any[]>([]);
-  const [selectingProducts, setSelectingProducts] = React.useState<boolean>(true);
   const [movementConcept, setMovementConcept] = React.useState<MovementConcept | null>(null);
 
   const { mutateAsync } = useMutation<unknown>(
@@ -49,11 +48,10 @@ export const MovementsManage: React.FC = () => {
     [isLoading, pageLoading, isFetching, id]
   );
 
-  const resetFormVariables = () => {
+  const resetFormVariables = (resetProducts: boolean = true) => {
     MovementFormRef.current?.resetField('requisitionId');
     setMovementConcept(movementConcept);
-    setSelectedProducts([]);
-    setSelectingProducts(false);
+    if(resetProducts) setSelectedProducts([]);
   }
 
   const onProductSelectionChange = (products: Product[]) => {
@@ -63,15 +61,10 @@ export const MovementsManage: React.FC = () => {
     }));
   }
 
-  const onMovementConceptSelected = (movementConcept: MovementConcept) => {
-    resetFormVariables();
-    setMovementConcept(movementConcept);
-    if(movementConcept.name == 'Salida a producción') {
-      setSelectingProducts(false);
-    } else {
-      setSelectedProducts([]);
-      setSelectingProducts(true);
-    }
+  const onMovementConceptSelected = (newMovementConcept: MovementConcept) => {
+    resetFormVariables(movementConcept?.name );
+    setMovementConcept(newMovementConcept);
+    console.log("newMovementConcept", newMovementConcept);
   }
 
   const onWorkOrderChange = (workOrder: WorkOrder) => {
@@ -89,19 +82,29 @@ export const MovementsManage: React.FC = () => {
     }
   }
 
+  const getProductBatchFormMode = () => {
+    if(movementConcept?.movementType.action != 'input') {
+      return 'select';
+    }
+    return 'create';
+  }
+
   const submitForm = async (isDraft = false) => {
     const MovementFormData = (await MovementFormRef.current?.getFormData({
       draftMode: isDraft,
       user
     })) as CreateMovementRequest;
     let movement: any = {...MovementFormData};
-    movement.products = selectedProducts.map((product) => {
-      product.batches = product.batchesForms.map((batchForm: MutableRefObject<any>) => {
-        return batchForm?.current?.getFieldsValue();
+    if(getProductBatchFormMode() === 'create') {
+      movement.products = selectedProducts.map((product) => {
+        product.batches = product.batchesForms.map((batchForm: MutableRefObject<any>) => {
+          return batchForm?.current?.getFieldsValue();
+        });
+        delete product.batchesForms;
+        return product;
       });
-      delete product.batchesForms;
-      return product;
-    });
+    }
+    else movement.products = selectedProducts;
     movement.fromId = movement.originWarehouseId;
     movement.toId = movement.destinyWarehouseId;
     console.log("MovementFormData", movement);
@@ -218,6 +221,7 @@ export const MovementsManage: React.FC = () => {
                                       {index > 0 && <hr className="w-full" />}
                                       <div className="flex items-center justify-between gap-3" key={index}>
                                         <ProductBatchForm
+                                          mode={getProductBatchFormMode()}
                                           product={product}
                                           formRef={batchForm}
                                         />
@@ -237,18 +241,22 @@ export const MovementsManage: React.FC = () => {
                                     </>
                                   ))
                                 }
-                                <div className="flex justify-end">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      product.batchesForms.push(React.createRef());
-                                      setSelectedProducts([...selectedProducts]);
-                                    }}
-                                    className="flex items-center gap-2 border border-green-600 bg-green-600 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-700 focus:outline-none focus:shadow-outline">
-                                    <PlusCircleFilled style={{fontSize: "1rem"}} />
-                                    Agregar lote
-                                  </button>
-                                </div>
+                                {
+                                  getProductBatchFormMode() === 'create' && (
+                                    <div className="flex justify-end">
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          product.batchesForms.push(React.createRef());
+                                          setSelectedProducts([...selectedProducts]);
+                                        }}
+                                        className="flex items-center gap-2 border border-green-600 bg-green-600 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-700 focus:outline-none focus:shadow-outline">
+                                        <PlusCircleFilled style={{fontSize: "1rem"}} />
+                                        Agregar lote
+                                      </button>
+                                    </div>
+                                  )
+                                }
                               </div>
                             </Collapse.Panel>
                           ))
