@@ -2,17 +2,17 @@ import type { ColumnsType } from "antd/es/table";
 import { alphabetically } from "../../../lib/sorters";
 
 export const MovementListColumns: ColumnsType<Movement> = [
-  {
-    title: "ID",
-    dataIndex: "partidaId",
-    key: "partidaId",
-    width: 150,
-    showSorterTooltip: false,
-  },
+  // {
+  //   title: "ID",
+  //   dataIndex: "partidaId",
+  //   key: "partidaId",
+  //   width: 150,
+  //   showSorterTooltip: false,
+  // },
   {
     title: "Folio",
-    dataIndex: "code",
-    key: "code",
+    dataIndex: "folio",
+    key: "folio",
     showSorterTooltip: false,
   },
   {
