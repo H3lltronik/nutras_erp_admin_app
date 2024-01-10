@@ -96,6 +96,14 @@ class BaseBatchAPI extends BaseAPI {
       return handleAPIError(error);
     }
   }
+
+  async getProuctBatches(productId: string): Promise<GetBatchResponse[] | APIError> {
+    try {
+      return await this.get<GetBatchResponse[]>(`/of-product/${productId}`);
+    } catch (error) {
+      return handleAPIError(error);
+    }
+  }
 }
 
 export default BaseBatchAPI;
