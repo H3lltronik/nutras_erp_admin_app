@@ -49,6 +49,13 @@ const WorkRequestForm = forwardRef<WorkRequestFormHandle, WorkRequestFormProps>(
               quantity: formData[key],
             }));
 
+          // Remove the product fields from formData
+          Object.keys(formData)
+            .filter((key) => key.startsWith("products."))
+            .forEach((key) => {
+              delete formData[key];
+            });
+
           const data = {
             ...formData,
             userId: params?.user?.id,
@@ -64,12 +71,23 @@ const WorkRequestForm = forwardRef<WorkRequestFormHandle, WorkRequestFormProps>(
     );
 
     useEffect(() => {
-      if (_props.entity) form.setFieldsValue(_props.entity);
+      if (_props.entity) {
+        const entity = {
+          ..._props.entity,
+        };
+
+        for (const product of entity.products) {
+          entity[`products.${product.productId}`] = product.quantity;
+        }
+
+        form.setFieldsValue(entity);
+      }
 
       if (_props.entity?.products) {
         const products = _props.entity.products.map((product) => ({
           id: product.productId,
           quantity: product.quantity,
+          commonName: product.product.commonName,
         }));
         setSelectedProducts(products);
       }
