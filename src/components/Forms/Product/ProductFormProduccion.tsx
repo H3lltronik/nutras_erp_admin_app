@@ -3,10 +3,12 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { MeasurementAPI, ProductTypesAPI } from "../../../api";
+import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { GenericSelect } from "../Common/GenericSelect";
@@ -65,9 +67,18 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       })
     );
 
+    const defaultValuesFromUrl = useMemo(() => {
+      return urlWithGetKeyToJson(
+        location.search,
+        "defaultValues"
+      ) as Product | null;
+    }, [location]);
+
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
-    }, [form, _props.entity]);
+
+      if (defaultValuesFromUrl) form.setFieldsValue(defaultValuesFromUrl);
+    }, [form, _props.entity, defaultValuesFromUrl]);
 
     return (
       <Form

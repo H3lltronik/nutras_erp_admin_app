@@ -55,10 +55,19 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             params
           );
 
+          console.log("kosherDetails", kosherDetails);
+          console.log("miercoles", {
+            ...form.getFieldsValue(),
+            ...kosherDetails,
+            departmentId: "65a427ba-d703-4f8f-b688-ccfa44d62db0",
+            isDraft: !!params?.draftMode,
+            isPublished: !params?.draftMode,
+          });
+
           return {
             ...form.getFieldsValue(),
-            kosherDetails,
-            departmentId: "f0d61712-ea21-4410-b5a4-3e83a4f41168",
+            ...kosherDetails,
+            departmentId: "65a427ba-d703-4f8f-b688-ccfa44d62db0",
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -99,7 +108,6 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               label="Tipo de producto"
               name="productTypeId"
               rules={[
-                
                 {
                   required: true,
                   message: "Este campo es obligatorio",
