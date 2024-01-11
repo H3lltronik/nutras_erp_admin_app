@@ -42,7 +42,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
   const [warehouses, setWarehouses] = useState<GetWarehousesResponse[]>([]);
   const [warehousesToShow, setWarehousesToShow] = useState<GetWarehousesResponse[]>([]);
   const [disableOriginWarehouse, setDisableOriginWarehouse] = useState<boolean>(true);
-  const [date, setDate] = useState<moment.Moment>(moment());
+  const [date, setDate] = useState<string>(moment().format("YYYY-MM-DD"));
 
   const onMovementConceptSelected = (value: string) => {
     const movementConcept = movementConcepts.find((concept) => concept.id === value);
@@ -103,7 +103,16 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
   );
 
   useEffect(() => {
-    if (_props.entity) form.setFieldsValue(_props.entity);
+    console.log("MovementForm props", _props.entity);
+    if (_props.entity) {
+      form.setFieldsValue({
+        ..._props.entity,
+        movementTypeId: _props.entity?.movementConcept?.movementTypeId,
+        originWarehouseId: _props.entity?.fromId,
+        destinyWarehouseId: _props.entity?.toId,
+        date: moment(_props.entity?.createdAt).format("YYYY-MM-DD"),
+      });
+    }
 
     const getMovementsConcept = async () => {
       try {
@@ -116,8 +125,9 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
 
     const getMovementsType = async () => {
       try {
-        const movementsType = await MovementTypeAPI.getAll();
-        setMovementTypes(movementsType.data);
+        const movementTypesApi = await MovementTypeAPI.getAll();
+        setMovementTypes(movementTypesApi.data);
+        console.log(movementTypesApi.data);
       } catch (error) {
         console.error("Error getting MovementTypes");
       }
@@ -127,6 +137,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
       try {
         const warehouses = await WarehousesAPI.getWarehouses();
         setWarehouses(warehouses.data);
+        if(!!_props.entity) setWarehousesToShow(warehouses.data);
       } catch (error) {
         console.error("Error getting Warehouses");
       }
@@ -161,7 +172,11 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
     <Form
       form={form}
       name="MovementForm"
-      initialValues={{ remember: true, userId: useAuth().user?.id, date: date.format('YYYY-MM-DD') }}
+      initialValues={{
+        remember: true,
+        userId: useAuth().user?.id,
+        date: _props.entity?.createdAt ? moment(_props.entity?.createdAt).format("YYYY-MM-DD") : date,
+      }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -174,7 +189,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
         </Col>
         <Col span={12}>
           <Form.Item label="Orden de trabajo" name="ot_id">
-            <Select onChange={onWorkOrderSelected}>
+            <Select onChange={onWorkOrderSelected} disabled={!!_props.entity}>
               {
                 workOrders.map((workOrder) => {
                   return <Select.Option key={workOrder.id} value={workOrder.id}>{workOrder.folio}</Select.Option>
@@ -188,7 +203,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item label="Concepto de movimiento" name="movementConceptId">
-            <Select onChange={onMovementConceptSelected}>
+            <Select onChange={onMovementConceptSelected} disabled={!!_props.entity}>
               {
                 movementConcepts.map((concept) => {
                   return <Select.Option key={concept.id} value={concept.id}>{concept.name}</Select.Option>
@@ -241,7 +256,7 @@ const MovementForm = forwardRef<MovementFormHandle, MovementFormProps>((_props, 
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item label="Origen" name="originWarehouseId" shouldUpdate>
-            <Select disabled={disableOriginWarehouse}>
+            <Select disabled={disableOriginWarehouse || !!_props.entity}>
               {
                 warehousesToShow.map((warehouse) => {
                   return <Select.Option key={warehouse.id} value={warehouse.id}>{warehouse.name}</Select.Option>

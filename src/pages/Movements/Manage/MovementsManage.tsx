@@ -168,140 +168,150 @@ export const MovementsManage: React.FC = () => {
               onMovementConpetChange={onMovementConceptSelected}
               onWorkOrderChange={onWorkOrderChange}
               onPurchaseRequisitionChange={onPurchaseRequisitionChange}/>
-            <Collapse accordion size="large" defaultActiveKey={1}>
-              <Collapse.Panel
-                key={1}
-                header={
-                  <h2 className="font-bold">Selecciona los productos</h2>
-                }
-              >
-                <ProductsList
-                  enableSelection={true}
-                  mode="selection-only"
-                  onSelectionChange={onProductSelectionChange}
-                />
-              </Collapse.Panel>
+              {
+                !entityData || !entityData.id ? (
+                  <>
+                    <Collapse accordion size="large" defaultActiveKey={1}>
+                      <Collapse.Panel
+                        key={1}
+                        header={
+                          <h2 className="font-bold">Selecciona los productos</h2>
+                        }
+                      >
+                        <ProductsList
+                          enableSelection={true}
+                          mode="selection-only"
+                          onSelectionChange={onProductSelectionChange}
+                        />
+                      </Collapse.Panel>
 
-              <Collapse.Panel
-                key={2}
-                header={
-                  <h2 className="font-bold">Productos seleccionados</h2>
-                }
-              >
-                {
-                  !!selectedProducts && !!selectedProducts.length ? (
-                    <>
-                      <Collapse accordion size="middle">
+                      <Collapse.Panel
+                        key={2}
+                        header={
+                          <h2 className="font-bold">Productos seleccionados</h2>
+                        }
+                      >
                         {
-                          selectedProducts.map((product, index) => (
-                            <Collapse.Panel
-                              key={index}
-                              header={
-                                <>
-                                  <span className="font-semibold">{product.commonName}</span>
-                                </>
-                              }
-                              extra={<DeleteOutlined
-                                style={{ color: 'red', fontSize: '1.1rem' }}
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    selectedProducts.splice(index, 1);
-                                    setSelectedProducts([...selectedProducts]);
-                                  }
-                                }
-                                />
-                              }
-                              className="border-none"
-                              style={{ borderBottom: '1px solid #e8e8e8' }}
-                            >
-                              <div className="flex flex-col gap-3">
+                          !!selectedProducts && !!selectedProducts.length ? (
+                            <>
+                              <Collapse accordion size="middle">
                                 {
-                                  product.batchesForms.map((batchForm: MutableRefObject<any>, index: number) => (
-                                    <>
-                                      {index > 0 && <hr className="w-full" />}
-                                      <div className="flex items-center justify-between gap-3" key={index}>
-                                        <ProductBatchForm
-                                          mode={getProductBatchFormMode()}
-                                          product={product}
-                                          formRef={batchForm}
+                                  selectedProducts.map((product, index) => (
+                                    <Collapse.Panel
+                                      key={index}
+                                      header={
+                                        <>
+                                          <span className="font-semibold">{product.commonName}</span>
+                                        </>
+                                      }
+                                      extra={<DeleteOutlined
+                                        style={{ color: 'red', fontSize: '1.1rem' }}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            selectedProducts.splice(index, 1);
+                                            setSelectedProducts([...selectedProducts]);
+                                          }
+                                        }
                                         />
+                                      }
+                                      className="border-none"
+                                      style={{ borderBottom: '1px solid #e8e8e8' }}
+                                    >
+                                      <div className="flex flex-col gap-3">
                                         {
-                                          product.batchesForms.length > 1 && (
-                                            <DeleteFilled
-                                              className="hover:cursor-pointer"
-                                              style={{ color: 'red', fontSize: '1.1rem' }}
-                                              onClick={() => {
-                                                product.batchesForms.splice(index, 1);
-                                                setSelectedProducts([...selectedProducts]);
-                                              }}
-                                            />
+                                          product.batchesForms.map((batchForm: MutableRefObject<any>, index: number) => (
+                                            <>
+                                              {index > 0 && <hr className="w-full" />}
+                                              <div className="flex items-center justify-between gap-3" key={index}>
+                                                <ProductBatchForm
+                                                  mode={getProductBatchFormMode()}
+                                                  product={product}
+                                                  formRef={batchForm}
+                                                />
+                                                {
+                                                  product.batchesForms.length > 1 && (
+                                                    <DeleteFilled
+                                                      className="hover:cursor-pointer"
+                                                      style={{ color: 'red', fontSize: '1.1rem' }}
+                                                      onClick={() => {
+                                                        product.batchesForms.splice(index, 1);
+                                                        setSelectedProducts([...selectedProducts]);
+                                                      }}
+                                                    />
+                                                  )
+                                                }
+                                              </div>
+                                            </>
+                                          ))
+                                        }
+                                        {
+                                          getProductBatchFormMode() === 'create' && (
+                                            <div className="flex justify-end">
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  product.batchesForms.push(React.createRef());
+                                                  setSelectedProducts([...selectedProducts]);
+                                                }}
+                                                className="flex items-center gap-2 border border-green-600 bg-green-600 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-700 focus:outline-none focus:shadow-outline">
+                                                <PlusCircleFilled style={{fontSize: "1rem"}} />
+                                                Agregar lote
+                                              </button>
+                                            </div>
                                           )
                                         }
                                       </div>
-                                    </>
+                                    </Collapse.Panel>
                                   ))
                                 }
-                                {
-                                  getProductBatchFormMode() === 'create' && (
-                                    <div className="flex justify-end">
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          product.batchesForms.push(React.createRef());
-                                          setSelectedProducts([...selectedProducts]);
-                                        }}
-                                        className="flex items-center gap-2 border border-green-600 bg-green-600 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-green-700 focus:outline-none focus:shadow-outline">
-                                        <PlusCircleFilled style={{fontSize: "1rem"}} />
-                                        Agregar lote
-                                      </button>
-                                    </div>
-                                  )
-                                }
-                              </div>
-                            </Collapse.Panel>
-                          ))
+                              </Collapse>
+                            </>
+                          ) : (
+                            <>
+                              <h2>No hay productos seleccionados</h2>
+                            </>
+                          )
                         }
-                      </Collapse>
-                    </>
-                  ) : (
-                    <>
-                      <h2>No hay productos seleccionados</h2>
-                    </>
-                  )
-                }
-              </Collapse.Panel>
-            </Collapse>
+                      </Collapse.Panel>
+                    </Collapse>
 
-            {/* <section>
-              <h1 className="text-2xl">Seleccion de lotes</h1>
-              <BatchesList
-                enableSelection={true}
-                mode="selection-only"
-                onSelectionChange={onLoteSelectionChange}
-                perPage={5}
-              />
-            </section> */}
-
-            <button
-              type="button"
-              onClick={() => submitForm(false)}
-              className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
-              Procesar
-            </button>
-            {!entityData?.isPublished && (
-              <button
-                type="button"
-                onClick={() => submitForm(true)}
-                className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
-                Borrador
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={doCancel}
-              className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
-              Cancelar
-            </button>
+                    <button
+                      type="button"
+                      onClick={() => submitForm(false)}
+                      className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
+                      Procesar
+                    </button>
+                    {!entityData?.isPublished && (
+                      <button
+                        type="button"
+                        onClick={() => submitForm(true)}
+                        className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
+                        Borrador
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={doCancel}
+                      className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {
+                      entityData.inventoryMovementLotes && entityData.inventoryMovementLotes.length && (
+                        <>
+                          <h2 className="font-bold">Productos</h2>
+                          <div className="flex flex-col gap-3">
+                            <Collapse accordion size="middle">
+                            </Collapse>
+                          </div>
+                        </>
+                      )
+                    }
+                  </>
+                )
+              }
           </section>
         </div>
         <AppLoader isLoading={loading} />
