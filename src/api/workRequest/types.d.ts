@@ -1,3 +1,8 @@
+type WorkRequestProduct = {
+  id: string;
+  quantity: number;
+};
+
 interface WorkRequest {
   createdAt: string;
   updatedAt: string;
@@ -10,6 +15,8 @@ interface WorkRequest {
   note: string;
   userId: string;
   user: User;
+  products: WorkRequestProduct[];
+  clientName: string;
   work_orders?: Array<PurchaseOrder>;
 }
 
