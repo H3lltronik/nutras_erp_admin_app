@@ -50,7 +50,7 @@ export const MovementsList: React.FC = () => {
                     className: "bg-green-600 text-white hover:bg-green-50",
                     icon: <EyeOutlined className="mr-[-7px]" />,
                     onClick: (record) => {
-                      console.log("movement", record);
+                      navigate(`/admin/movements/manage/${record.id}`);
                     },
                     conditionEval: (_record) => {
                       return true;

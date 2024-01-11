@@ -5,6 +5,7 @@ interface MovementConcept {
   id: string;
   name: string;
   movementType: MovementType;
+  movementTypeId: string;
 }
 
 interface MovementType {
