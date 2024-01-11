@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Modal, Space, Table, TablePaginationConfig } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
+import { TableRowSelection } from "antd/es/table/interface";
 import { memo, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocationQuery } from "../../hooks/useLocationQuery";
@@ -41,6 +42,7 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   enableSelection?: boolean;
   selectionLimit?: number;
   onSelectionChange?: (selectedRows: TData[]) => void;
+  selectedRowIds?: string[];
 }
 
 export interface IDataWithID {
@@ -67,12 +69,26 @@ const _AdminDataTable = <
   editDisabled = false,
   deleteDisabled = false,
   perPage = 5,
+  selectedRowIds = [],
 }: AdminDataTableProps<TData, TResponse>) => {
   const navigate = useNavigate();
   const locationQuery = useLocationQuery();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageLoading, setPageLoading] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TData[]>([]);
+
+  // implement a way to let the table know what rows is selected by default
+  useEffect(() => {
+    if (selectedRowIds.length === 0) return;
+
+    const newSelectedRows = selectedRowIds.map((id) => ({ id }) as TData);
+    const merged = [...selectedRows, ...newSelectedRows];
+    const uniqueRows = Array.from(new Set(merged.map((row) => row.id))).map(
+      (id) => merged.find((row) => row.id === id)
+    );
+
+    setSelectedRows(uniqueRows as TData[]);
+  }, [selectedRowIds]);
 
   useEffect(() => {
     const _page = locationQuery.get("page");
@@ -136,7 +152,7 @@ const _AdminDataTable = <
   const rowSelectionConfig = useMemo(() => {
     if (enableSelection === false) return undefined;
 
-    return {
+    const config: TableRowSelection<TData> = {
       type: selectionLimit > 1 ? "checkbox" : "radio",
       selectedRowKeys: selectedRows.map((row) => row.id),
       onChange: (
@@ -149,6 +165,8 @@ const _AdminDataTable = <
       },
       hideSelectAll: true,
     };
+
+    return config;
   }, [enableSelection, onSelectionChange, selectedRows, selectionLimit]);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
@@ -228,6 +246,7 @@ const _AdminDataTable = <
           total: totalItems as number,
           pageSize: perPage,
         }}
+        // implement a way to let the table know what rows is selected
         rowClassName={rowClassName}
         rowSelection={rowSelectionConfig}
       />

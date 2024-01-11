@@ -3,10 +3,12 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { MeasurementAPI, ProductTypesAPI } from "../../../api";
+import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { GenericSelect } from "../Common/GenericSelect";
@@ -57,7 +59,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           return {
             ...form.getFieldsValue(),
             ...kosherDetails,
-            departmentId: "3ed0a95c-6eed-4928-8ab6-9c5f888bc029",
+            departmentId: "6cebdab4-cc4b-4bee-b011-286c0ce6979b",
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };
@@ -65,9 +67,18 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       })
     );
 
+    const defaultValuesFromUrl = useMemo(() => {
+      return urlWithGetKeyToJson(
+        location.search,
+        "defaultValues"
+      ) as Product | null;
+    }, [location]);
+
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
-    }, [form, _props.entity]);
+
+      if (defaultValuesFromUrl) form.setFieldsValue(defaultValuesFromUrl);
+    }, [form, _props.entity, defaultValuesFromUrl]);
 
     return (
       <Form

@@ -8,6 +8,7 @@ import BaseMovementConceptAPI from "./movement/movement_concept.api";
 import BaseMovementTypeAPI from "./movement/movement_type.api";
 import BaseMeasurementAPI from "./measurement/measurement.api";
 import BaseMovementAPI from "./movement/movement.api";
+import BaseMovementLotesAPI from "./movement_lotes/movement_lotes.api";
 import BaseProductAPI from "./product/product.api";
 import BaseProductTypesAPI from "./product/product_types.api";
 import BaseProfilesAPI from "./profiles/profiles.api";
@@ -39,6 +40,7 @@ export const BatchTypesAPI = new BaseBatchEntryTypesAPI(`${BASE_URL}/${ENTITIES_
 export const MovementTypeAPI = new BaseMovementTypeAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementType}`);
 export const MovementConceptAPI = new BaseMovementConceptAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementConcept}`);
 export const MovementAPI = new BaseMovementAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movement}`);
+export const MovementLotesAPI = new BaseMovementLotesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.movementLote}`);
 export const WorkOrderServiceTypeAPI = new BaseWorkOrderServiceTypeAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.workOrderServiceType}`);
 export const PurchaseRequisitionAPI = new BasePurchaseRequisitionAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.purchaseRequisition}`);
 export const PurchaseOrderAPI = new BasePurchaseOrderAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.purchaseOrder}`);

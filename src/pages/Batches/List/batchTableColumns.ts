@@ -1,5 +1,4 @@
 import type { ColumnsType } from "antd/es/table";
-import { alphabetically } from "../../../lib/sorters";
 
 export const BatchListColumns: ColumnsType<Batch> = [
   {
@@ -23,7 +22,11 @@ export const BatchListColumns: ColumnsType<Batch> = [
     dataIndex: "product",
     key: "product",
     render(_value, record) {
-      return record.product.commonName;
+      try {
+        return record.product?.commonName;
+      } catch (error) {
+        return "";
+      }
     },
     showSorterTooltip: false,
   },

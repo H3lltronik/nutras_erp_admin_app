@@ -94,6 +94,7 @@ export interface KosherDetailsToPost {
 }
 
 export const formatProductForm = (productToFormat: ProductFormResult) => {
+  console.log("[formatProductForm]", productToFormat);
   const certificateValidity = productToFormat.certificateValidity
     ? new Date(productToFormat.certificateValidity)
     : null;
@@ -129,6 +130,7 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
       certificateValidity: certificateValidity,
     },
   };
+  
 
   return product;
 };

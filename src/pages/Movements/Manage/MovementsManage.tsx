@@ -3,14 +3,17 @@ import { Collapse, Layout } from "antd";
 import React, { MutableRefObject, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MovementAPI } from "../../../api";
+import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
+import { WorkOrder } from "../../../api/workOrder/types";
 import { AppLoader } from "../../../components/Common/AppLoader";
 import MovementForm, {
   MovementFormHandle,
 } from "../../../components/Forms/Movement/MovementForm";
-import { cancelModal, showToast } from "../../../lib/notify";
-import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import useAuth from "../../../hooks/useAuth";
+import { cancelModal, showToast } from "../../../lib/notify";
+import { MovementLotesList } from "../../MovementLotes/List/MovementLotesList";
 import { ProductsList } from "../../Products";
+import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import ProductBatchForm from "../Common/ProductBatchForm";
 import { WorkOrder } from "../../../api/workOrder/types";
 import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
@@ -26,12 +29,15 @@ export const MovementsManage: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = React.useState<any[]>([]);
   const [movementConcept, setMovementConcept] = React.useState<MovementConcept | null>(null);
 
-  const { mutateAsync } = useMutation<unknown>(
-    (id: string, data: Movement) =>
-      MovementAPI.updateMovement(id, data)
+  const { mutateAsync } = useMutation<unknown>((id: string, data: Movement) =>
+    MovementAPI.updateMovement(id, data)
   );
   const navigate = useNavigate();
   const { id } = useParams();
+  const [movementType, setMovementType] = React.useState<MovementType | null>(
+    null
+  );
+  const [lotesSelection, setLotesSelection] = React.useState<Batch[]>([]);
 
   const {
     data: entity,
@@ -71,8 +77,10 @@ export const MovementsManage: React.FC = () => {
   const onWorkOrderChange = (workOrder: WorkOrder) => {
   }
 
-  const onPurchaseRequisitionChange = (purchaseRequisition: PurchaseRequisition) => {
-    if(purchaseRequisition) {
+  const onPurchaseRequisitionChange = (
+    purchaseRequisition: PurchaseRequisition
+  ) => {
+    if (purchaseRequisition) {
       const productsList = purchaseRequisition.purchase_requisition_products;
       setSelectedProducts(productsList.map((product) => {
         let productMapped: any = product.product;
@@ -81,7 +89,7 @@ export const MovementsManage: React.FC = () => {
         return productMapped;
       }));
     }
-  }
+  };
 
   const getProductBatchFormMode = () => {
     if(movementConcept?.movementType.action != 'input') {
@@ -93,7 +101,7 @@ export const MovementsManage: React.FC = () => {
   const submitForm = async (isDraft = false) => {
     const MovementFormData = (await MovementFormRef.current?.getFormData({
       draftMode: isDraft,
-      user
+      user,
     })) as CreateMovementRequest;
     let movement: any = {...MovementFormData};
     if(getProductBatchFormMode() === 'create') {
@@ -115,10 +123,7 @@ export const MovementsManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await MovementAPI.updateMovement(
-            entity.id,
-            movement
-          );
+          result = await MovementAPI.updateMovement(entity.id, movement);
           message = "Movement updated successfully";
         } else {
           alert("Cannot update the Movement");
