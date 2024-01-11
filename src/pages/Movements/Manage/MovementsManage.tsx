@@ -11,6 +11,7 @@ import MovementForm, {
 } from "../../../components/Forms/Movement/MovementForm";
 import useAuth from "../../../hooks/useAuth";
 import { cancelModal, showToast } from "../../../lib/notify";
+import { MovementLotesList } from "../../MovementLotes/List/MovementLotesList";
 import { ProductsList } from "../../Products";
 import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import ProductBatchForm from "../Common/ProductBatchForm";
@@ -33,6 +34,10 @@ export const MovementsManage: React.FC = () => {
   );
   const navigate = useNavigate();
   const { id } = useParams();
+  const [movementType, setMovementType] = React.useState<MovementType | null>(
+    null
+  );
+  const [lotesSelection, setLotesSelection] = React.useState<Batch[]>([]);
 
   const {
     data: entity,

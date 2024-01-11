@@ -8,6 +8,7 @@ export const ENTITIES_ENDPOINTS = {
   batch: "lote",
   batchEntryType: "lote-entry-type",
   movement: "inventory-movement",
+  movementLote: "inventory-movement-lote",
   movementType: "movement_type",
   movementConcept: "movement_concept",
   products: "products",
