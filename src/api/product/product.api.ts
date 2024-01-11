@@ -49,6 +49,28 @@ class BaseProductAPI extends BaseAPI {
     }
   }
 
+  async getProductsWithBatches(
+    params?: GetProductsParams
+  ): Promise<GetProductsResponseWithStatus | APIError> {
+    console.log("[getProductsWithBatches] params: ", params);
+    try {
+      const products = await this.get<GetProductsResponse>("/with-batches", params);
+      console.log("[getProductsWithBatches] products: ", products);
+      const productsWithStatus = products.data.map((product) =>
+        Object.assign({}, product, {
+          status: statusParser(product),
+        })
+      );
+
+      return {
+        data: productsWithStatus,
+        pagination: products.pagination,
+      };
+    } catch (error) {
+      return handleAPIError(error);
+    }
+  }
+
   async getProduct(
     userId: string,
     params?: QueryParams
