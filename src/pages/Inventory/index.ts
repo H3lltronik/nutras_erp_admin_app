@@ -1,3 +1,3 @@
-export { WorkRequestsList } from './List/InventoryList';
-export { WorkRequestsManage } from './Manage/InventoryManage';
+export { InventoriesList } from './List/InventoryList';
+export { InventoriesManage } from './Manage/InventoryManage';
 

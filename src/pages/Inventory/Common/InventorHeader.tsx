@@ -24,14 +24,14 @@ export const InventoryHeader: React.FC = () => {
         navigate("/admin/inventory");
       },
     },
-    {
-      label: "Crear movimiento",
-      key: "/admin/inventory/manage",
-      icon: <EditOutlined />,
-      onClick: () => {
-        navigate("/admin/inventory/manage");
-      },
-    },
+    // {
+    //   label: "Crear movimiento",
+    //   key: "/admin/inventory/manage",
+    //   icon: <EditOutlined />,
+    //   onClick: () => {
+    //     navigate("/admin/inventory/manage");
+    //   },
+    // },
   ];
 
   const onClick: MenuProps["onClick"] = (e) => {

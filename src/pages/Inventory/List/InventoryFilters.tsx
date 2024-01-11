@@ -1,9 +1,9 @@
 import { Select } from "antd";
 import { entityStatuses } from "../../../lib/entity.utils";
-import { useWorkRequestsListPageStore } from "./inventory_request_list_page.store";
+import { useInventoriesListPageStore } from "./inventory_request_list_page.store";
 
-export default function WorkRequestFilters() {
-  const { setDraftMode, setPublished } = useWorkRequestsListPageStore(
+export default function InventoryFilters() {
+  const { setDraftMode, setPublished } = useInventoriesListPageStore(
     (state) => state
   );
 

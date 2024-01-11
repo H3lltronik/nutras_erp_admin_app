@@ -61,6 +61,7 @@ export const MovementsManage: React.FC = () => {
   }
 
   const onProductSelectionChange = (products: Product[]) => {
+    if(!products || !products.length) return;
     setSelectedProducts(products.map((product: any) => {
       product.batchesForms = [React.createRef()];
       return product;
@@ -108,11 +109,10 @@ export const MovementsManage: React.FC = () => {
         product.batches = product.batchesForms.map((batchForm: MutableRefObject<any>) => {
           return batchForm?.current?.getFieldsValue();
         });
-        delete product.batchesForms;
         return product;
       });
     }
-    else movement.products = selectedProducts;
+    else movement.products = [...selectedProducts];
     movement.fromId = movement.originWarehouseId;
     movement.toId = movement.destinyWarehouseId;
     console.log("MovementFormData", movement);
@@ -219,7 +219,7 @@ export const MovementsManage: React.FC = () => {
                               className="border-none"
                               style={{ borderBottom: '1px solid #e8e8e8' }}
                             >
-                              <div className="flex flex-col gap-3" key={index + selectedProducts.length}>
+                              <div className="flex flex-col gap-3">
                                 {
                                   product.batchesForms.map((batchForm: MutableRefObject<any>, index: number) => (
                                     <>
