@@ -59,7 +59,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           return {
             ...form.getFieldsValue(),
             ...kosherDetails,
-            departmentId: "3ed0a95c-6eed-4928-8ab6-9c5f888bc029",
+            departmentId: "6cebdab4-cc4b-4bee-b011-286c0ce6979b",
             isDraft: !!params?.draftMode,
             isPublished: !params?.draftMode,
           };

@@ -55,15 +55,6 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             params
           );
 
-          console.log("kosherDetails", kosherDetails);
-          console.log("miercoles", {
-            ...form.getFieldsValue(),
-            ...kosherDetails,
-            departmentId: "65a427ba-d703-4f8f-b688-ccfa44d62db0",
-            isDraft: !!params?.draftMode,
-            isPublished: !params?.draftMode,
-          });
-
           return {
             ...form.getFieldsValue(),
             ...kosherDetails,
