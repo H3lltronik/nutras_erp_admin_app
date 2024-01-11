@@ -1,10 +1,8 @@
-import { Button, Collapse, Layout, Table } from "antd";
+import { Button, Layout, Table } from "antd";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProductAPI } from "../../../api";
 import { InventoriesListBreadcrumb } from "../Common/Breadcrums";
-import InventoryFilters from "./InventoryFilters";
-import { useInventoriesListPageStore } from "./inventory_request_list_page.store";
 import { ProductFilters } from "../../Products/List/ProductFilters";
 import { useProductsListPageStore } from "../../Products/List/products_list_page.store";
 import moment from "moment-timezone";
@@ -14,8 +12,8 @@ const { Content } = Layout;
 
 export const InventoriesList: React.FC = () => {
   const navigate = useNavigate();
-  const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } = useProductsListPageStore();
   const [products, setProducts] = React.useState([]);
+  const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } = useProductsListPageStore();
 
   useEffect(() => {
     const getProductsWithBatches = async () => {
@@ -24,7 +22,7 @@ export const InventoriesList: React.FC = () => {
         const products = await ProductAPI.getProductsWithBatches({
           nameSearch,
           codeSearch,
-          providerSearch,
+          // providerSearch,
         });
         const productsArray = products.data ? products.data : [];
         setProducts(productsArray.map((product) => ({ ...product, key: product.id })));
