@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { WorkRequestAPI } from "../../../api";
+import { BatchAPI } from "../../../api";
 import { AppLoader } from "../../../components/Common/AppLoader";
 import InventoryMovementForm from "../../../components/Forms/InventoryMovement/InventoryMovementForm";
-import { WorkRequestFormHandle } from "../../../components/Forms/WorkRequest/WorkRequestForm";
+import { InventoryFormHandle } from "../../../components/Forms/Inventory/InventoryForm";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { InventoryManageBreadcrumb } from "../Common/Breadcrums";
 
@@ -13,7 +13,7 @@ const { confirm } = Modal;
 const { Content } = Layout;
 
 export const InventoryManage: React.FC = () => {
-  const workRequestFormRef = useRef<WorkRequestFormHandle | null>(null);
+  const InventoryFormRef = useRef<InventoryFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
   const { mutateAsync } = useMutation<unknown>((id: string, data: any) => {});
@@ -24,9 +24,9 @@ export const InventoryManage: React.FC = () => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetWorkRequestResponse | APIError>(
-    ["workRequest", { id }],
-    () => WorkRequestAPI.getWorkRequest(id as string),
+  } = useQuery<GetBatchResponse | APIError>(
+    ["Inventory", { id }],
+    () => BatchAPI.getBatch(id as string),
     { enabled: !!id, refetchOnWindowFocus: false }
   );
 
@@ -36,10 +36,10 @@ export const InventoryManage: React.FC = () => {
   );
 
   const submitForm = async (isDraft = false) => {
-    const workRequestFormData = (await workRequestFormRef.current?.getFormData({
+    const InventoryFormData = (await InventoryFormRef.current?.getFormData({
       draftMode: isDraft,
-    })) as CreateWorkRequestRequest;
-    console.log("workRequestFormData", workRequestFormData);
+    })) as CreateBatchRequest;
+    console.log("InventoryFormData", InventoryFormData);
 
     setPageLoading(true);
     try {
@@ -48,18 +48,18 @@ export const InventoryManage: React.FC = () => {
 
       if (entity) {
         if ("id" in entity) {
-          result = await WorkRequestAPI.updateWorkRequest(
+          result = await BatchAPI.updateInventory(
             entity.id,
-            workRequestFormData
+            InventoryFormData
           );
-          message = "workRequesto actualizado correctamente";
+          message = "Inventoryo actualizado correctamente";
         } else {
-          alert("No se puede actualizar el WorkRequesto");
+          alert("No se puede actualizar el Inventoryo");
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(workRequestFormData);
-        message = "workRequesto creado correctamente";
+        result = await mutateAsync(InventoryFormData);
+        message = "Inventoryo creado correctamente";
       }
 
       if (result) {
@@ -96,7 +96,7 @@ export const InventoryManage: React.FC = () => {
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
             <InventoryMovementForm
-              ref={workRequestFormRef}
+              ref={InventoryFormRef}
               entity={entityData}
             />
 

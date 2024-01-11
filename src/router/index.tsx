@@ -5,6 +5,7 @@ import NotFound from "../pages/Errors/NotFound";
 import { Home } from "../pages/Home";
 import { HomeHeader } from "../pages/Home/HomeHeader";
 import { InventoryManage } from "../pages/Inventory/Manage/InventoryManage";
+import { InventoriesList } from "../pages/Inventory/List/InventoryList";
 import Login from "../pages/Login/Login";
 import { MeasurementsHeader } from "../pages/MeasurementTypes/MeasurementsHeader";
 import { MeasurementsList } from "../pages/MeasurementTypes/MeasurementsList";
@@ -32,6 +33,7 @@ import { PurchaseOrdersList, PurchaseOrdersManage } from "../pages/PurchaseOrder
 import { PurchaseOrdersHeader } from "../pages/PurchaseOrders/Common/PurchaseOrdersHeader";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { routesList } from "./routes";
+import { InventoryHeader } from "../pages/Inventory/Common/InventorHeader";
 
 const router = createBrowserRouter([
   {
@@ -267,7 +269,7 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout
         navContent={<PurchaseRequisitionHeader />}
-        headerTitle="Productos">
+        headerTitle="Requsuciones de compra">
         <PurchaseRequisitionList />
       </DefaultLayout>
     ),
@@ -277,7 +279,7 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout
         navContent={<PurchaseRequisitionHeader />}
-        headerTitle="Productos">
+        headerTitle="Requsiciones de compra">
         <PurchaseRequisitionManage />
       </DefaultLayout>
     ),
@@ -317,8 +319,8 @@ const router = createBrowserRouter([
   {
     path: "/admin/inventory",
     element: (
-      <DefaultLayout navContent={<WorkOrdersHeader />} headerTitle="Inventario">
-        <InventoryManage />
+      <DefaultLayout navContent={<InventoryHeader />} headerTitle="Inventario">
+        <InventoriesList />
       </DefaultLayout>
     ),
   },

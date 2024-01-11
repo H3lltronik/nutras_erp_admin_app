@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 export const InventoryManageBreadcrumb = () => {
   const navigate = useNavigate();
 
-  const workRequestsManageBreadcrumb: ItemType[] = [
+  const InventoriesManageBreadcrumb: ItemType[] = [
     {
       title: "Seguridad",
     },
     {
-      title: "Solicitudes de trabajo",
+      title: "Inventario",
       className:
         "cursor-pointer hover:text-blue-500 transition-all duration-300",
       onClick: () => {
@@ -25,24 +25,24 @@ export const InventoryManageBreadcrumb = () => {
   return (
     <Breadcrumb
       style={{ margin: "16px 0" }}
-      items={workRequestsManageBreadcrumb}
+      items={InventoriesManageBreadcrumb}
     />
   );
 };
 
-export const WorkRequestsListBreadcrumb = () => {
-  const workRequestsListBreadcrumb: ItemType[] = [
+export const InventoriesListBreadcrumb = () => {
+  const InventoriesListBreadcrumb: ItemType[] = [
     {
-      title: "Producción",
+      title: "Almacén",
     },
     {
-      title: "Solicitudes de trabajo",
+      title: "Inventario",
     },
   ];
   return (
     <Breadcrumb
       style={{ margin: "16px 0" }}
-      items={workRequestsListBreadcrumb}
+      items={InventoriesListBreadcrumb}
     />
   );
 };
