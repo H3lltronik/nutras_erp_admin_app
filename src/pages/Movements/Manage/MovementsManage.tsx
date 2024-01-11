@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Collapse, Layout } from "antd";
+import { Collapse, Layout, Table } from "antd";
 import React, { MutableRefObject, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MovementAPI } from "../../../api";
@@ -15,9 +15,8 @@ import { MovementLotesList } from "../../MovementLotes/List/MovementLotesList";
 import { ProductsList } from "../../Products";
 import { MovementsManageBreadcrumb } from "../Common/Breadcrums";
 import ProductBatchForm from "../Common/ProductBatchForm";
-import { WorkOrder } from "../../../api/workOrder/types";
-import { PurchaseRequisition } from "../../../api/purchaseRequisition/types";
 import { DeleteFilled, DeleteOutlined, PlusCircleFilled } from "@ant-design/icons";
+import moment from "moment-timezone";
 
 const { Content } = Layout;
 
@@ -96,6 +95,19 @@ export const MovementsManage: React.FC = () => {
       return 'select';
     }
     return 'create';
+  }
+
+  const getProductsToShow = () => {
+    const productsMap = new Map();
+    console.log("entityData", entityData?.inventoryMovementLotes.length);
+    entityData?.inventoryMovementLotes.forEach(inventoryLote => {
+      if(!productsMap.has(inventoryLote.lote.productId)) {
+        productsMap.set(inventoryLote.lote.productId, {...inventoryLote.lote?.product, batches: []});
+      }
+      productsMap.get(inventoryLote.lote.productId).batches.push(inventoryLote.lote);
+    });
+    console.log("productsMap", Array.from(productsMap.values()));
+    return Array.from(productsMap.values());
   }
 
   const submitForm = async (isDraft = false) => {
@@ -306,9 +318,59 @@ export const MovementsManage: React.FC = () => {
                     {
                       entityData.inventoryMovementLotes && entityData.inventoryMovementLotes.length && (
                         <>
-                          <h2 className="font-bold">Productos</h2>
+                          <h2 className="font-semibold mb-4" style={{fontSize: "2rem"}}>Productos</h2>
                           <div className="flex flex-col gap-3">
                             <Collapse accordion size="middle">
+                              {
+                                getProductsToShow().map((product, index) => (
+                                  <Collapse.Panel
+                                    key={index}
+                                    header={
+                                      <>
+                                        <span className="font-semibold">{product.commonName}</span>
+                                      </>
+                                    }
+                                    className="border-none"
+                                    style={{ borderBottom: '1px solid #e8e8e8' }}
+                                  >
+                                    <>
+                                      <div>
+                                        <h2 className="font-semibold" style={{fontSize: "1.25rem"}}>Lotes</h2>
+                                      </div>
+                                      <div className="flex flex-col gap-3">
+                                        <Table
+                                          dataSource={product.batches.map((batch) => {
+                                            return {
+                                              ...batch,
+                                              key: batch.id,
+                                            }
+                                          })}
+                                          columns={[
+                                            {
+                                              title: 'Código',
+                                              dataIndex: 'code',
+                                              key: 'code',
+                                            },
+                                            {
+                                              title: 'Caducidad',
+                                              dataIndex: 'expirationDate',
+                                              key: 'expirationDate',
+                                              render(value) {
+                                                return value ? moment(value).format('DD/MM/YYYY') : 'Sin caducidad';
+                                              },
+                                            },
+                                            {
+                                              title: 'Cantidad',
+                                              dataIndex: 'quantity',
+                                              key: 'quantity',
+                                            }
+                                          ]}
+                                        ></Table>
+                                      </div>
+                                    </>
+                                  </Collapse.Panel>
+                                ))
+                              }
                             </Collapse>
                           </div>
                         </>
