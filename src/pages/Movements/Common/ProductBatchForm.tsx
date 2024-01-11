@@ -6,7 +6,7 @@ import moment from 'moment-timezone';
 interface ProductBatchFormProps {
     product: Product;
     formRef?: MutableRefObject<any>;
-    mode: 'create' | 'select';
+    mode: 'create' | 'select' | 'view';
 }
 
 const ProductBatchForm: React.FC<ProductBatchFormProps> = (props) => {

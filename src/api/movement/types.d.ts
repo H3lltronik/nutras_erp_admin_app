@@ -13,12 +13,13 @@ interface Movement {
   concept: string;
   type: string;
   movementConcept: MovementConcept;
-  fromWarehouse: Warehouse;
-  toWarehouse: Warehouse;
   oc: any | null;
   ocId: number | null;
-  origin: string;
-  destination: string;
+  fromId: string;
+  from: Warehouse;
+  toId: string;
+  to: Warehouse;
+  inventoryMovementLotes: InventoryMovementLote[];
 }
 
 type CreateMovementRequest = Omit<Movement, "id">;
