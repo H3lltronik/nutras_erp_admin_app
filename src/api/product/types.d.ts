@@ -94,6 +94,7 @@ interface ProductType {
   id: string;
   partidaId: number;
   name: string;
+  description: string;
 }
 
 type GetProductTypesResponse = {
