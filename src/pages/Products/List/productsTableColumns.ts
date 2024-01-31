@@ -21,7 +21,7 @@ export const productListColumns: ColumnsType<Product> = [
     title: "Nombre",
     dataIndex: "commonName",
     key: "commonName",
-    sorter: (a, b) => (a.name && b.name ? alphabetically(a.name, b.name) : 0),
+    sorter: (a, b) => (a.commonName && b.commonName ? alphabetically(a.commonName, b.commonName) : 0),
     showSorterTooltip: false,
   },
   {
