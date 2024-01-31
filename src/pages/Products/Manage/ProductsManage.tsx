@@ -120,7 +120,7 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
               roles.Product.entity
             ) ? (
               <>
-                <h2 className="text-2xl">Formulario de compras</h2>
+                <h2 className="text-2xl">Catalogo de insumos</h2>
                 <hr className="mt-2 mb-5" />
                 <ProductFormCompras
                   formMode={props.formMode}

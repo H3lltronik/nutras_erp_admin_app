@@ -7,14 +7,14 @@ export const ProductsManageBreadcrumb = () => {
 
   const productsManageBreadcrumb: ItemType[] = [
     {
-      title: "Seguridad",
+      title: "Catalogo de productos",
     },
     {
-      title: "Productos",
+      title: "Catalogo de insumos",
       className:
         "cursor-pointer hover:text-blue-500 transition-all duration-300",
       onClick: () => {
-        navigate("/admin/products");
+        navigate("/admin/products/insumos");
       },
       href: "/admin/products",
     },
@@ -30,10 +30,10 @@ export const ProductsManageBreadcrumb = () => {
 export const ProductsListBreadcrumb = () => {
   const productsListBreadcrumb: ItemType[] = [
     {
-      title: "Administración",
+      title: "Catalogo de productos",
     },
     {
-      title: "Productos",
+      title: "Catalogo de insumos",
     },
   ];
   return (

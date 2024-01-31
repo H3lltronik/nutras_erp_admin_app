@@ -1,4 +1,5 @@
 import { Col, DatePicker, Form, Input, Row } from "antd";
+import moment from "moment-timezone";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 const onFinish = (values: unknown) => {
@@ -19,6 +20,7 @@ export type ProductKosherFormHandle = {
 
 type ProductKosherFormProps = {
   entity?: KosherDetails | null;
+  mode?: FormMode;
 };
 
 const ProductKosherForm = forwardRef<
@@ -50,7 +52,9 @@ const ProductKosherForm = forwardRef<
   );
 
   useEffect(() => {
-    if (_props.entity) form.setFieldsValue(_props.entity);
+    if (_props.entity) {
+      form.setFieldsValue({..._props.entity, certificateValidity: _props.entity.certificateValidity ? moment(_props.entity.certificateValidity) : null});
+    }
   }, [form, _props.entity]);
 
   return (
@@ -62,7 +66,7 @@ const ProductKosherForm = forwardRef<
       onFinishFailed={onFinishFailed}
       autoComplete="off">
       <Form.Item<KosherDetails> name="id" style={{ display: "none" }}>
-        <Input />
+        <Input disabled={_props.mode === 'view'}/>
       </Form.Item>
 
       <Row gutter={16}>
@@ -76,7 +80,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input />
+            <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -89,7 +93,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input />
+            <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
       </Row>
@@ -105,7 +109,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input />
+            <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -118,7 +122,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input />
+            <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
       </Row>
@@ -134,7 +138,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input />
+            <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -147,7 +151,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <DatePicker />
+            <DatePicker disabled={_props.mode === 'view'} />
           </Form.Item>
         </Col>
       </Row>

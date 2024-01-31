@@ -17,19 +17,19 @@ export const ProductsHeader: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Listado de productos",
-      key: "/admin/products",
+      label: "Catalogo de insumos",
+      key: "/admin/products/insumos",
       icon: <OrderedListOutlined />,
       onClick: () => {
-        navigate("/admin/products");
+        navigate("/admin/products/insumos");
       },
     },
     {
       label: "Crear producto",
-      key: "/admin/products/manage",
+      key: "/admin/products/insumos/manage",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/products/manage");
+        navigate("/admin/products/insumos/manage");
       },
     },
   ];

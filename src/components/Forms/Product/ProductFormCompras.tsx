@@ -112,7 +112,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   })
                 }
                 placeholder="Selecciona un tipo de producto"
-                optionLabel="name"
+                optionLabel="description"
                 optionKey={"id"}
                 queryKey={["productTypes"]}
               />

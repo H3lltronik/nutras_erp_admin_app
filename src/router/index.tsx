@@ -208,7 +208,7 @@ const router = createBrowserRouter([
   {
     path: "/admin/products/insumos/manage/:id?",
     element: (
-      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
+      <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos (INSUMOS)">
         <ProductsManage listPath="/admin/products/insumos" formType="compras" />
       </DefaultLayout>
     ),

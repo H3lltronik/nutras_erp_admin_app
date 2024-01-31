@@ -7,6 +7,7 @@ interface Product {
   id: string;
   partidaId: number;
   productTypeId: string;
+  type?: ProductType;
   code: string;
   commonName: string;
   providerId: string;
@@ -14,6 +15,7 @@ interface Product {
   presentation: string;
   quantityPerUnit: string;
   isKosher: boolean;
+  allergen: boolean;
   departmentId: string;
   unit: Unit;
   kosherDetails: KosherDetails;
@@ -94,6 +96,7 @@ interface ProductType {
   id: string;
   partidaId: number;
   name: string;
+  description: string;
 }
 
 type GetProductTypesResponse = {
