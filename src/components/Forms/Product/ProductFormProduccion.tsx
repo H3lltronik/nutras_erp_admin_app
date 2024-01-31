@@ -256,12 +256,15 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
         </Row>
 
-        {isKosher && (
+        {isKosher || _props.entity?.isKosher && (
           <Row
             gutter={16}
             className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
             <Col span={24}>
-              <ProductKosherForm ref={productKosherFormRef} />
+              <ProductKosherForm
+                ref={productKosherFormRef}
+                entity={_props.entity?.isKosher ? _props.entity.kosherDetails : null}
+                mode={_props.formMode} />
             </Col>
           </Row>
         )}

@@ -163,7 +163,8 @@ export const unformatProductForm = (
     // quantityPerUnit: productToUnformat ?? "",
     allergen: productToUnformat.purchaseData?.allergen ?? "",
     kosherDetails: {
-      agency: productToUnformat.kosherDetails?.agency ?? "",
+      ...productToUnformat.kosherDetails,
+      certificateValidity: String(productToUnformat.kosherDetails?.certificateValidity ?? "")
     },
     // packaging: ,
     // mold: ,
