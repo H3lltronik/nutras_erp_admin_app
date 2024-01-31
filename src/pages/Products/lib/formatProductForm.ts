@@ -108,6 +108,7 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     providerId: productToFormat.providerId,
     unitId: productToFormat.unitId,
     isKosher: productToFormat.isKosher,
+    allergen: productToFormat.allergen,
     presentation: productToFormat.presentation,
     quantityPerUnit: productToFormat.quantityPerUnit,
     departmentId: productToFormat.departmentId,

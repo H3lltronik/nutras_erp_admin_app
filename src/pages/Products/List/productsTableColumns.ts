@@ -25,14 +25,6 @@ export const productListColumns: ColumnsType<Product> = [
     showSorterTooltip: false,
   },
   {
-    title: "Proveedor",
-    dataIndex: "provider",
-    key: "provider",
-    render(_value, record) {
-      return record.provider?.name;
-    },
-  },
-  {
     title: "Unidad",
     dataIndex: "unit",
     key: "unit",
@@ -41,11 +33,44 @@ export const productListColumns: ColumnsType<Product> = [
     },
   },
   {
-    title: "Cantidad",
-    dataIndex: "quantity",
-    key: "quantity",
-    sorter: (a, b) => Number(a.quantity) - Number(b.quantity),
-    showSorterTooltip: false,
+    title: "Tipo",
+    dataIndex: "type",
+    key: "type",
+    render(_value, record) {
+      return record.type?.name;
+    },
+  },
+  {
+    title: "Proveedor",
+    dataIndex: "provider",
+    key: "provider",
+    render(_value, record) {
+      return record.provider?.name;
+    },
+  },
+  {
+    title: "Kosher",
+    dataIndex: "isKosher",
+    key: "isKosher",
+    render(_value, record) {
+      return record.isKosher ? "Kosher" : "";
+    },
+  },
+  {
+    title: "Alergeno",
+    dataIndex: "allergen",
+    key: "allergen",
+    render(_value, record) {
+      return record.allergen ? "Alergeno" : "";
+    },
+  },
+  {
+    title: "Presentación",
+    dataIndex: "presentation",
+    key: "presentation",
+    render(_value, record) {
+      return record.presentation;
+    },
   },
   {
     title: "Estatus",
