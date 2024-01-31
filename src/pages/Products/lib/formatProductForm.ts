@@ -108,6 +108,7 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     providerId: productToFormat.providerId,
     unitId: productToFormat.unitId,
     isKosher: productToFormat.isKosher,
+    allergen: productToFormat.allergen,
     presentation: productToFormat.presentation,
     quantityPerUnit: productToFormat.quantityPerUnit,
     departmentId: productToFormat.departmentId,
@@ -163,7 +164,8 @@ export const unformatProductForm = (
     // quantityPerUnit: productToUnformat ?? "",
     allergen: productToUnformat.purchaseData?.allergen ?? "",
     kosherDetails: {
-      agency: productToUnformat.kosherDetails?.agency ?? "",
+      ...productToUnformat.kosherDetails,
+      certificateValidity: String(productToUnformat.kosherDetails?.certificateValidity ?? "")
     },
     // packaging: ,
     // mold: ,
