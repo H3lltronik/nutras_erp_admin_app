@@ -41,8 +41,15 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
+    const [productTypes, setProductTypes] = useState<ProductType[]>([]);
+    const [selectedProductType, setSelectedProductType] = useState<string>("");
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
+
+    const getCodeAddon = (): string => {
+      const productType = productTypes.find((type: ProductType) => type.id === selectedProductType);
+      return productType?.name ?? '';
+    }
 
     useImperativeHandle(
       ref,
@@ -68,6 +75,17 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
 
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
+
+      const getProductTypes = async () => {
+        const types: any = await ProductTypesAPI.getProductTypes({
+          department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
+        });
+
+        console.log("types", types);
+        setProductTypes(types.data);
+      }
+
+      getProductTypes();4
     }, [form, _props.entity]);
 
     const kosherDetails = useMemo(() => {
@@ -85,6 +103,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
       <Form
         form={form}
         name="productForm"
+        layout="vertical"
         initialValues={{ isKosher: false, allergen: false }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -94,7 +113,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
@@ -111,6 +130,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                       .VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
                   })
                 }
+                onChange={(value) => setSelectedProductType(value)}
                 placeholder="Selecciona un tipo de producto"
                 optionLabel="description"
                 optionKey={"id"}
@@ -118,7 +138,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
@@ -131,10 +151,8 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Codigo"
               name="code"
@@ -144,10 +162,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input addonBefore={getCodeAddon()} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
@@ -166,11 +184,8 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={16}>
-          <Col span={12}></Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Presentacion"
               name="presentation"
@@ -183,10 +198,8 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Proveedor"
               name="providerId"
@@ -207,7 +220,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Cantidad x unidad"
               name="quantityPerUnit"
@@ -220,9 +233,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={16}>
           <Col span={"auto"}>
             <Form.Item<Product> label="Kosher" name="isKosher">
               <Switch />
@@ -233,20 +244,22 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <Switch />
             </Form.Item>
           </Col>
-        </Row>
 
-        {isKosher && (
-          <Row
-            gutter={16}
-            className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
-            <Col span={24}>
-              <ProductKosherForm
-                ref={productKosherFormRef}
-                entity={kosherDetails}
-              />
-            </Col>
-          </Row>
-        )}
+          <Col span={24}>
+            {isKosher && (
+              <Row
+                gutter={16}
+                className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
+                <Col span={24}>
+                  <ProductKosherForm
+                    ref={productKosherFormRef}
+                    entity={kosherDetails}
+                  />
+                </Col>
+              </Row>
+            )}
+          </Col>
+        </Row>
       </Form>
     );
   }
