@@ -103,3 +103,17 @@ type GetProductTypesResponse = {
   data: ProductType[];
   pagination: Pagination;
 };
+
+interface ProductPresentation {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  partidaId: number;
+  name: string;
+}
+
+type GetProductPresentationsResponse = {
+  data: ProductPresentation[];
+  pagination: Pagination;
+};

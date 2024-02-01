@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { MeasurementAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
+import { MeasurementAPI, ProductPresentationAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { ProvidersManage } from "../../../pages/Providers";
 import { GenericSelect } from "../Common/GenericSelect";
@@ -81,7 +81,8 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
           department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
         });
 
-        console.log("types", types);
+        const presentations = await ProductPresentationAPI.getProductPresentations({});
+        console.log("presentations", presentations);
         setProductTypes(types.data);
       }
 
@@ -187,15 +188,23 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
 
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
-              label="Presentacion"
+              label="Presentación"
               name="presentation"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <GenericSelect
+                fetcher={() => 
+                  ProductPresentationAPI.getProductPresentations()
+                }
+                placeholder="Selecciona una presentación"
+                optionLabel="name"
+                optionKey={"name"}
+                queryKey={["productPresentation"]}
+              />
             </Form.Item>
           </Col>
 
