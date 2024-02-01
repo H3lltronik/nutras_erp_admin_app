@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { MeasurementAPI, ProductTypesAPI } from "../../../api";
+import { MeasurementAPI, ProductPresentationAPI, ProductTypesAPI } from "../../../api";
 import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
@@ -184,16 +184,24 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<Product>
-              label="Presentacion"
+          <Form.Item<Product>
+              label="Presentación"
               name="presentation"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <GenericSelect
+                fetcher={() => 
+                  ProductPresentationAPI.getProductPresentations()
+                }
+                placeholder="Selecciona una presentación"
+                optionLabel="name"
+                optionKey={"name"}
+                queryKey={["productPresentation"]}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -229,16 +237,24 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item<Product>
-              label="Presentación PT"
+          <Form.Item<Product>
+              label="Presentación"
               name="presentation"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <GenericSelect
+                fetcher={() => 
+                  ProductPresentationAPI.getProductPresentations()
+                }
+                placeholder="Selecciona una presentación"
+                optionLabel="name"
+                optionKey={"name"}
+                queryKey={["productPresentation"]}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
