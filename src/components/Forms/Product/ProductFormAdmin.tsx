@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { useLocation } from "react-router-dom";
-import { MeasurementAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
+import { MeasurementAPI, ProductPresentationAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
 import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import {
   ProductFormResult,
@@ -183,16 +183,24 @@ const ProductFormAdmin = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<ProductToPost>
-              label="Presentacion"
+          <Form.Item<Product>
+              label="Presentación"
               name="presentation"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <GenericSelect
+                fetcher={() => 
+                  ProductPresentationAPI.getProductPresentations()
+                }
+                placeholder="Selecciona una presentación"
+                optionLabel="name"
+                optionKey={"name"}
+                queryKey={["productPresentation"]}
+              />
             </Form.Item>
           </Col>
         </Row>
