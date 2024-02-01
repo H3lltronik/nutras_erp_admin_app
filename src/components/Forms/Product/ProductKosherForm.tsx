@@ -70,7 +70,7 @@ const ProductKosherForm = forwardRef<
       </Form.Item>
 
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="Agencia Kosher"
             name="agency"
@@ -83,7 +83,7 @@ const ProductKosherForm = forwardRef<
             <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="KID/UKD"
             name="certifiedCompany"
@@ -96,10 +96,8 @@ const ProductKosherForm = forwardRef<
             <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
-      </Row>
 
-      <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="Compañía Certificada"
             name="nameOnCertificate"
@@ -112,7 +110,7 @@ const ProductKosherForm = forwardRef<
             <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="Numero de página del certificado"
             name="kidOrUkd"
@@ -125,10 +123,8 @@ const ProductKosherForm = forwardRef<
             <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
-      </Row>
 
-      <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="Nombre en el certificado"
             name="certificatePageNumber"
@@ -141,7 +137,7 @@ const ProductKosherForm = forwardRef<
             <Input disabled={_props.mode === 'view'}/>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="Vigencia del certificado"
             name="certificateValidity"
