@@ -7,7 +7,7 @@ interface Product {
   id: string;
   partidaId: number;
   productTypeId: string;
-  type?: ProductType;
+  productType?: ProductType;
   code: string;
   commonName: string;
   providerId: string;
@@ -101,5 +101,19 @@ interface ProductType {
 
 type GetProductTypesResponse = {
   data: ProductType[];
+  pagination: Pagination;
+};
+
+interface ProductPresentation {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  partidaId: number;
+  name: string;
+}
+
+type GetProductPresentationsResponse = {
+  data: ProductPresentation[];
   pagination: Pagination;
 };

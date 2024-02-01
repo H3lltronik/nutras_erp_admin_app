@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { MeasurementAPI, ProductTypesAPI } from "../../../api";
+import { MeasurementAPI, ProductPresentationAPI, ProductTypesAPI } from "../../../api";
 import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
@@ -84,6 +84,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       <Form
         form={form}
         name="productForm"
+        layout="vertical"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -93,7 +94,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
@@ -118,7 +119,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
@@ -131,10 +132,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Codigo"
               name="code"
@@ -147,7 +145,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
@@ -167,10 +165,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Descripción del producto"
               name="description"
@@ -183,23 +178,28 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Presentacion"
+          <Col xs={24} md={12} lg={8} xl={6}>
+          <Form.Item<Product>
+              label="Presentación"
               name="presentation"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <GenericSelect
+                fetcher={() => 
+                  ProductPresentationAPI.getProductPresentations()
+                }
+                placeholder="Selecciona una presentación"
+                optionLabel="name"
+                optionKey={"name"}
+                queryKey={["productPresentation"]}
+              />
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Empaque"
               name="packaging"
@@ -212,7 +212,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Cantidad x unidad"
               name="quantityPerUnit"
@@ -225,23 +225,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item<Product>
-              label="Presentación PT"
-              name="presentation"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input disabled={disabled} />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Molde"
               name="mold"

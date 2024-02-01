@@ -37,7 +37,7 @@ export const productListColumns: ColumnsType<Product> = [
     dataIndex: "type",
     key: "type",
     render(_value, record) {
-      return record.type?.name;
+      return record.productType?.name;
     },
   },
   {

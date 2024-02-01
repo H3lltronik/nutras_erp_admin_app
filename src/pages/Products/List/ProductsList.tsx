@@ -25,6 +25,8 @@ type ProductsListProps = {
   onSelectionChange?: (selectedRows: Product[]) => void;
   selectionLimit?: number | undefined | null;
   selectedRowIds?: string[];
+  productFormType?: 'PP' | 'PT';
+  columnsToHide?: string[];
 };
 const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
 
@@ -70,7 +72,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               onClick={handleNewProductClick}
               className="bg-green-600 text-white hover:bg-green-50"
               type="default">
-              Nuevo insumo
+              Nuevo {props.productFormType ?? "insumo"}
             </Button>
           </div>
         ) : null}
@@ -89,7 +91,9 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               selectedRowIds={props.selectedRowIds}
               queryKey="users"
               fetchData={fetchData}
-              columns={productListColumns}
+              columns={productListColumns.filter((column) =>
+                  !props.columnsToHide?.includes(column.dataIndex as string)
+                )}
               deleteAction={doDelete}
               editAction={doEdit}
               deleteDisabled={isSelectionOnly(props.mode)}
