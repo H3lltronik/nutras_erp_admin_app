@@ -135,6 +135,13 @@ const router = createBrowserRouter([
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsList
           mode="full"
+          productFormType="PP"
+          columnsToHide={[
+            'type',
+            'provider',
+            'isKosher',
+            'allergen'
+          ]}
           buildNewProductPath={({ id }) =>
             jsonToUrlWithGetKey(
               `/admin/products/manage/pp/${id}`,
@@ -157,6 +164,13 @@ const router = createBrowserRouter([
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
         <ProductsList
           mode="full"
+          productFormType="PT"
+          columnsToHide={[
+            'type',
+            'provider',
+            'isKosher',
+            'allergen'
+          ]}
           buildNewProductPath={({ id }) =>
             jsonToUrlWithGetKey(
               `/admin/products/manage/pt/${id}`,

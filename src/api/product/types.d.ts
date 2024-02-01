@@ -7,7 +7,7 @@ interface Product {
   id: string;
   partidaId: number;
   productTypeId: string;
-  type?: ProductType;
+  productType?: ProductType;
   code: string;
   commonName: string;
   providerId: string;
