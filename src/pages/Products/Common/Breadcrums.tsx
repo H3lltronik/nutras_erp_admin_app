@@ -16,7 +16,7 @@ export const ProductsManageBreadcrumb = () => {
       onClick: () => {
         navigate("/admin/products/insumos");
       },
-      href: "/admin/products",
+      href: "/admin/products/insumos",
     },
     {
       title: "Crear - Editar producto",

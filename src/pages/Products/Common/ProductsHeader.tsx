@@ -26,10 +26,10 @@ export const ProductsHeader: React.FC = () => {
     },
     {
       label: "Crear producto",
-      key: "/admin/products/insumos/manage",
+      key: "/admin/products/insumos/manage/",
       icon: <EditOutlined />,
       onClick: () => {
-        navigate("/admin/products/insumos/manage");
+        navigate("/admin/products/insumos/manage/");
       },
     },
   ];

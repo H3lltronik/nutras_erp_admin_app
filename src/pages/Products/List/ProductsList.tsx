@@ -70,7 +70,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               onClick={handleNewProductClick}
               className="bg-green-600 text-white hover:bg-green-50"
               type="default">
-              Nuevo producto
+              Nuevo insumo
             </Button>
           </div>
         ) : null}
