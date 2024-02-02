@@ -3,11 +3,16 @@ import { alphabetically } from "../../../lib/sorters";
 
 export const providerListColumns: ColumnsType<Provider> = [
   {
-    title: "ID",
-    dataIndex: "partidaId",
-    key: "partidaId",
+    title: "Código",
+    dataIndex: "code",
+    key: "code",
     width: 150,
-    sorter: (a, b) => a.partidaId - b.partidaId,
+    sorter: (a, b) => {
+      if (a.code && b.code) {
+        return a.code.localeCompare(b.code);
+      }
+      return 0;
+    },
     showSorterTooltip: false,
   },
   {
@@ -26,7 +31,7 @@ export const providerListColumns: ColumnsType<Provider> = [
     showSorterTooltip: false,
   },
   {
-    title: "Telefono",
+    title: "Teléfono",
     dataIndex: "phone",
     key: "phone",
     sorter: (a, b) =>
@@ -39,6 +44,14 @@ export const providerListColumns: ColumnsType<Provider> = [
     key: "email",
     sorter: (a, b) =>
       a.email && b.email ? alphabetically(a.email, b.email) : 0,
+    showSorterTooltip: false,
+  },
+  {
+    title: "RFC",
+    dataIndex: "RFC",
+    key: "RFC",
+    sorter: (a, b) =>
+      a.RFC && b.RFC ? alphabetically(a.RFC, b.RFC) : 0,
     showSorterTooltip: false,
   },
   {

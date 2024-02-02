@@ -137,6 +137,7 @@ const router = createBrowserRouter([
           mode="full"
           productFormType="PP"
           columnsToHide={[
+            'partidaId',
             'type',
             'provider',
             'isKosher',
@@ -166,6 +167,7 @@ const router = createBrowserRouter([
           mode="full"
           productFormType="PT"
           columnsToHide={[
+            'partidaId',
             'type',
             'provider',
             'isKosher',

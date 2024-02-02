@@ -19,6 +19,7 @@ const { Content } = Layout;
 type ProvidersManageProps = {
   onSuccess?: (data?: Provider) => void;
   enableRedirect?: boolean;
+  inModal?: boolean;
 };
 
 export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
@@ -77,7 +78,7 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
       if (result) {
         if ("id" in result) {
           showToast(message, "success");
-          if (props.enableRedirect) navigate("/admin/providers");
+          if (props.enableRedirect ?? false) navigate("/admin/providers");
           if (props.onSuccess) props.onSuccess(result);
         }
       }
@@ -108,7 +109,7 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
 
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            <ProviderForm ref={providerFormRef} entity={entityData} />
+            <ProviderForm inModal={props.inModal ?? false} ref={providerFormRef} entity={entityData} />
             <button
               type="button"
               onClick={() => submitForm(false)}
