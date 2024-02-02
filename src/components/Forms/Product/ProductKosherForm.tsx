@@ -86,33 +86,6 @@ const ProductKosherForm = forwardRef<
         <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
             label="KID/UKD"
-            name="certifiedCompany"
-            rules={[
-              {
-                required: true && !isDraft,
-                message: "Este campo es obligatorio",
-              },
-            ]}>
-            <Input disabled={_props.mode === 'view'}/>
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} lg={12} xl={8} className="mb-5">
-          <Form.Item<KosherDetails>
-            label="Compañía Certificada"
-            name="nameOnCertificate"
-            rules={[
-              {
-                required: true && !isDraft,
-                message: "Este campo es obligatorio",
-              },
-            ]}>
-            <Input disabled={_props.mode === 'view'}/>
-          </Form.Item>
-        </Col>
-        <Col xs={24} lg={12} xl={8} className="mb-5">
-          <Form.Item<KosherDetails>
-            label="Numero de página del certificado"
             name="kidOrUkd"
             rules={[
               {
@@ -126,8 +99,39 @@ const ProductKosherForm = forwardRef<
 
         <Col xs={24} lg={12} xl={8} className="mb-5">
           <Form.Item<KosherDetails>
-            label="Nombre en el certificado"
+            label="Compañía Certificada"
+            name="certifiedCompany"
+            rules={[
+              {
+                required: true && !isDraft,
+                message: "Este campo es obligatorio",
+              },
+            ]}>
+            <Input disabled={_props.mode === 'view'}/>
+          </Form.Item>
+        </Col>
+        <Col xs={24} lg={12} xl={8} className="mb-5">
+          <Form.Item<KosherDetails>
+            label="Numero de página del certificado"
             name="certificatePageNumber"
+            rules={[
+              {
+                required: true && !isDraft,
+                message: "Este campo es obligatorio",
+              },
+              {
+                pattern: /^\d*$/,
+                message: "Este campo solo admite números",
+              }
+            ]}>
+            <Input disabled={_props.mode === 'view'}/>
+          </Form.Item>
+        </Col>
+
+        <Col xs={24} lg={12} xl={8} className="mb-5">
+          <Form.Item<KosherDetails>
+            label="Nombre en el certificado"
+            name="nameOnCertificate"
             rules={[
               {
                 required: true && !isDraft,
