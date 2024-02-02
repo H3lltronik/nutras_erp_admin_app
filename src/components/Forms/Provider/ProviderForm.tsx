@@ -24,6 +24,7 @@ export type ProviderFormHandle = {
 
 type ProviderFormProps = {
   entity?: Provider | null;
+  inModal?: boolean;
 };
 
 const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
@@ -75,7 +76,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Código"
               name="code"
@@ -97,7 +98,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Nombre"
               name="name"
@@ -115,7 +116,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="RFC"
               name="RFC"
@@ -133,7 +134,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input onKeyUp={writeOnlyUpperCase} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Razon Social"
               name="businessName"
@@ -151,7 +152,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8}}>
             <Form.Item<Provider>
               label="Servicio (Servicio que da el proveedor)"
               name="service"
@@ -169,7 +170,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8}}>
             <Row gutter={8}>
               <Col>
                 <Form.Item<Provider>
@@ -215,7 +216,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               </Col>
             </Row>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Correo"
               name="email"
@@ -228,7 +229,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Correo de pagos"
               name="paymentEmail"
@@ -241,7 +242,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Banco"
               name="bank"
@@ -260,7 +261,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Cuenta CLABE"
               name="clabeAccount"
@@ -274,7 +275,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input maxLength={18} onKeyUp={writeOnlyNumbers} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
             <Form.Item<Provider>
               label="Número de cuenta"
               name="accountNumber"

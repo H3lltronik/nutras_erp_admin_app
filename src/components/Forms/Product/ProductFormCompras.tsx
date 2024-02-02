@@ -224,7 +224,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["providers"]}
-                addForm={<ProvidersManage enableRedirect={false} />}
+                addForm={<ProvidersManage inModal={true} enableRedirect={false} />}
                 addFormTitle="Agregar Proveedor"
               />
             </Form.Item>
