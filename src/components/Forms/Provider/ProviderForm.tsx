@@ -57,11 +57,15 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
         event.preventDefault();
       }
     }
+    var writeOnlyUpperCase = (event: any) => {
+      event.target.value = event.target.value.toUpperCase();
+    }
 
     return (
       <Form
         form={form}
         name="providerForm"
+        layout="vertical"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -71,7 +75,29 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Provider>
+              label="Código"
+              name="code"
+              rules={[
+                { required: true, message: "Este campo es obligatorio" },
+                {
+                  min: 4,
+                  message: "El código debe tener 4 caracteres",
+                },
+                {
+                  max: 4,
+                  message: "El código debe tener 4 caracteres",
+                },
+                {
+                  pattern: /^[A-Za-z0-9]+$/,
+                  message: "Solo se aceptan letras y números",
+                }
+              ]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Nombre"
               name="name"
@@ -89,7 +115,25 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Provider>
+              label="RFC"
+              name="RFC"
+              rules={[
+                { required: true, message: "Este campo es obligatorio" },
+                {
+                  min: 10,
+                  message: "El RFC debe tener al menos 10 caracteres",
+                },
+                {
+                  max: 14,
+                  message: "El RFC no puede exceder los 14 caracteres",
+                },
+              ]}>
+              <Input onKeyUp={writeOnlyUpperCase} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Razon Social"
               name="businessName"
@@ -107,7 +151,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8}>
             <Form.Item<Provider>
               label="Servicio (Servicio que da el proveedor)"
               name="service"
@@ -125,13 +169,11 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8}>
             <Row gutter={8}>
               <Col>
                 <Form.Item<Provider>
-                  label="Teléfono"
+                  label="Lada"
                   name="lada"
                   rules={[
                     {
@@ -157,6 +199,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               </Col>
               <Col style={{flex: 1}}>
                 <Form.Item<Provider>
+                  label="Teléfono"
                   name="phone"
                   rules={[
                     { pattern: /^\d+\-\d+\-\d+$/, message: "Solo se aceptan números" },
@@ -166,13 +209,13 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                     },
                   ]}>
                     <InputMask mask="999-999-999999" maskChar={null}>
-                      {(inputProps: any) => <Input {...inputProps} maxLength={14} onKeyPress={writeOnlyNumbers} />}
+                      {(inputProps: any) => <Input {...inputProps} maxLength={14} onKeyUp={writeOnlyNumbers} />}
                     </InputMask>
                 </Form.Item>
               </Col>
             </Row>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Correo"
               name="email"
@@ -185,7 +228,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Correo de pagos"
               name="paymentEmail"
@@ -198,9 +241,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               <Input />
             </Form.Item>
           </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Banco"
               name="bank"
@@ -219,7 +260,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Cuenta CLABE"
               name="clabeAccount"
@@ -230,10 +271,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "La cuenta CLABE debe tener 18 dígitos exactos",
                 },
               ]}>
-              <Input maxLength={18} onKeyPress={writeOnlyNumbers} />
+              <Input maxLength={18} onKeyUp={writeOnlyNumbers} />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Provider>
               label="Número de cuenta"
               name="accountNumber"

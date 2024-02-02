@@ -46,6 +46,13 @@ export const ProvidersList: React.FC = () => {
               deleteAction={doDelete}
               editAction={doEdit}
               perPage={20}
+              rowClassName={(_record) => {
+                const record = _record as Product;
+                if (record.deletedAt) return "cancelled-row";
+                if (record.isDraft) return "draft-row";
+
+                return "";
+              }}
               queryParameters={{
                 withDeleted: "true",
                 nameSearch,
