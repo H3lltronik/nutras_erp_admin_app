@@ -120,7 +120,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
               {
-                pattern: /^\d*$/,
+                pattern: /^[0-9]*$/,
                 message: "Este campo solo admite números",
               }
             ]}>
