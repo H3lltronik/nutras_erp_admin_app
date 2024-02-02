@@ -2,7 +2,7 @@ import type { ColumnsType } from "antd/es/table";
 
 export const usersListColumns: ColumnsType<Product> = [
   {
-    title: "ID",
+    title: "Código de usuario",
     dataIndex: "partidaId",
     key: "partidaId",
     width: 150,

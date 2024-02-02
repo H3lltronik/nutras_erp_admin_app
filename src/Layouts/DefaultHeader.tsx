@@ -84,7 +84,7 @@ export const DefaultHeader: React.FC<HeaderProps> = (props) => {
               <Spin />
             ) : (
               <>
-                Hola, <strong>{meData?.username}</strong>
+                <strong>{meData?.name}</strong>
               </>
             )}
           </Text>

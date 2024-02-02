@@ -7,6 +7,7 @@ import { ProvidersListBreadcrumb } from "../Common/Breadcrums";
 import ProviderFilters from "./ProviderFilters";
 import { providerListColumns } from "./providersTableColumns";
 import { useProvidersListPageStore } from "./providers_list_page.store";
+import { EyeOutlined } from "@ant-design/icons";
 
 const { Content } = Layout;
 
@@ -46,6 +47,13 @@ export const ProvidersList: React.FC = () => {
               deleteAction={doDelete}
               editAction={doEdit}
               perPage={20}
+              rowClassName={(_record) => {
+                const record = _record as Product;
+                if (record.deletedAt) return "cancelled-row";
+                if (record.isDraft) return "draft-row";
+
+                return "";
+              }}
               queryParameters={{
                 withDeleted: "true",
                 nameSearch,
@@ -54,6 +62,19 @@ export const ProvidersList: React.FC = () => {
                 draftMode: getDraftMode(),
                 published: getPublished(),
               }}
+              additionalActions={[
+                {
+                  className: "bg-green-600 text-white hover:bg-green-50",
+                  icon: <EyeOutlined className="mr-[-7px]" />,
+                  onClick: (record) => {
+                    navigate(`/admin/providers/inspect/provider/${record.id}`);
+                  },
+                  conditionEval: (_record) => {
+                    const record = _record as Product;
+                    return record.isDraft === false;
+                  },
+                },
+              ]}
             />
           </section>
         </div>

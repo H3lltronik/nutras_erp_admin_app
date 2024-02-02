@@ -6,6 +6,8 @@ interface Provider {
   isPublished: boolean;
   id: string;
   partidaId: number;
+  code: string;
+  RFC?: string;
   name: string | null;
   businessName: string | null;
   service: string | null;

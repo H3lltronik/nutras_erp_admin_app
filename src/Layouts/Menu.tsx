@@ -65,31 +65,31 @@ const items: MenuItem[] = [
       roles.Product.roles.read.role
     ),
   ]),
-  getItem("Dirección", "7", null, [
-    getItem(
-      "Solicitudes de trabajo",
-      "/admin/work-requests",
-      <OrderedListOutlined />,
-      [],
-      roles.WorkRequests.roles.read.role
-    ),
-  ]),
-  getItem("Almacén", "2", null, [
-    getItem(
-      "Inventario",
-      "/admin/inventory",
-      <CodeSandboxOutlined />,
-      [],
-      roles.Inventory.roles.read.role
-    ),
-    getItem(
-      "Movimientos",
-      "/admin/movements",
-      <DatabaseOutlined />,
-      [],
-      roles.Inventory.roles.read.role
-    ),
-  ]),
+  // getItem("Dirección", "7", null, [
+  //   getItem(
+  //     "Solicitudes de trabajo",
+  //     "/admin/work-requests",
+  //     <OrderedListOutlined />,
+  //     [],
+  //     roles.WorkRequests.roles.read.role
+  //   ),
+  // ]),
+  // getItem("Almacén", "2", null, [
+  //   getItem(
+  //     "Inventario",
+  //     "/admin/inventory",
+  //     <CodeSandboxOutlined />,
+  //     [],
+  //     roles.Inventory.roles.read.role
+  //   ),
+  //   getItem(
+  //     "Movimientos",
+  //     "/admin/movements",
+  //     <DatabaseOutlined />,
+  //     [],
+  //     roles.Inventory.roles.read.role
+  //   ),
+  // ]),
   getItem("Administración", "1", null, [
     getItem(
       "Usuarios",
@@ -129,38 +129,38 @@ const items: MenuItem[] = [
       roles.Provider.roles.read.role
     ),
   ]),
-  getItem("Producción", "4", null, [
-    getItem(
-      "Ordenes de trabajo",
-      "/admin/work-orders",
-      <OrderedListOutlined />,
-      [],
-      roles.WorkOrders.roles.read.role
-    ),
-    getItem(
-      "Requisición de compras",
-      "/admin/purchase-requisition",
-      <PieChartOutlined />,
-      [],
-      roles.PurchaseRequisition.roles.read.role
-    ),
-    getItem(
-      "Etiquetación",
-      "/admin/labelation",
-      <PieChartOutlined />,
-      [],
-      roles.Tagging.roles.read.role
-    ),
-  ]),
-  getItem("Calidad", "5", null, [
-    getItem(
-      "Calidad",
-      "/admin/quality",
-      <PieChartOutlined />,
-      [],
-      roles.Quality.roles.read.role
-    ),
-  ]),
+  // getItem("Producción", "4", null, [
+  //   getItem(
+  //     "Ordenes de trabajo",
+  //     "/admin/work-orders",
+  //     <OrderedListOutlined />,
+  //     [],
+  //     roles.WorkOrders.roles.read.role
+  //   ),
+  //   getItem(
+  //     "Requisición de compras",
+  //     "/admin/purchase-requisition",
+  //     <PieChartOutlined />,
+  //     [],
+  //     roles.PurchaseRequisition.roles.read.role
+  //   ),
+  //   getItem(
+  //     "Etiquetación",
+  //     "/admin/labelation",
+  //     <PieChartOutlined />,
+  //     [],
+  //     roles.Tagging.roles.read.role
+  //   ),
+  // ]),
+  // getItem("Calidad", "5", null, [
+  //   getItem(
+  //     "Calidad",
+  //     "/admin/quality",
+  //     <PieChartOutlined />,
+  //     [],
+  //     roles.Quality.roles.read.role
+  //   ),
+  // ]),
 ];
 
 // Utility function to check if the current path matches the regex pattern

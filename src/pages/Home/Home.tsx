@@ -1,11 +1,14 @@
 import { Breadcrumb, Image, Layout, Typography } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
-import React from "react";
+import React, { useEffect } from "react";
 import nutrasLogo from "../../assets/dashboard.svg";
+import useAuth from "../../hooks/useAuth";
 
 const { Content } = Layout;
 
 export const Home: React.FC = () => {
+  const userData = useAuth();
+
   const breadcrumb: ItemType[] = [
     {
       title: "Dashboard",
@@ -27,7 +30,7 @@ export const Home: React.FC = () => {
             background: "#fff",
           }}>
           <div className="mx-auto text-center">
-            <Typography.Title level={1}>Bienvenido al sistema</Typography.Title>
+            <Typography.Title level={1}>{`Bienvenido al sistema${userData.user?.name ? `, ${userData.user?.name}` : ''}`}</Typography.Title>
             {/* <Image
               preview={false}
               src={nutrasLogo}
