@@ -10,6 +10,9 @@ export type AvailableProductFilters = {
   code?: boolean;
   provider?: boolean;
   status?: boolean;
+  kosher?: boolean;
+  allergen?: boolean;
+  productTypes?: boolean;
 };
 type ProductFiltersProps = {
   disabledFilters?: AvailableProductFilters;

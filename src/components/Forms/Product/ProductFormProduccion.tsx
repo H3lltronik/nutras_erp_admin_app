@@ -15,6 +15,7 @@ import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
+import TextArea from "antd/es/input/TextArea";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -236,6 +237,40 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input disabled={disabled} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Descripción del proveedor"
+              name="providerDescription"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 150,
+                  message: "No puede exceder los 150 caracteres",
+                }
+              ]}>
+              <TextArea disabled={disabled} style={{resize: 'none'}} maxLength={150} placeholder="Descripción del proveedor" rows={4}></TextArea>
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Notas del producto"
+              name="notes"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                }
+              ]}>
+              <TextArea disabled={disabled} style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
         </Row>

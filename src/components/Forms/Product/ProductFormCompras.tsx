@@ -230,6 +230,19 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
+              label="Cantidad x unidad"
+              name="quantityPerUnit"
+              rules={[
+                {
+                  required: false && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
               label="Descripción del proveedor"
               name="providerDescription"
               rules={[
@@ -242,20 +255,24 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "No puede exceder los 150 caracteres",
                 }
               ]}>
-              <TextArea style={{resize: 'none'}} placeholder="Descripción del proveedor" rows={4}></TextArea>
+              <TextArea style={{resize: 'none'}} maxLength={150} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
-              label="Cantidad x unidad"
-              name="quantityPerUnit"
+              label="Notas del producto"
+              name="notes"
               rules={[
                 {
-                  required: false && !isDraft,
+                  required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                }
               ]}>
-              <Input />
+              <TextArea style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
 
