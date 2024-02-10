@@ -15,6 +15,7 @@ import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
+import TextArea from "antd/es/input/TextArea";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -81,12 +82,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
           department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
         });
 
-        const presentations = await ProductPresentationAPI.getProductPresentations({});
-        console.log("presentations", presentations);
         setProductTypes(types.data);
       }
 
-      getProductTypes();4
+      getProductTypes();
     }, [form, _props.entity]);
 
     const kosherDetails = useMemo(() => {
@@ -149,13 +148,13 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input placeholder="Nombre comun" />
             </Form.Item>
           </Col>
 
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
-              label="Codigo"
+              label="Código"
               name="code"
               rules={[
                 {
@@ -163,7 +162,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input addonBefore={getCodeAddon()} />
+              <Input placeholder="Código" addonBefore={getCodeAddon()} />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -227,6 +226,23 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 addForm={<ProvidersManage inModal={true} enableRedirect={false} />}
                 addFormTitle="Agregar Proveedor"
               />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Descripción del proveedor"
+              name="providerDescription"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 150,
+                  message: "No puede exceder los 150 caracteres",
+                }
+              ]}>
+              <TextArea style={{resize: 'none'}} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>

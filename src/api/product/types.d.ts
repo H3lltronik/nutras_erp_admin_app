@@ -11,6 +11,7 @@ interface Product {
   code: string;
   commonName: string;
   providerId: string;
+  providerDescription: string;
   unitId: string;
   presentation: string;
   quantityPerUnit: string;
