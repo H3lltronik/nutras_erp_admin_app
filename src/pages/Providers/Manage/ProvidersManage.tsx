@@ -1,4 +1,3 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
@@ -10,6 +9,7 @@ import ProviderForm, {
 } from "../../../components/Forms/Provider/ProviderForm";
 import { useAbilities } from "../../../hooks/roles/useAbilities";
 import useAuth from "../../../hooks/useAuth";
+import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { ProvidersManageBreadcrumb } from "../Common/Breadcrums";
 
@@ -20,6 +20,7 @@ type ProvidersManageProps = {
   onSuccess?: (data?: Provider) => void;
   enableRedirect?: boolean;
   inModal?: boolean;
+  formMode?: FormMode;
 };
 
 export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
@@ -33,6 +34,7 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
   const { id } = useParams();
   const { user } = useAuth();
   const ability = useAbilities(user?.profile.roles || []);
+  const { disabled } = useFormModeChecker({ formMode: props.formMode });
 
   const {
     data: entity,
@@ -53,6 +55,10 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
     const providerFormData = (await providerFormRef.current?.getFormData({
       draftMode: isDraft,
     })) as CreateProviderRequest;
+    if (disabled) {
+      console.log("The form is disabled");
+      return;
+    }
 
     setPageLoading(true);
     try {
@@ -109,27 +115,46 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
 
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
-            <ProviderForm inModal={props.inModal ?? false} ref={providerFormRef} entity={entityData} />
-            <button
-              type="button"
-              onClick={() => submitForm(false)}
-              className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
-              Procesar
-            </button>
-            {!entityData?.isPublished && (
+            <ProviderForm
+              formMode={props.formMode}
+              inModal={props.inModal ?? false}
+              ref={providerFormRef}
+              entity={entityData}
+            />
+
+            {!disabled && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => submitForm(false)}
+                  className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
+                  Procesar
+                </button>
+                {!entityData?.isPublished && (
+                  <button
+                    type="button"
+                    onClick={() => submitForm(true)}
+                    className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
+                    Borrador
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={doCancel}
+                  className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
+                  Cancelar
+                </button>
+              </>
+            )}
+
+            {disabled && (
               <button
                 type="button"
-                onClick={() => submitForm(true)}
-                className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
-                Borrador
+                onClick={() => navigate(-1)}
+                className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
+                Regresar
               </button>
             )}
-            <button
-              type="button"
-              onClick={doCancel}
-              className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline">
-              Cancelar
-            </button>
           </section>
         </div>
         <AppLoader isLoading={loading} />
