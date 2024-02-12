@@ -38,7 +38,7 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   deleteActionConditionEval?: (record: TData) => boolean;
   editActionConditionEval?: (record: TData) => boolean;
   deleteDisabled?: boolean;
-  editDisabled?: boolean;
+  editDisabled?: boolean | ((record: TData) => boolean);
   enableSelection?: boolean;
   selectionLimit?: number;
   onSelectionChange?: (selectedRows: TData[]) => void;
@@ -174,37 +174,49 @@ const _AdminDataTable = <
     setCurrentPage(pagination.current as number);
   };
 
-  const defaultActions: Action<TData>[] = [];
+  const buildDefaultActions = (record: TData) => {
+    const defaultActions: Action<TData>[] = [];
 
-  if (editAction != null && !editDisabled)
-    defaultActions.push({
-      icon: <EditOutlined className="mr-[-6px]" />,
-      className: "bg-blue-600 text-white hover:bg-blue-50",
-      onClick: async (record) => await editAction(record.id as string),
-      conditionEval: editActionConditionEval,
-    });
+    let _editDisabled = editDisabled;
+    if (typeof editDisabled === "function") {
+      _editDisabled = editDisabled(record);
+    }
 
-  if (deleteAction != null && !deleteDisabled)
-    defaultActions.push({
-      icon: <CloseOutlined className="mr-[-7px]" />,
-      className: "bg-red-600 text-white hover:bg-red-50",
-      onClick: async (record) => {
-        confirm({
-          icon: <ExclamationCircleOutlined />,
-          content: <p className="">¿Estás seguro de cancelar el registro?</p>,
-          onOk: () => {
-            setPageLoading(true);
-            mutateAsync(record.id as string);
-          },
-          okButtonProps: {
-            className: "bg-red-500 border-none hover:bg-red-600",
-          },
-        });
-      },
-      conditionEval: deleteActionConditionEval,
-    });
+    if (editAction != null && !_editDisabled)
+      defaultActions.push({
+        icon: <EditOutlined className="mr-[-6px]" />,
+        className: "bg-blue-600 text-white hover:bg-blue-50",
+        onClick: async (record) => await editAction(record.id as string),
+        conditionEval: editActionConditionEval,
+      });
 
-  const combinedActions = [...defaultActions, ...additionalActions];
+    if (deleteAction != null && !deleteDisabled)
+      defaultActions.push({
+        icon: <CloseOutlined className="mr-[-7px]" />,
+        className: "bg-red-600 text-white hover:bg-red-50",
+        onClick: async (record) => {
+          confirm({
+            icon: <ExclamationCircleOutlined />,
+            content: <p className="">¿Estás seguro de cancelar el registro?</p>,
+            onOk: () => {
+              setPageLoading(true);
+              mutateAsync(record.id as string);
+            },
+            okButtonProps: {
+              className: "bg-red-500 border-none hover:bg-red-600",
+            },
+          });
+        },
+        conditionEval: deleteActionConditionEval,
+      });
+
+    return defaultActions;
+  };
+
+  const buidCombinedActions = (record: TData) => [
+    ...buildDefaultActions(record),
+    ...additionalActions,
+  ];
   const combinedColumns = [
     ...columns,
     {
@@ -212,7 +224,7 @@ const _AdminDataTable = <
       key: "action",
       render: (_: unknown, record: TData) => (
         <Space size="small">
-          {combinedActions
+          {buidCombinedActions(record)
             .filter((item) => {
               if (!item.conditionEval) return true;
               return item.conditionEval(record);

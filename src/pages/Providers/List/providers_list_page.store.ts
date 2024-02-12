@@ -4,6 +4,15 @@ type ProvidersListPageState = {
   loading: boolean;
   setLoading: (value: boolean) => void;
 
+  nameSearch: string;
+  setNameSearch: (value: string) => void;
+
+  codeSearch: string;
+  setCodeSearch: (value: string) => void;
+
+  rfcSearch: string;
+  setRFCSearch: (value: string) => void;
+
   draftMode: boolean | undefined;
   setDraftMode: (value: boolean | undefined) => void;
   getDraftMode: () => string | undefined;
@@ -22,6 +31,15 @@ export const useProvidersListPageStore = create<ProvidersListPageState>(
       if (draftMode === undefined) return undefined;
       return draftMode ? "true" : "false";
     },
+
+    nameSearch: "",
+    setNameSearch: (value: string) => set({ nameSearch: value }),
+
+    codeSearch: "",
+    setCodeSearch: (value: string) => set({ codeSearch: value }),
+
+    rfcSearch: "",
+    setRFCSearch: (value: string) => set({ rfcSearch: value }),
 
     published: undefined,
     setPublished: (value: boolean | undefined) => set({ published: value }),
