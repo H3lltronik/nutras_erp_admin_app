@@ -107,7 +107,7 @@ const router = createBrowserRouter([
         headerTitle={`Inspeccion de producto`}>
         <ProductsManage
           formMode="view"
-          formType="produccion"
+          formType="compras"
           listPath="/admin/products/pp"
         />
       </DefaultLayout>
@@ -245,6 +245,20 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
         <ProvidersManage enableRedirect={true} />
+      </DefaultLayout>
+    ),
+  },
+  {
+    path: "/admin/providers/inspect/provider/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<ProvidersHeader />}
+        headerTitle={`Inspeccion de proveedor`}>
+        <ProvidersManage
+          formMode="view"
+          formType="produccion"
+          listPath="/admin/products/pp"
+        />
       </DefaultLayout>
     ),
   },

@@ -25,7 +25,7 @@ type ProductsListProps = {
   onSelectionChange?: (selectedRows: Product[]) => void;
   selectionLimit?: number | undefined | null;
   selectedRowIds?: string[];
-  productFormType?: 'PP' | 'PT';
+  productFormType?: "PP" | "PT";
   columnsToHide?: string[];
 };
 const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
@@ -33,8 +33,17 @@ const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
 export const ProductsList: React.FC<ProductsListProps> = (props) => {
   if (!props.mode) props.mode = "full";
   const navigate = useNavigate();
-  const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
-    useProductsListPageStore();
+  const {
+    nameSearch,
+    codeSearch,
+    providerSearch,
+    getProductTypes,
+    getKosher,
+    getAllergen,
+    getDraftMode,
+    getPublished,
+    getDeleted,
+  } = useProductsListPageStore();
 
   const fetchData = (params: object) =>
     ProductAPI.getProducts({
@@ -61,6 +70,8 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     }
     navigate(url);
   };
+
+  console.log("props.mode", getKosher());
 
   return (
     <>
@@ -91,16 +102,26 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               selectedRowIds={props.selectedRowIds}
               queryKey="users"
               fetchData={fetchData}
-              columns={productListColumns.filter((column) =>
+              columns={productListColumns.filter(
+                (column) =>
                   !props.columnsToHide?.includes(column.dataIndex as string)
-                )}
+              )}
               deleteAction={doDelete}
               editAction={doEdit}
-              deleteDisabled={isSelectionOnly(props.mode)}
-              editDisabled={isSelectionOnly(props.mode)}
+              // editDisabled={isSelectionOnly(props.mode)}
+              editDisabled={(_record) => {
+                const record = _record as Provider;
+                return record.deletedAt != null;
+              }}
+              deleteDisabled={(_record) => {
+                const record = _record as Provider;
+                return record.deletedAt != null;
+              }}
               editActionConditionEval={(record) => {
                 const product = record as Product;
-                return product.deletedAt === null;
+                return (
+                  product.deletedAt === null || isSelectionOnly(props.mode)
+                );
               }}
               rowClassName={(_record) => {
                 const record = _record as Product;
@@ -134,8 +155,12 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                 nameSearch,
                 codeSearch,
                 providerSearch,
+                productTypes: getProductTypes(),
+                kosher: getKosher(),
+                allergen: getAllergen(),
                 draftMode: getDraftMode(),
                 published: getPublished(),
+                deleted: getDeleted(),
               }}
             />
           </section>

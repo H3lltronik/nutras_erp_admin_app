@@ -7,16 +7,21 @@ interface Product {
   id: string;
   partidaId: number;
   productTypeId: string;
+  ppCategoryId?: string;
+  ppCategory?: PPProductType;
   productType?: ProductType;
   code: string;
   commonName: string;
   providerId: string;
+  providerDescription: string;
+  notes: string;
   unitId: string;
   presentation: string;
   quantityPerUnit: string;
   isKosher: boolean;
   allergen: boolean;
   departmentId: string;
+  ppNotes: string;
   unit: Unit;
   kosherDetails: KosherDetails;
   purchaseData: PurchaseData;
@@ -115,5 +120,21 @@ interface ProductPresentation {
 
 type GetProductPresentationsResponse = {
   data: ProductPresentation[];
+  pagination: Pagination;
+};
+
+type PPProductType = {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  id: string;
+  partidaId: number;
+  mask: string;
+  prefix: string;
+  suffix: string;
+};
+
+type GetPPProductTypesResponse = {
+  data: PPProductType[];
   pagination: Pagination;
 };

@@ -1,3 +1,4 @@
+import { EyeOutlined } from "@ant-design/icons";
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +8,12 @@ import { ProvidersListBreadcrumb } from "../Common/Breadcrums";
 import ProviderFilters from "./ProviderFilters";
 import { providerListColumns } from "./providersTableColumns";
 import { useProvidersListPageStore } from "./providers_list_page.store";
-import { EyeOutlined } from "@ant-design/icons";
 
 const { Content } = Layout;
 
 export const ProvidersList: React.FC = () => {
   const navigate = useNavigate();
-  const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
+  const { nameSearch, codeSearch, rfcSearch, getDraftMode, getPublished } =
     useProvidersListPageStore();
 
   const fetchData = (params: object) => ProvidersAPI.getProviders(params);
@@ -46,6 +46,14 @@ export const ProvidersList: React.FC = () => {
               columns={providerListColumns}
               deleteAction={doDelete}
               editAction={doEdit}
+              editDisabled={(_record) => {
+                const record = _record as Provider;
+                return record.deletedAt != null;
+              }}
+              deleteDisabled={(_record) => {
+                const record = _record as Provider;
+                return record.deletedAt != null;
+              }}
               perPage={20}
               rowClassName={(_record) => {
                 const record = _record as Product;
@@ -58,7 +66,7 @@ export const ProvidersList: React.FC = () => {
                 withDeleted: "true",
                 nameSearch,
                 codeSearch,
-                providerSearch,
+                rfcSearch,
                 draftMode: getDraftMode(),
                 published: getPublished(),
               }}

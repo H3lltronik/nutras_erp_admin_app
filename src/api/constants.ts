@@ -13,6 +13,7 @@ export const ENTITIES_ENDPOINTS = {
   movementConcept: "movement_concept",
   products: "products",
   product_types: "product-types",
+  pp_product_types: "pp-product-types",
   productPresentations: "product-presentation",
   provider: "providers",
   workRequests: "workRequests",
