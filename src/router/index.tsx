@@ -107,7 +107,7 @@ const router = createBrowserRouter([
         headerTitle={`Inspeccion de producto`}>
         <ProductsManage
           formMode="view"
-          formType="produccion"
+          formType="compras"
           listPath="/admin/products/pp"
         />
       </DefaultLayout>
