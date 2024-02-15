@@ -15,6 +15,7 @@ import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
+import TextArea from "antd/es/input/TextArea";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -42,12 +43,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
-    const [selectedProductType, setSelectedProductType] = useState<string>("");
+    const [selectedProductType, setSelectedProductType] = useState<string | undefined>(undefined);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
 
     const getCodeAddon = (): string => {
-      const productType = productTypes.find((type: ProductType) => type.id === selectedProductType);
+      const productType = productTypes.find((type: ProductType) => type.id === (selectedProductType ?? _props.entity?.productTypeId));
       return productType?.name ?? '';
     }
 
@@ -81,12 +82,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
           department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
         });
 
-        const presentations = await ProductPresentationAPI.getProductPresentations({});
-        console.log("presentations", presentations);
         setProductTypes(types.data);
       }
 
-      getProductTypes();4
+      getProductTypes();
     }, [form, _props.entity]);
 
     const kosherDetails = useMemo(() => {
@@ -96,7 +95,6 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
           _props.entity?.kosherDetails?.certificateValidity
         ),
       };
-      console.log("_props.entity?.kosherDetails", result);
       return result;
     }, [_props.entity]);
 
@@ -131,7 +129,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                       .VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
                   })
                 }
-                onChange={(value) => setSelectedProductType(value)}
+                onChange={(value) => {
+                  setSelectedProductType(value);
+                  const type = productTypes.find((type: ProductType) => type.id === value);
+                  if(type?.name == 'MP') form.setFieldValue("code", _props.entity?.code ?? "");
+                  else form.setFieldValue("code", null);
+                }}
                 placeholder="Selecciona un tipo de producto"
                 optionLabel="description"
                 optionKey={"id"}
@@ -149,13 +152,13 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={!_props.entity?.id && !selectedProductType} placeholder="Nombre común" />
             </Form.Item>
           </Col>
 
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
-              label="Codigo"
+              label="Código"
               name="code"
               rules={[
                 {
@@ -163,7 +166,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input addonBefore={getCodeAddon()} />
+              <Input disabled={!_props.entity?.id && !selectedProductType} placeholder="Código" addonBefore={getCodeAddon()} />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -177,6 +180,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
+                disabled={!_props.entity?.id && !selectedProductType}
                 fetcher={() => MeasurementAPI.getMeasurements()}
                 placeholder="Selecciona una unidad de medida"
                 optionLabel="name"
@@ -197,6 +201,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
+                disabled={!_props.entity?.id && !selectedProductType}
                 fetcher={() => 
                   ProductPresentationAPI.getProductPresentations()
                 }
@@ -219,6 +224,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
+                disabled={!_props.entity?.id && !selectedProductType}
                 fetcher={() => ProvidersAPI.getProviders()}
                 placeholder="Selecciona un proveedor"
                 optionLabel="name"
@@ -239,20 +245,60 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input />
+              <Input disabled={!_props.entity?.id && !selectedProductType} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Descripción del proveedor"
+              name="providerDescription"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 150,
+                  message: "No puede exceder los 150 caracteres",
+                }
+              ]}>
+              <TextArea disabled={!_props.entity?.id && !selectedProductType} style={{resize: 'none'}} maxLength={150} placeholder="Descripción del proveedor" rows={4}></TextArea>
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Notas del producto"
+              name="notes"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                }
+              ]}>
+              <TextArea disabled={!_props.entity?.id && !selectedProductType} style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
 
-          <Col span={"auto"}>
-            <Form.Item<Product> label="Kosher" name="isKosher">
-              <Switch />
-            </Form.Item>
-          </Col>
-          <Col span={"auto"}>
-            <Form.Item<Product> label="Alergeno" name="allergen">
-              <Switch />
-            </Form.Item>
-          </Col>
+          {
+            (getCodeAddon() == 'MP') && (
+              <>
+                <Col span={"auto"}>
+                  <Form.Item<Product> label="Kosher" name="isKosher">
+                    <Switch />
+                  </Form.Item>
+                </Col>
+                <Col span={"auto"}>
+                  <Form.Item<Product> label="Alergeno" name="allergen">
+                    <Switch />
+                  </Form.Item>
+                </Col>
+              </>
+            )
+          }
 
           <Col span={24}>
             {isKosher && (

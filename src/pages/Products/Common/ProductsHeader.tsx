@@ -17,7 +17,7 @@ export const ProductsHeader: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Catalogo de insumos",
+      label: "Catálogo de insumos",
       key: "/admin/products/insumos",
       icon: <OrderedListOutlined />,
       onClick: () => {

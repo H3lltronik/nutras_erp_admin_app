@@ -8,6 +8,8 @@ export interface ProductFormResult {
   code: string;
   commonName: string;
   providerId: string;
+  providerDescription: string;
+  notes: string;
   unitId: string;
   presentation: string;
   quantityPerUnit: string;
@@ -58,6 +60,8 @@ export interface ProductToPost {
   code?: string;
   commonName?: string;
   providerId?: string;
+  providerDescription: string;
+  notes?: string;
   unitId?: string;
   presentation?: string;
   quantityPerUnit?: string;
@@ -106,6 +110,8 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     productTypeId: productToFormat.productTypeId,
     commonName: productToFormat.commonName,
     providerId: productToFormat.providerId,
+    providerDescription: productToFormat.providerDescription,
+    notes: productToFormat.notes,
     unitId: productToFormat.unitId,
     isKosher: productToFormat.isKosher,
     allergen: productToFormat.allergen,
@@ -152,6 +158,8 @@ export const unformatProductForm = (
     productTypeId: productToUnformat.productTypeId ?? "",
     commonName: productToUnformat.commonName ?? "",
     providerId: productToUnformat.providerId ?? "",
+    providerDescription: productToUnformat.providerDescription ?? "",
+    notes: productToUnformat.notes ?? "",
     unitId: productToUnformat.unitId ?? "",
     isKosher: productToUnformat.isKosher ?? false,
     quantityPerUnit: productToUnformat.quantityPerUnit ?? "",

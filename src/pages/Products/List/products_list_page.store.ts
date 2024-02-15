@@ -10,6 +10,18 @@ type ProductsListPageState = {
   providerSearch: string;
   setProviderSearch: (value: string) => void;
 
+  kosher: boolean | undefined;
+  setKosher: (value: boolean | undefined) => void;
+  getKosher: () => string | undefined;
+  
+  allergen: boolean | undefined;
+  setAllergen: (value: boolean | undefined) => void;
+  getAllergen: () => string | undefined;
+
+  productTypes: string[];
+  setProductTypes: (value: string[]) => void;
+  getProductTypes: () => string | undefined;
+
   loading: boolean;
   setLoading: (value: boolean) => void;
 
@@ -32,6 +44,30 @@ export const useProductsListPageStore = create<ProductsListPageState>(
 
     providerSearch: "",
     setProviderSearch: (value: string) => set({ providerSearch: value }),
+
+    kosher: undefined,
+    setKosher: (value: boolean | undefined) => set({ kosher: value }),
+    getKosher: () => {
+      const kosher = get().kosher;
+      if (kosher === undefined) return undefined;
+      return kosher ? "true" : "false";
+    },
+
+    allergen: undefined,
+    setAllergen: (value: boolean | undefined) => set({ allergen: value }),
+    getAllergen: () => {
+      const allergen = get().allergen;
+      if (allergen === undefined) return undefined;
+      return allergen ? "true" : "false";
+    },
+
+    productTypes: [],
+    setProductTypes: (value: string[]) => set({ productTypes: value }),
+    getProductTypes: () => {
+      const productTypes = get().productTypes;
+      if (productTypes.length === 0) return undefined;
+      return JSON.stringify(productTypes ?? []);
+    },
 
     draftMode: undefined,
     setDraftMode: (value: boolean | undefined) => set({ draftMode: value }),
