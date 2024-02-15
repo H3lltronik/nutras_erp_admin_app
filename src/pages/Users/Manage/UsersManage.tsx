@@ -1,4 +1,3 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
@@ -26,11 +25,12 @@ export const UsersManage: React.FC = () => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetUserResponse | APIError>(
-    ["users", { id }],
-    () => UserAPI.getUser(id as string),
-    { enabled: !!id, refetchOnWindowFocus: false }
-  );
+  } = useQuery<GetUserResponse | APIError>({
+    queryKey: ["users", { id }],
+    queryFn: () => UserAPI.getUser(id as string),
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
 
   const loading = useMemo(
     () => pageLoading || isFetching || (isLoading && !!id),

@@ -21,11 +21,13 @@ import BaseWorkOrderAPI from "./workOrder/workOrder.api";
 import BaseWorkOrderServiceTypeAPI from "./workOrder/workOrderServiceTypes.api";
 import BaseWorkRequestAPI from "./workRequest/workRequest.api";
 import BaseProductPresentationsAPI from "./product/product-presentation.api";
+import BasePPProductTypesAPI from "./product/pp_product_types.api";
 
 const BASE_URL = import.meta.env.VITE_API_PATH;
 
 export const ProductAPI = new BaseProductAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.products}`);
 export const ProductTypesAPI = new BaseProductTypesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.product_types}`);
+export const PPProductTypesAPI = new BasePPProductTypesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.pp_product_types}`);
 export const ProductPresentationAPI = new BaseProductPresentationsAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.productPresentations}`);
 
 export const ProvidersAPI = new BaseProviderAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.provider}`);

@@ -37,7 +37,7 @@ interface AdminDataTableProps<TData extends IDataWithID, TResponse> {
   queryParameters?: Record<string, string | number | undefined>;
   deleteActionConditionEval?: (record: TData) => boolean;
   editActionConditionEval?: (record: TData) => boolean;
-  deleteDisabled?: boolean;
+  deleteDisabled?: boolean | ((record: TData) => boolean);
   editDisabled?: boolean | ((record: TData) => boolean);
   enableSelection?: boolean;
   selectionLimit?: number;
@@ -98,13 +98,15 @@ const _AdminDataTable = <
 
   const { data, isLoading, isFetching, refetch } = useQuery<
     TResponse | APIError
-  >([queryKey, currentPage], () =>
-    fetchData({
-      offset: (currentPage - 1) * perPage,
-      limit: perPage,
-      ...queryParameters,
-    })
-  );
+  >({
+    queryKey: [queryKey, currentPage],
+    queryFn: () =>
+      fetchData({
+        offset: (currentPage - 1) * perPage,
+        limit: perPage,
+        ...queryParameters,
+      }),
+  });
 
   const loading = useMemo(
     () => pageLoading || isFetching,
@@ -116,13 +118,11 @@ const _AdminDataTable = <
     refetch();
   }, [refetch, queryParameters]);
 
-  const { mutateAsync } = useMutation((id: string) => deleteAction(id), {
+  const { mutateAsync } = useMutation({
+    mutationFn: (id: string) => deleteAction(id),
     onSuccess: (result) => {
-      if ("partidaId" in result)
-        showToast(
-          `Registro ${result.partidaId} eliminado correctamente`,
-          "success"
-        );
+      if ("id" in result)
+        showToast(`Registro ${result.id} eliminado correctamente`, "success");
       else showToast("Ha ocurrido un error al eliminar el registro", "error");
     },
     onError: (error: APIError) => {
@@ -190,7 +190,12 @@ const _AdminDataTable = <
         conditionEval: editActionConditionEval,
       });
 
-    if (deleteAction != null && !deleteDisabled)
+    let _deleteDisabled = deleteDisabled;
+    if (typeof deleteDisabled === "function") {
+      _deleteDisabled = deleteDisabled(record);
+    }
+
+    if (deleteAction != null && !_deleteDisabled)
       defaultActions.push({
         icon: <CloseOutlined className="mr-[-7px]" />,
         className: "bg-red-600 text-white hover:bg-red-50",

@@ -42,7 +42,9 @@ export const GenericSelect = <T,>({
   }, [fetcher]);
   const addFormRef = useRef<{ getFormData: () => void }>(null);
 
-  const { data, isLoading } = useQuery<T[]>(queryKey, () => fetch(), {
+  const { data, isLoading } = useQuery<T[]>({
+    queryKey,
+    queryFn: fetch,
     refetchOnWindowFocus: false,
   });
 

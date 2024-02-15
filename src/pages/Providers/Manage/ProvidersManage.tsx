@@ -27,9 +27,13 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
   const providerFormRef = useRef<ProviderFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation((data: CreateProviderRequest) =>
-    ProvidersAPI.createProvider<CreateProviderRequest>(data)
-  );
+  const { mutateAsync } = useMutation({
+    mutationFn: (data: CreateProviderRequest) =>
+      ProvidersAPI.createProvider<CreateProviderRequest>(data),
+    onSuccess: () => {
+      showToast("Proveedorador creado correctamente", "success");
+    },
+  });
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
@@ -40,11 +44,12 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetProviderResponse | APIError>(
-    ["provider", { id }],
-    () => ProvidersAPI.getProvider(id as string),
-    { enabled: !!id, refetchOnWindowFocus: false }
-  );
+  } = useQuery<GetProviderResponse | APIError>({
+    queryKey: ["provider", { id }],
+    queryFn: () => ProvidersAPI.getProvider(id as string),
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
 
   const loading = useMemo(
     () => pageLoading || isFetching || (isLoading && !!id),

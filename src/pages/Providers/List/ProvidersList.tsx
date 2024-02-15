@@ -50,6 +50,10 @@ export const ProvidersList: React.FC = () => {
                 const record = _record as Provider;
                 return record.deletedAt != null;
               }}
+              deleteDisabled={(_record) => {
+                const record = _record as Provider;
+                return record.deletedAt != null;
+              }}
               perPage={20}
               rowClassName={(_record) => {
                 const record = _record as Product;

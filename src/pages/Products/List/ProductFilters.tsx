@@ -28,6 +28,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setCodeSearch,
     setProviderSearch,
     setDraftMode,
+    setDeleted,
     setPublished,
   } = useProductsListPageStore((state) => state);
 
@@ -76,9 +77,13 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     if (value.includes(entityStatuses.PUBLISHED)) setPublished(true);
     else setPublished(undefined);
 
+    if (value.includes(entityStatuses.DELETED)) setDeleted(true);
+    else setDeleted(undefined);
+
     if (!value || value.length === 0) {
       setDraftMode(undefined);
       setPublished(undefined);
+      setDeleted(undefined);
     }
   };
 
@@ -132,6 +137,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             </Select.Option>
             <Select.Option value={entityStatuses.PUBLISHED}>
               {entityStatuses.PUBLISHED}
+            </Select.Option>
+            <Select.Option value={entityStatuses.DELETED}>
+              {entityStatuses.DELETED}
             </Select.Option>
           </Select>
         </div>

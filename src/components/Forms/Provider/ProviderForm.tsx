@@ -4,6 +4,7 @@ import InputMask from "react-input-mask";
 import { flags } from "../../../assets/flags/index.ts";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked.tsx";
 import { banks, countriesWithLada } from "../Common/Constants";
+import TextArea from "antd/es/input/TextArea";
 const { Option } = Select;
 
 const onFinish = (values: unknown) => {
@@ -307,6 +308,28 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                 maxLength={20}
                 onKeyPress={writeOnlyNumbers}
               />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Provider>
+              label="Notas de proveedor"
+              name="notes"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                },
+              ]}>
+              <TextArea
+                disabled={disabled}
+                style={{ resize: "none" }}
+                maxLength={300}
+                placeholder="Notas de proveedor"
+                rows={4}></TextArea>
             </Form.Item>
           </Col>
         </Row>

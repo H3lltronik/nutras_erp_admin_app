@@ -13,6 +13,7 @@ interface Provider {
   service: string | null;
   phone: string | null;
   email: string | null;
+  notes: string | null;
   paymentEmail: string | null;
   bank: string | null;
   clabeAccount: string | null;

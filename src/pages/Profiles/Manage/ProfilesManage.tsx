@@ -1,4 +1,3 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Layout, Modal } from "antd";
 import React, { useMemo, useRef } from "react";
@@ -22,11 +21,12 @@ export const ProfilesManage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const entity = useQuery<GetProfileResponse | APIError>(
-    ["profiles", { id }],
-    () => ProfileAPI.getProfile(id as string),
-    { enabled: !!id }
-  );
+  const entity = useQuery<GetProfileResponse | APIError>({
+    queryKey: ["profiles", { id }],
+    queryFn: () => ProfileAPI.getProfile(id as string),
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
 
   const submitForm = async (isDraft = false) => {
     const profileFormData = (await profileFormRef.current?.getFormData({

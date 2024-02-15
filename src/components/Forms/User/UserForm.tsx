@@ -45,7 +45,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
 
   const { data: departmentsData, isLoading: loadingDepartments } = useQuery<
     GetDepartmentsResponse | APIError
-  >(["departments"], () => DepartmentsAPI.getDepartments());
+  >({
+    queryKey: ["departments"],
+    queryFn: DepartmentsAPI.getDepartments,
+  });
 
   useImperativeHandle(
     ref,
@@ -93,7 +96,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
             label="Nombre"
             name="name"
             rules={[
-              { required: true && !isDraft, message: "Este campo es requerido" },
+              {
+                required: true && !isDraft,
+                message: "Este campo es requerido",
+              },
             ]}>
             <Input />
           </Form.Item>
@@ -103,7 +109,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
             label="Nombre de usuario"
             name="username"
             rules={[
-              { required: true && !isDraft, message: "Este campo es requerido" },
+              {
+                required: true && !isDraft,
+                message: "Este campo es requerido",
+              },
             ]}>
             <Input type="email" />
           </Form.Item>
@@ -114,50 +123,59 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
               label="Contraseña"
               name="password"
               rules={[
-                { required: true && !isDraft, message: "Este campo es requerido" },
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es requerido",
+                },
               ]}>
               <Input.Password />
             </Form.Item>
           )}
         </Col>
-          {props.entity == null && (
-            <Col xs={24} md={12} lg={8} xl={6}>
-              <Form.Item<FieldType>
-                label="Confirmar contraseña"
-                name="confirmPassword"
-                rules={[
-                  { required: true && !isDraft, message: "Este campo es requerido" },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value || getFieldValue("password") === value) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error("The two passwords do not match!")
-                      );
-                    },
-                  }),
-                ]}>
-                <Input.Password />
-              </Form.Item>
-            </Col>
-          )}
-          {props.entity && (
-            <Col xs={24} md={12} lg={8} xl={6}>
-              <Form.Item<FieldType>
-                label="Nueva contraseña"
-                name="newPassword"
-                rules={[{ required: false && !isDraft }]}>
-                <Input.Password />
-              </Form.Item>
-            </Col>
-          )}
+        {props.entity == null && (
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<FieldType>
+              label="Confirmar contraseña"
+              name="confirmPassword"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es requerido",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("The two passwords do not match!")
+                    );
+                  },
+                }),
+              ]}>
+              <Input.Password />
+            </Form.Item>
+          </Col>
+        )}
+        {props.entity && (
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<FieldType>
+              label="Nueva contraseña"
+              name="newPassword"
+              rules={[{ required: false && !isDraft }]}>
+              <Input.Password />
+            </Form.Item>
+          </Col>
+        )}
         <Col xs={24} md={12} lg={8} xl={6}>
           <Form.Item<FieldType>
             label="Perfil"
             name="profileId"
             rules={[
-              { required: true && !isDraft, message: "Este campo es requerido" },
+              {
+                required: true && !isDraft,
+                message: "Este campo es requerido",
+              },
             ]}>
             <Select
               placeholder="Selecciona un perfil"
@@ -176,7 +194,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
             label="Departamento"
             name="departmentId"
             rules={[
-              { required: true && !isDraft, message: "Este campo es requerido" },
+              {
+                required: true && !isDraft,
+                message: "Este campo es requerido",
+              },
             ]}>
             <Select
               placeholder="Selecciona un departamento"
