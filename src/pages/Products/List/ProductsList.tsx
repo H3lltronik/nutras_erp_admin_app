@@ -33,7 +33,7 @@ const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
 export const ProductsList: React.FC<ProductsListProps> = (props) => {
   if (!props.mode) props.mode = "full";
   const navigate = useNavigate();
-  const { nameSearch, codeSearch, providerSearch, getDraftMode, getPublished } =
+  const { nameSearch, codeSearch, providerSearch, getProductTypes, getKosher, getAllergen, getDraftMode, getPublished } =
     useProductsListPageStore();
 
   const fetchData = (params: object) =>
@@ -61,6 +61,8 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     }
     navigate(url);
   };
+
+  console.log("props.mode", getKosher());
 
   return (
     <>
@@ -134,6 +136,9 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                 nameSearch,
                 codeSearch,
                 providerSearch,
+                productTypes: getProductTypes(),
+                kosher: getKosher(),
+                allergen: getAllergen(),
                 draftMode: getDraftMode(),
                 published: getPublished(),
               }}

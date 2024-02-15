@@ -7,6 +7,9 @@ export const productListColumns: ColumnsType<Product> = [
     dataIndex: "code",
     key: "code",
     sorter: (a, b) => (a.code && b.code ? alphabetically(a.code, b.code) : 0),
+    render(_value, record) {
+      return `${record.productType?.name}-${record.code}`;
+    },
     showSorterTooltip: false,
   },
   {
