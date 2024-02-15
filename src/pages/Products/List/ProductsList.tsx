@@ -37,8 +37,10 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     nameSearch,
     codeSearch,
     providerSearch,
+    getProductTypes,
+    getKosher,
+    getAllergen,
     getDraftMode,
-    getDeleted,
     getPublished,
   } = useProductsListPageStore();
 
@@ -67,6 +69,8 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     }
     navigate(url);
   };
+
+  console.log("props.mode", getKosher());
 
   return (
     <>
@@ -114,7 +118,9 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
               }}
               editActionConditionEval={(record) => {
                 const product = record as Product;
-                return product.deletedAt === null || isSelectionOnly(props.mode);
+                return (
+                  product.deletedAt === null || isSelectionOnly(props.mode)
+                );
               }}
               rowClassName={(_record) => {
                 const record = _record as Product;
@@ -148,6 +154,9 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                 nameSearch,
                 codeSearch,
                 providerSearch,
+                productTypes: getProductTypes(),
+                kosher: getKosher(),
+                allergen: getAllergen(),
                 draftMode: getDraftMode(),
                 published: getPublished(),
                 deleted: getDeleted(),

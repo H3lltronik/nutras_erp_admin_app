@@ -11,6 +11,7 @@ type ResponseWithData<T> = Data<T> | APIError;
 
 interface GenericSelectProps<T> extends AntSelectProps<string> {
   placeholder?: string;
+  multiple?: boolean;
   fetcher: () => Promise<ResponseWithData<T>>;
   queryKey: QueryKey;
   optionKey: keyof T;
@@ -23,6 +24,7 @@ interface GenericSelectProps<T> extends AntSelectProps<string> {
 
 export const GenericSelect = <T,>({
   placeholder,
+  multiple,
   fetcher,
   optionKey,
   optionLabel,
@@ -54,6 +56,7 @@ export const GenericSelect = <T,>({
     <>
       <div className="flex gap-1">
         <AntSelect
+          className="flex-grow"
           showSearch
           defaultValue={defaultValue}
           disabled={fixedDefaultValue && defaultValue ? true : false}
@@ -63,6 +66,7 @@ export const GenericSelect = <T,>({
             option?.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
           allowClear
+          mode={multiple ? "multiple" : undefined}
           loading={isLoading}
           {...restProps}>
           {Array.isArray(data) &&
