@@ -42,6 +42,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     getAllergen,
     getDraftMode,
     getPublished,
+    getDeleted,
   } = useProductsListPageStore();
 
   const fetchData = (params: object) =>
