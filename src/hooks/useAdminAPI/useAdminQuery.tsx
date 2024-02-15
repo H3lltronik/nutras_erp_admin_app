@@ -26,8 +26,10 @@ const useAdminQuery = <T extends Endpoint>(
   }
 
   const { queryKey, apiCall } = endpoints[endpoint];
-
-  return useQuery([queryKey], () => apiCall(params), {
+  
+  return useQuery({
+    queryKey,
+    queryFn: () => apiCall(params),
     enabled: !_loading,
     ...queryOptions,
   });

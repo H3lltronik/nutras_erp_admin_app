@@ -2,7 +2,7 @@ import { Breadcrumb } from "antd";
 import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { useNavigate } from "react-router-dom";
 
-export const ProductsManageBreadcrumb = () => {
+export const PPManageBreadcrumb = () => {
   const navigate = useNavigate();
 
   const productsManageBreadcrumb: ItemType[] = [
@@ -10,16 +10,16 @@ export const ProductsManageBreadcrumb = () => {
       title: "Catálogo de productos",
     },
     {
-      title: "Catálogo de insumos",
+      title: "Catálogo PP",
       className:
         "cursor-pointer hover:text-blue-500 transition-all duration-300",
       onClick: () => {
-        navigate("/admin/products/insumos");
+        navigate("/admin/products/pp");
       },
-      href: "/admin/products/insumos",
+      href: "/admin/products/pp",
     },
     {
-      title: "Crear - Editar producto",
+      title: "Crear - Editar producto PP",
     },
   ];
   return (
@@ -27,13 +27,13 @@ export const ProductsManageBreadcrumb = () => {
   );
 };
 
-export const ProductsListBreadcrumb = () => {
+export const PPListBreadcrumb = () => {
   const productsListBreadcrumb: ItemType[] = [
     {
       title: "Catálogo de productos",
     },
     {
-      title: "Catálogo de insumos",
+      title: "Catálogo PP",
     },
   ];
   return (

@@ -7,10 +7,10 @@ export const ProvidersManageBreadcrumb = () => {
 
   const providersManageBreadcrumb: ItemType[] = [
     {
-      title: "Seguridad",
+      title: "Compras",
     },
     {
-      title: "Proveedors",
+      title: "Proveedores",
       className:
         "cursor-pointer hover:text-blue-500 transition-all duration-300",
       onClick: () => {
@@ -33,10 +33,10 @@ export const ProvidersManageBreadcrumb = () => {
 export const ProvidersListBreadcrumb = () => {
   const providersListBreadcrumb: ItemType[] = [
     {
-      title: "Administración",
+      title: "Compras",
     },
     {
-      title: "Proveedors",
+      title: "Proveedores",
     },
   ];
   return (

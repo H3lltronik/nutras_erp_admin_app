@@ -23,9 +23,13 @@ export const PurchaseOrdersManage: React.FC = () => {
     unknown,
     unknown,
     { id: string; data: PurchaseOrder }
-  >(["updatePurchaseOrder"], (variables) =>
-    PurchaseOrderAPI.updatePurchaseOrder(variables.id, variables.data)
-  );
+  >({
+    mutationFn: (variables) =>
+      PurchaseOrderAPI.updatePurchaseOrder(variables.id, variables.data),
+    onSuccess: () => {
+      showToast("Orden de compra actualizada correctamente", "success");
+    },
+  });
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -34,11 +38,12 @@ export const PurchaseOrdersManage: React.FC = () => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetPurchaseOrderResponse | APIError>(
-    ["purchaseOrder", { id }],
-    () => PurchaseOrderAPI.getPurchaseOrder(id as string),
-    { enabled: !!id, refetchOnWindowFocus: false }
-  );
+  } = useQuery<GetPurchaseOrderResponse | APIError>({
+    queryKey: ["purchaseOrder", { id }],
+    queryFn: () => PurchaseOrderAPI.getPurchaseOrder(id as string),
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
 
   const loading = useMemo(
     () => pageLoading || isFetching || (isLoading && !!id),
@@ -46,10 +51,11 @@ export const PurchaseOrdersManage: React.FC = () => {
   );
 
   const submitForm = async (isDraft = false) => {
-    const purchaseOrderFormData = (await purchaseOrderFormRef.current?.getFormData({
-      draftMode: isDraft,
-      user,
-    })) as CreatePurchaseOrderRequest;
+    const purchaseOrderFormData =
+      (await purchaseOrderFormRef.current?.getFormData({
+        draftMode: isDraft,
+        user,
+      })) as CreatePurchaseOrderRequest;
     console.log("purchaseOrderFormData", purchaseOrderFormData);
 
     setPageLoading(true);
@@ -69,7 +75,9 @@ export const PurchaseOrdersManage: React.FC = () => {
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await PurchaseOrderAPI.createPurchaseOrder(purchaseOrderFormData);
+        result = await PurchaseOrderAPI.createPurchaseOrder(
+          purchaseOrderFormData
+        );
         message = "purchaseOrdero creado correctamente";
       }
 

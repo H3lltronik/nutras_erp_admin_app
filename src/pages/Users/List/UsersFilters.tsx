@@ -18,11 +18,19 @@ export default function UsersFilters() {
 
   const { data: profilesData, isLoading: loadingProfiles } = useQuery<
     GetProfilesResponse | APIError
-  >(["profiles"], () => ProfileAPI.getProfiles());
+  >({
+    queryKey: ["profiles"],
+    queryFn: () => ProfileAPI.getProfiles(),
+    refetchOnWindowFocus: false,
+  });
 
   const { data: departmentsData, isLoading: loadingDepartments } = useQuery<
     GetDepartmentsResponse | APIError
-  >(["departments"], () => DepartmentsAPI.getDepartments());
+  >({
+    queryKey: ["departments"],
+    queryFn: () => DepartmentsAPI.getDepartments(),
+    refetchOnWindowFocus: false,
+  });
 
   const profiles = useMemo(() => {
     if (loadingProfiles || !profilesData) return [];

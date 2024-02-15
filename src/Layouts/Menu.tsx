@@ -41,9 +41,9 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Catalogo de productos", "6", null, [
+  getItem("Catálogo de productos", "6", null, [
     getItem(
-      "Catalogo de insumos",
+      "Catálogo de insumos",
       "/admin/products/insumos",
       <CodeSandboxOutlined />,
       [],

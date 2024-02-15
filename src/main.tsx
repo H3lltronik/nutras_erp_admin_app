@@ -27,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </Helmet>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   </React.StrictMode>
 );

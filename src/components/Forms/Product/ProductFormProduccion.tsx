@@ -1,4 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { Col, Form, Input, Row } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import {
   forwardRef,
   useEffect,
@@ -7,7 +9,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { MeasurementAPI, ProductPresentationAPI, ProductTypesAPI } from "../../../api";
+import {
+  MeasurementAPI,
+  PPProductTypesAPI,
+  ProductPresentationAPI,
+  ProductTypesAPI,
+} from "../../../api";
 import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
@@ -44,6 +51,29 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
+    const formProductType = Form.useWatch("productTypeId", form);
+    const ppCategoryId = Form.useWatch("ppCategoryId", form);
+
+    const { data: ppCategoriesData, isLoading: loadingPPCategories } = useQuery<
+      GetPPProductTypesResponse | APIError
+    >({
+      queryKey: ["ppCategories"],
+      queryFn: async () => {
+        const result = await PPProductTypesAPI.getProductTypes();
+        if ("data" in result) {
+          return result.data;
+        }
+        return [];
+      },
+      refetchOnWindowFocus: false,
+    });
+
+    let selectedPPCategory = null;
+    if (ppCategoryId && ppCategoriesData) {
+      selectedPPCategory = ppCategoriesData.find(
+        (category) => category.id === ppCategoryId
+      );
+    }
 
     useImperativeHandle(
       ref,
@@ -77,7 +107,16 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
 
-      if (defaultValuesFromUrl) form.setFieldsValue(defaultValuesFromUrl);
+      if (defaultValuesFromUrl) {
+        form.setFieldsValue(defaultValuesFromUrl);
+
+        if (
+          defaultValuesFromUrl.productType?.id ==
+          import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID
+        ) {
+          // form.setFieldsValue({ isKosher: true });
+        }
+      }
     }, [form, _props.entity, defaultValuesFromUrl]);
 
     return (
@@ -94,7 +133,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={3}>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
@@ -105,7 +144,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={disabled}
+                disabled={true}
                 fetcher={() =>
                   ProductTypesAPI.getProductTypes({
                     department: import.meta.env
@@ -119,6 +158,28 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
+          {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
+            <Col xs={24} md={12} lg={8} xl={6}>
+              <Form.Item<Product>
+                label="Categoria de PP"
+                name="ppCategoryId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Este campo es obligatorio",
+                  },
+                ]}>
+                <GenericSelect
+                  disabled={disabled}
+                  fetcher={() => PPProductTypesAPI.getProductTypes()}
+                  placeholder="Selecciona una categoria de PP"
+                  optionLabel="mask"
+                  optionKey={"id"}
+                  queryKey={["ppCategories"]}
+                />
+              </Form.Item>
+            </Col>
+          )}
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Nombre Común"
@@ -132,7 +193,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={5}>
             <Form.Item<Product>
               label="Codigo"
               name="code"
@@ -142,7 +203,11 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                addonBefore={selectedPPCategory?.prefix}
+                addonAfter={selectedPPCategory?.suffix}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -179,7 +244,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
-          <Form.Item<Product>
+            <Form.Item<Product>
               label="Presentación"
               name="presentation"
               rules={[
@@ -189,9 +254,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                fetcher={() => 
-                  ProductPresentationAPI.getProductPresentations()
-                }
+                fetcher={() => ProductPresentationAPI.getProductPresentations()}
                 placeholder="Selecciona una presentación"
                 optionLabel="name"
                 optionKey={"name"}
@@ -238,20 +301,92 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Descripción del proveedor"
+              name="providerDescription"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 150,
+                  message: "No puede exceder los 150 caracteres",
+                },
+              ]}>
+              <TextArea
+                disabled={disabled}
+                style={{ resize: "none" }}
+                maxLength={150}
+                placeholder="Descripción del proveedor"
+                rows={4}></TextArea>
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Notas del producto"
+              name="notes"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                },
+              ]}>
+              <TextArea
+                disabled={disabled}
+                style={{ resize: "none" }}
+                maxLength={300}
+                placeholder="Descripción del proveedor"
+                rows={4}></TextArea>
+            </Form.Item>
+          </Col>
         </Row>
-
-        {isKosher || _props.entity?.isKosher && (
-          <Row
-            gutter={16}
-            className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
-            <Col span={24}>
-              <ProductKosherForm
-                ref={productKosherFormRef}
-                entity={_props.entity?.isKosher ? _props.entity.kosherDetails : null}
-                mode={_props.formMode} />
-            </Col>
-          </Row>
+        {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Product>
+              label="Notas de PP"
+              name="ppNotes"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                },
+              ]}>
+              <TextArea
+                disabled={disabled}
+                style={{ resize: "none" }}
+                maxLength={150}
+                placeholder="Descripción del proveedor"
+                rows={4}></TextArea>
+            </Form.Item>
+          </Col>
         )}
+
+        {isKosher ||
+          (_props.entity?.isKosher && (
+            <Row
+              gutter={16}
+              className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
+              <Col span={24}>
+                <ProductKosherForm
+                  ref={productKosherFormRef}
+                  entity={
+                    _props.entity?.isKosher ? _props.entity.kosherDetails : null
+                  }
+                  mode={_props.formMode}
+                />
+              </Col>
+            </Row>
+          ))}
       </Form>
     );
   }

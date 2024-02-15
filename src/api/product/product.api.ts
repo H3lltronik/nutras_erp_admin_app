@@ -10,6 +10,9 @@ export type GetProductsParams = QueryParams &
     providerSearch?: string;
     type?: string;
     department?: string;
+    kosher?: string;
+    allergen?: string;
+    productTypes?: string[];
   };
 
 class BaseProductAPI extends BaseAPI {

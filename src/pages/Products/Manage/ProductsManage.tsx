@@ -13,6 +13,8 @@ import { useAbilities } from "../../../hooks/roles/useAbilities";
 import useAuth from "../../../hooks/useAuth";
 import { cancelModal, showToast } from "../../../lib/notify";
 import { ProductsManageBreadcrumb } from "../Common/Breadcrums";
+import { PPManageBreadcrumb } from "../Common/PPBreadcrums";
+import { PTManageBreadcrumb } from "../Common/PTBreadcrums";
 import {
   ProductFormResult,
   ProductToPost,
@@ -32,9 +34,13 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
   const productFormRef = useRef<ProductFormHandle | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageLoading, setPageLoading] = React.useState<boolean>(false);
-  const { mutateAsync } = useMutation((data: ProductToPost) =>
-    ProductAPI.createProduct<ProductToPost>(data)
-  );
+  const { mutateAsync } = useMutation({
+    mutationFn: (data: ProductToPost) =>
+      ProductAPI.createProduct<ProductToPost>(data),
+    onSuccess: () => {
+      showToast("Producto creado correctamente", "success");
+    },
+  });
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
@@ -44,11 +50,12 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
     data: entity,
     isFetching,
     isLoading,
-  } = useQuery<GetProductResponse | APIError>(
-    ["product", { id }],
-    () => ProductAPI.getProduct(id as string),
-    { enabled: !!id, refetchOnWindowFocus: false }
-  );
+  } = useQuery<GetProductResponse | APIError>({
+    queryKey: ["product", { id }],
+    queryFn: () => ProductAPI.getProduct(id as string),
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
 
   const loading = useMemo(
     () => pageLoading || isFetching || (isLoading && !!id),
@@ -111,7 +118,13 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
   return (
     <>
       <Content className="relative mx-4">
-        <ProductsManageBreadcrumb />
+        {props.formType == "produccion" ? (
+          <PPManageBreadcrumb />
+        ) : props.formType == "compras" ? (
+          <PTManageBreadcrumb />
+        ) : (
+          <ProductsManageBreadcrumb />
+        )}
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
             {props.formType === "compras" &&
@@ -120,7 +133,7 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
               roles.Product.entity
             ) ? (
               <>
-                <h2 className="text-2xl">Catalogo de insumos</h2>
+                <h2 className="text-2xl">Catálogo de insumos</h2>
                 <hr className="mt-2 mb-5" />
                 <ProductFormCompras
                   formMode={props.formMode}
