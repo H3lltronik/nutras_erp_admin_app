@@ -322,7 +322,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
-              label="Notas del producto"
+              label="Notas"
               name="notes"
               rules={[
                 {
