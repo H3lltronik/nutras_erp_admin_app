@@ -371,7 +371,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "No puede exceder los 300 caracteres",
                 }
               ]}>
-              <TextArea disabled={(!_props.entity && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
+              <TextArea disabled={(!_props.entity && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={300} placeholder="Notas" rows={4}></TextArea>
             </Form.Item>
           </Col>
 

@@ -248,6 +248,8 @@ const router = createBrowserRouter([
           listPath="/admin/products/insumos"
           formType="compras"
           hiddenFields={[
+            "mold",
+            "packaging",
           ]}
           />
       </DefaultLayout>
