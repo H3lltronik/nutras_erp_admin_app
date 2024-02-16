@@ -134,7 +134,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="productTypeId"
               rules={[
                 {
-                  required: true,
+                  required: true && !_props.hiddenFields?.includes('productTypeId'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -172,7 +172,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="commonName"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('commonName'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -194,7 +194,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="description"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('description'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -216,7 +216,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="code"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('code'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -238,7 +238,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="unitId"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('unitId'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -264,7 +264,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="presentation"
               rules={[
                 {
-                  required: true,
+                  required: true && !_props.hiddenFields?.includes('presentation'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -290,7 +290,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="mold"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('mold'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -312,7 +312,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="packaging"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('packaging'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -334,7 +334,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="providerId"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('providerId'),
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -384,7 +384,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="providerDescription"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('providerDescription'),
                   message: "Este campo es obligatorio",
                 },
                 {
@@ -411,7 +411,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               name="notes"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required: true && !isDraft && !_props.hiddenFields?.includes('notes'),
                   message: "Este campo es obligatorio",
                 },
                 {
