@@ -275,6 +275,20 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/admin/providers/inspect/provider/:id?",
+    element: (
+      <DefaultLayout
+        navContent={<ProvidersHeader />}
+        headerTitle={`Inspeccion de proveedor`}>
+        <ProvidersManage
+          formMode="view"
+          formType="produccion"
+          listPath="/admin/products/pp"
+        />
+      </DefaultLayout>
+    ),
+  },
+  {
     path: "/admin/profiles",
     element: (
       <DefaultLayout navContent={<ProfilesHeader />} headerTitle="Perfiles">

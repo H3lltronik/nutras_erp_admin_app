@@ -36,6 +36,10 @@ type ProductsListPageState = {
   published: boolean | undefined;
   setPublished: (value: boolean | undefined) => void;
   getPublished: () => string | undefined;
+
+  deleted: boolean | undefined;
+  setDeleted: (value: boolean | undefined) => void;
+  getDeleted: () => string | undefined;
 };
 
 export const useProductsListPageStore = create<ProductsListPageState>(
@@ -95,6 +99,14 @@ export const useProductsListPageStore = create<ProductsListPageState>(
       const published = get().published;
       if (published === undefined) return undefined;
       return published ? "true" : "false";
+    },
+
+    deleted: undefined,
+    setDeleted: (value: boolean | undefined) => set({ deleted: value }),
+    getDeleted: () => {
+      const deleted = get().deleted;
+      if (deleted === undefined) return undefined;
+      return deleted ? "true" : "false";
     },
 
     loading: false,

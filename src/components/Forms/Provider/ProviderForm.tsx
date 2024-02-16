@@ -1,9 +1,11 @@
 import { Col, Form, Image, Input, Row, Select } from "antd";
-const { Option } = Select;
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import InputMask from "react-input-mask";
-import { flags } from '../../../assets/flags/index.ts';
-import { banks, countriesWithLada } from "../Common/Constants"
+import { flags } from "../../../assets/flags/index.ts";
+import { useFormModeChecker } from "../../../lib/form/disabledChecked.tsx";
+import { banks, countriesWithLada } from "../Common/Constants";
+import TextArea from "antd/es/input/TextArea";
+const { Option } = Select;
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -12,7 +14,6 @@ const onFinish = (values: unknown) => {
 const onFinishFailed = (errorInfo: unknown) => {
   console.log("Failed:", errorInfo);
 };
-
 
 interface GetFormData {
   draftMode: boolean;
@@ -25,13 +26,17 @@ export type ProviderFormHandle = {
 type ProviderFormProps = {
   entity?: Provider | null;
   inModal?: boolean;
+  formMode?: FormMode;
 };
 
 const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
-    const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
+    const [selectedCountry, setSelectedCountry] = useState<
+      string | undefined
+    >();
+    const { disabled } = useFormModeChecker({ formMode: _props.formMode });
 
     useImperativeHandle(
       ref,
@@ -57,10 +62,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
       if (!/[0-9]/.test(event.key)) {
         event.preventDefault();
       }
-    }
+    };
     var writeOnlyUpperCase = (event: any) => {
       event.target.value = event.target.value.toUpperCase();
-    }
+    };
 
     return (
       <Form
@@ -76,7 +81,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider>
               label="Código"
               name="code"
@@ -93,12 +101,15 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                 {
                   pattern: /^[A-Za-z0-9]+$/,
                   message: "Solo se aceptan letras y números",
-                }
+                },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider>
               label="Nombre"
               name="name"
@@ -113,33 +124,25 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El nombre no puede exceder los 50 caracteres",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
-            <Form.Item<Provider>
-              label="RFC"
-              name="RFC"
-              rules={[
-                { required: true, message: "Este campo es obligatorio" },
-                {
-                  min: 10,
-                  message: "El RFC debe tener al menos 10 caracteres",
-                },
-                {
-                  max: 14,
-                  message: "El RFC no puede exceder los 14 caracteres",
-                },
-              ]}>
-              <Input onKeyUp={writeOnlyUpperCase} />
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
+            <Form.Item<Provider> label="RFC" name="RFC">
+              <Input disabled={disabled} onKeyUp={writeOnlyUpperCase} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider>
               label="Razon Social"
               name="businessName"
               rules={[
-                { required: true, message: "Este campo es obligatorio" },
                 {
                   min: 3,
                   message: "La razón social debe tener al menos 3 caracteres",
@@ -149,10 +152,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "La razón social no puede exceder los 50 caracteres",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8}}>
+          <Col {...(_props.inModal ? { span: 12 } : { xs: 24, md: 12, lg: 8 })}>
             <Form.Item<Provider>
               label="Servicio (Servicio que da el proveedor)"
               name="service"
@@ -167,56 +170,63 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El servicio no puede exceder los 50 caracteres",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8}}>
+          <Col {...(_props.inModal ? { span: 12 } : { xs: 24, md: 12, lg: 8 })}>
             <Row gutter={8}>
               <Col>
-                <Form.Item<Provider>
-                  label="Lada"
-                  name="lada"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Porfavor selecciona una lada",
-                    },
-                  ]}
-                >
+                <Form.Item<Provider> label="Lada" name="lada">
                   <Select
-                    style={{minWidth: 90}}
-                    onChange={(value) => setSelectedCountry(value)}
-                  >
+                    disabled={disabled}
+                    style={{ minWidth: 90 }}
+                    onChange={(value) => setSelectedCountry(value)}>
                     {countriesWithLada.map((country) => {
                       return (
                         <Option key={country.name} value={country.lada}>
-                          <Image src={flags[country.img]} width={24}/>
+                          <Image src={flags[country.img]} width={24} />
                           {` +${country.lada}`}
                         </Option>
-                      )
+                      );
                     })}
                   </Select>
                 </Form.Item>
               </Col>
-              <Col style={{flex: 1}}>
+              <Col style={{ flex: 1 }}>
                 <Form.Item<Provider>
                   label="Teléfono"
                   name="phone"
                   rules={[
-                    { pattern: /^\d+\-\d+\-\d+$/, message: "Solo se aceptan números" },
+                    {
+                      pattern: /^\d+\-\d+\-\d+$/,
+                      message: "Solo se aceptan números",
+                    },
                     {
                       min: 8,
                       message: "El teléfono debe tener entre 8 y 12 dígitos",
                     },
                   ]}>
-                    <InputMask mask="999-999-999999" maskChar={null}>
-                      {(inputProps: any) => <Input {...inputProps} maxLength={14} onKeyUp={writeOnlyNumbers} />}
-                    </InputMask>
+                  <InputMask
+                    disabled={disabled}
+                    mask="999-999-999999"
+                    maskChar={null}>
+                    {(inputProps: any) => (
+                      <Input
+                        {...inputProps}
+                        disabled={disabled}
+                        maxLength={14}
+                        onKeyUp={writeOnlyNumbers}
+                      />
+                    )}
+                  </InputMask>
                 </Form.Item>
               </Col>
             </Row>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider>
               label="Correo"
               name="email"
@@ -226,10 +236,13 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El formato del correo no es válido",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider>
               label="Correo de pagos"
               name="paymentEmail"
@@ -239,20 +252,18 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El formato del correo no es válido",
                 },
               ]}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
-            <Form.Item<Provider>
-              label="Banco"
-              name="bank"
-              rules={[
-                {
-                  required: true,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Select style={{ width: '100%' }} placeholder="Selecciona un banco">
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
+            <Form.Item<Provider> label="Banco" name="bank">
+              <Select
+                disabled={disabled}
+                style={{ width: "100%" }}
+                placeholder="Selecciona un banco">
                 {banks.map((bank) => (
                   <Option key={bank} value={bank}>
                     {bank}
@@ -261,21 +272,22 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               </Select>
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
-            <Form.Item<Provider>
-              label="Cuenta CLABE"
-              name="clabeAccount"
-              rules={[
-                { required: true, message: "Este campo es obligatorio" },
-                {
-                  len: 18,
-                  message: "La cuenta CLABE debe tener 18 dígitos exactos",
-                },
-              ]}>
-              <Input maxLength={18} onKeyUp={writeOnlyNumbers} />
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
+            <Form.Item<Provider> label="Cuenta CLABE" name="clabeAccount">
+              <Input
+                disabled={disabled}
+                maxLength={18}
+                onKeyUp={writeOnlyNumbers}
+              />
             </Form.Item>
           </Col>
-          <Col {..._props.inModal ? {span: 12} : {xs: 24, md: 12, lg: 8, xl: 6}}>
+          <Col
+            {...(_props.inModal
+              ? { span: 12 }
+              : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider>
               label="Número de cuenta"
               name="accountNumber"
@@ -291,7 +303,33 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                     "El número de cuenta no puede exceder los 20 caracteres",
                 },
               ]}>
-              <Input maxLength={20} onKeyPress={writeOnlyNumbers} />
+              <Input
+                disabled={disabled}
+                maxLength={20}
+                onKeyPress={writeOnlyNumbers}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}>
+            <Form.Item<Provider>
+              label="Notas de proveedor"
+              name="notes"
+              rules={[
+                {
+                  required: true && !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  max: 300,
+                  message: "No puede exceder los 300 caracteres",
+                },
+              ]}>
+              <TextArea
+                disabled={disabled}
+                style={{ resize: "none" }}
+                maxLength={300}
+                placeholder="Notas de proveedor"
+                rows={4}></TextArea>
             </Form.Item>
           </Col>
         </Row>
