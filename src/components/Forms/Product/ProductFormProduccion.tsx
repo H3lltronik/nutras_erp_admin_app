@@ -301,7 +301,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          {/* <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
               label="Notas"
               name="notes"
@@ -322,7 +322,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 placeholder="Notas"
                 rows={4}></TextArea>
             </Form.Item>
-          </Col>
+          </Col> */}
         </Row>
         {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
           <Col xs={24} md={12} lg={8} xl={6}>
