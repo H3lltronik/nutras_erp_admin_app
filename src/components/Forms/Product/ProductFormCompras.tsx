@@ -156,7 +156,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   else form.setFieldValue("code", null);
                 }}
                 placeholder="Selecciona un tipo de producto"
-                optionLabel="name"
+                optionLabel="description"
                 optionKey={"id"}
                 queryKey={["productTypes"]}
               />
@@ -178,7 +178,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 placeholder="Nombre común"
               />
@@ -200,7 +200,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 placeholder="Descripción del producto"
               />
@@ -222,7 +222,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 placeholder="Código"
                 addonBefore={getCodeAddon()}
@@ -244,7 +244,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <GenericSelect
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 fetcher={() => MeasurementAPI.getMeasurements()}
                 placeholder="Selecciona una unidad de medida"
@@ -270,7 +270,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <GenericSelect
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 fetcher={() => ProductPresentationAPI.getProductPresentations()}
                 placeholder="Selecciona una presentación"
@@ -296,7 +296,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 placeholder="Molde"
               />
@@ -318,7 +318,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 placeholder="Empaque"
               />
@@ -340,7 +340,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <GenericSelect
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 fetcher={() => ProvidersAPI.getProviders()}
                 placeholder="Selecciona un proveedor"
@@ -369,7 +369,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 placeholder="Cantidad x unidad"
               />
@@ -394,7 +394,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <TextArea
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 style={{ resize: "none" }}
                 maxLength={150}
@@ -421,11 +421,11 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <TextArea
                 disabled={
-                  (!_props.entity?.id && !selectedProductType) || disabled
+                  (!_props.entity && !selectedProductType) || disabled
                 }
                 style={{ resize: "none" }}
                 maxLength={300}
-                placeholder="Descripción del proveedor"
+                placeholder="Notas"
                 rows={4}></TextArea>
             </Form.Item>
           </Col>

@@ -301,31 +301,9 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input disabled={disabled} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          {/* <Col xs={24} md={12} lg={8} xl={6}>
             <Form.Item<Product>
-              label="Descripción del proveedor"
-              name="providerDescription"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-                {
-                  max: 150,
-                  message: "No puede exceder los 150 caracteres",
-                },
-              ]}>
-              <TextArea
-                disabled={disabled}
-                style={{ resize: "none" }}
-                maxLength={150}
-                placeholder="Descripción del proveedor"
-                rows={4}></TextArea>
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
-            <Form.Item<Product>
-              label="Notas del producto"
+              label="Notas"
               name="notes"
               rules={[
                 {
@@ -341,10 +319,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 disabled={disabled}
                 style={{ resize: "none" }}
                 maxLength={300}
-                placeholder="Descripción del proveedor"
+                placeholder="Notas"
                 rows={4}></TextArea>
             </Form.Item>
-          </Col>
+          </Col> */}
         </Row>
         {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
           <Col xs={24} md={12} lg={8} xl={6}>
