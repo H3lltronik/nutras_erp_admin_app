@@ -201,6 +201,12 @@ const router = createBrowserRouter([
           defaultFilters={{
             type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
           }}
+          disabledFilters={{
+            kosher: true,
+            allergen: true,
+            provider: true,
+            productTypes: true,
+          }}
         />
       </DefaultLayout>
     ),
