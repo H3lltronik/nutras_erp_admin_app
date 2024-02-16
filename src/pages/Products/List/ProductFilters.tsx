@@ -5,7 +5,7 @@ import { GetProductsParams } from "../../../api/product/product.api";
 import { entityStatuses } from "../../../lib/entity.utils";
 import { useProductsListPageStore } from "./products_list_page.store";
 import { GenericSelect } from "../../../components/Forms/Common/GenericSelect";
-import { ProductTypesAPI } from "../../../api";
+import { ProductPresentationAPI, ProductTypesAPI } from "../../../api";
 
 export type AvailableProductFilters = {
   name?: boolean;
@@ -15,6 +15,7 @@ export type AvailableProductFilters = {
   kosher?: boolean;
   allergen?: boolean;
   productTypes?: boolean;
+  presentations?: boolean;
 };
 type ProductFiltersProps = {
   disabledFilters?: AvailableProductFilters;
@@ -34,6 +35,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setKosher,
     setAllergen,
     setProductTypes,
+    setPresentations,
   } = useProductsListPageStore((state) => state);
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setKosher,
     setAllergen,
     setProductTypes,
+    setPresentations,
     setProviderSearch,
     setPublished,
   ]);
@@ -80,6 +83,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
 
   const handleProductTypesChange = (value: string | string[]) => {
     if(Array.isArray(value)) setProductTypes(value);
+  }
+
+  const handlePresentationsChange = (value: string | string[]) => {
+    if(Array.isArray(value)) setPresentations(value);
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -167,6 +174,24 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             </div>
           )
         }
+
+        <div style={{flexBasis: '200px'}}
+          className={
+            `flex flex-col ${disabledFilters.presentations ? 'hidden' : ''}`
+          }>
+          <small>Busqueda por presentación</small>
+          <GenericSelect
+            fetcher={() =>
+              ProductPresentationAPI.getProductPresentations()
+            }
+            multiple={true}
+            onChange={handlePresentationsChange}
+            placeholder="Busqueda..."
+            optionLabel="name"
+            optionKey={"name"}
+            queryKey={["productPresentations"]}
+          />
+        </div>
 
         {
           !disabledFilters.kosher && (

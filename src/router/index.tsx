@@ -219,6 +219,9 @@ const router = createBrowserRouter([
           defaultFilters={{
             department: import.meta.env.VITE_DBVAL_DEPARTMENT_COMPRAS_ID,
           }}
+          disabledFilters={{
+            presentations: true,
+          }}
         />
       </DefaultLayout>
     ),
