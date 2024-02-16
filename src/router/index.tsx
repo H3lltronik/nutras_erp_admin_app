@@ -117,7 +117,12 @@ const router = createBrowserRouter([
     path: "/admin/products/manage/pp/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <ProductsManage formType="produccion" listPath="/admin/products/pp" />
+        <ProductsManage
+          formType="produccion"
+          listPath="/admin/products/pp"
+          hiddenFields={[
+          ]}
+          />
       </DefaultLayout>
     ),
   },
@@ -125,7 +130,12 @@ const router = createBrowserRouter([
     path: "/admin/products/manage/pt/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <ProductsManage formType="produccion" listPath="/admin/products/pt" />
+        <ProductsManage
+          formType="produccion"
+          listPath="/admin/products/pt"
+          hiddenFields={[
+          ]}
+          />
       </DefaultLayout>
     ),
   },
@@ -231,7 +241,12 @@ const router = createBrowserRouter([
     path: "/admin/products/insumos/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos (INSUMOS)">
-        <ProductsManage listPath="/admin/products/insumos" formType="compras" />
+        <ProductsManage
+          listPath="/admin/products/insumos"
+          formType="compras"
+          hiddenFields={[
+          ]}
+          />
       </DefaultLayout>
     ),
   },
