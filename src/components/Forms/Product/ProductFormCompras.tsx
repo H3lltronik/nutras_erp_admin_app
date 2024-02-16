@@ -425,7 +425,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 }
                 style={{ resize: "none" }}
                 maxLength={300}
-                placeholder="Descripción del proveedor"
+                placeholder="Notas"
                 rows={4}></TextArea>
             </Form.Item>
           </Col>
