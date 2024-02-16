@@ -125,6 +125,11 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
         ) : (
           <ProductsManageBreadcrumb />
         )}
+        {entity?.deletedAt && (
+          <div className="w-full py-1 bg-red-500 text-center text-white">
+            Cancelado
+          </div>
+        )}
         <div className="p-[24px] bg-white">
           <section className="max-w-[1500px]">
             {props.formType === "compras" &&
