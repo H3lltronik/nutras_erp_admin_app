@@ -143,6 +143,12 @@ const router = createBrowserRouter([
             'isKosher',
             'allergen'
           ]}
+          disabledFilters={{
+            kosher: true,
+            allergen: true,
+            provider: true,
+            productTypes: true,
+          }}
           buildNewProductPath={({ id }) =>
             jsonToUrlWithGetKey(
               `/admin/products/manage/pp/${id}`,

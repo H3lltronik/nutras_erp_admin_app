@@ -107,42 +107,52 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
   return (
     <section className="flex flex-wrap items-center pb-2 gap-3">
       <>
-        <div className="flex flex-col">
-          <small>Busqueda por nombre</small>
-          <Input
-            disabled={disabledFilters.name}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleNameChange}
-            allowClear
-          />
-        </div>
+        {
+          !disabledFilters.name && (
+            <div className="flex flex-col">
+              <small>Busqueda por nombre</small>
+              <Input
+                disabled={disabledFilters.name}
+                className="w-40"
+                placeholder="Busqueda..."
+                onChange={handleNameChange}
+                allowClear
+              />
+            </div>
+          )
+        }
 
-        <div className="flex flex-col">
-          <small>Busqueda por codigo</small>
-          <Input
-            disabled={disabledFilters.code}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleCodeChange}
-            allowClear
-          />
-        </div>
+        {!disabledFilters.code && (
+          <div className="flex flex-col">
+            <small>Busqueda por codigo</small>
+            <Input
+              disabled={disabledFilters.code}
+              className="w-40"
+              placeholder="Busqueda..."
+              onChange={handleCodeChange}
+              allowClear
+            />
+          </div>
+        )}
 
-        <div className="flex flex-col">
-          <small>Busqueda por proveedor</small>
-          <Input
-            disabled={disabledFilters.provider}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleProviderChange}
-            allowClear
-          />
-        </div>
+        {!disabledFilters.provider && (
+          <div className="flex flex-col">
+            <small>Busqueda por proveedor</small>
+            <Input
+              disabled={disabledFilters.provider}
+              className="w-40"
+              placeholder="Busqueda..."
+              onChange={handleProviderChange}
+              allowClear
+            />
+          </div>
+        )}
 
-        <div className="flex flex-col" style={{flexBasis: '200px'}}>
-          <small>Busqueda por tipo</small>
-          <GenericSelect
+        {
+          !disabledFilters.productTypes && (
+            <div className="flex flex-col" style={{flexBasis: '200px'}}>
+              <small>Busqueda por tipo</small>
+              <GenericSelect
                 disabled={disabledFilters.productTypes}
                 fetcher={() =>
                   ProductTypesAPI.getProductTypes()
@@ -154,51 +164,65 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
                 optionKey={"id"}
                 queryKey={["productTypes"]}
               />
-        </div>
+            </div>
+          )
+        }
 
-        <div className="flex flex-col">
-          <small>Busqueda por kosher</small>
-          <Select
-            disabled={disabledFilters.kosher}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleKosherChange}
-            allowClear>
-            <Select.Option value="true">Sí</Select.Option>
-            <Select.Option value="false">No</Select.Option>
-          </Select>
-        </div>
+        {
+          !disabledFilters.kosher && (
+            <div className="flex flex-col">
+              <small>Busqueda por kosher</small>
+              <Select
+                disabled={disabledFilters.kosher}
+                className="w-40"
+                placeholder="Busqueda..."
+                onChange={handleKosherChange}
+                allowClear>
+                <Select.Option value="true">Sí</Select.Option>
+                <Select.Option value="false">No</Select.Option>
+              </Select>
+            </div>
+          )
+        }
 
-        <div className="flex flex-col">
-          <small>Busqueda por alergeno</small>
-          <Select
-            disabled={disabledFilters.allergen}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleAllergenChange}
-            allowClear>
-            <Select.Option value="true">Sí</Select.Option>
-            <Select.Option value="false">No</Select.Option>
-          </Select>
-        </div>
+        {
+          !disabledFilters.allergen && (
+            <div className="flex flex-col">
+              <small>Busqueda por alergeno</small>
+              <Select
+                disabled={disabledFilters.allergen}
+                className="w-40"
+                placeholder="Busqueda..."
+                onChange={handleAllergenChange}
+                allowClear>
+                <Select.Option value="true">Sí</Select.Option>
+                <Select.Option value="false">No</Select.Option>
+              </Select>
+            </div>
+          )
+        }
 
-        <div className="flex flex-col">
-          <small>Busqueda por status</small>
-          <Select
-            disabled={disabledFilters.status}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleStatusChange}
-            mode="multiple"
-            allowClear>
-            <Select.Option value={entityStatuses.DRAFT}>
-              {entityStatuses.DRAFT}
-            </Select.Option>
-            <Select.Option value={entityStatuses.PUBLISHED}>
-              {entityStatuses.PUBLISHED}
-            </Select.Option>
-          </Select>
-        </div>
+        {
+          !disabledFilters.status && (
+            <div className="flex flex-col">
+              <small>Busqueda por status</small>
+              <Select
+                disabled={disabledFilters.status}
+                className="w-40"
+                placeholder="Busqueda..."
+                onChange={handleStatusChange}
+                mode="multiple"
+                allowClear>
+                <Select.Option value={entityStatuses.DRAFT}>
+                  {entityStatuses.DRAFT}
+                </Select.Option>
+                <Select.Option value={entityStatuses.PUBLISHED}>
+                  {entityStatuses.PUBLISHED}
+                </Select.Option>
+              </Select>
+            </div>
+          )
+        }
       </>
     </section>
   );
