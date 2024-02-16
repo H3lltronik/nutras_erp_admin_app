@@ -36,6 +36,7 @@ export type ProductFormHandle = {
 type ProductFormProps = {
   entity?: Product | null;
   formMode?: FormMode;
+  hiddenFields?: string[];
 };
 
 const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
@@ -114,7 +115,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("productTypeId") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
@@ -146,7 +150,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("commonName") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
@@ -156,11 +163,14 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={(!_props.entity?.id && !selectedProductType) || disabled} placeholder="Nombre común" />
+              <Input disabled={(!_props.entity && !selectedProductType) || disabled} placeholder="Nombre común" />
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("description") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Descripción del producto"
               name="description"
@@ -171,13 +181,16 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 placeholder="Descripción del producto"
               />
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("code") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Código"
               name="code"
@@ -187,10 +200,13 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={(!_props.entity?.id && !selectedProductType) || disabled} placeholder="Código" addonBefore={getCodeAddon()} />
+              <Input disabled={(!_props.entity && !selectedProductType) || disabled} placeholder="Código" addonBefore={getCodeAddon()} />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("unitId") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
@@ -201,7 +217,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 fetcher={() => MeasurementAPI.getMeasurements()}
                 placeholder="Selecciona una unidad de medida"
                 optionLabel="name"
@@ -211,7 +227,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("presentation") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Presentación"
               name="presentation"
@@ -222,7 +241,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 fetcher={() => 
                   ProductPresentationAPI.getProductPresentations()
                 }
@@ -234,7 +253,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("mold") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Molde"
               name="mold"
@@ -245,13 +267,16 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 placeholder="Molde"
               />
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("packaging") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Empaque"
               name="packaging"
@@ -262,13 +287,16 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 placeholder="Empaque"
               />
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("providerId") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Proveedor"
               name="providerId"
@@ -279,7 +307,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 fetcher={() => ProvidersAPI.getProviders()}
                 placeholder="Selecciona un proveedor"
                 optionLabel="name"
@@ -290,7 +318,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("quantityPerUnit") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Cantidad x unidad"
               name="quantityPerUnit"
@@ -300,10 +331,13 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={(!_props.entity?.id && !selectedProductType) || disabled} placeholder="Cantidad x unidad" />
+              <Input disabled={(!_props.entity && !selectedProductType) || disabled} placeholder="Cantidad x unidad" />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("providerDescription") ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Descripción del proveedor"
               name="providerDescription"
@@ -317,12 +351,15 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "No puede exceder los 150 caracteres",
                 }
               ]}>
-              <TextArea disabled={(!_props.entity?.id && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={150} placeholder="Descripción del proveedor" rows={4}></TextArea>
+              <TextArea disabled={(!_props.entity && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={150} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.includes("notes") ? "hidden" : ""
+            }>
             <Form.Item<Product>
-              label="Notas del producto"
+              label="Notas"
               name="notes"
               rules={[
                 {
@@ -334,7 +371,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "No puede exceder los 300 caracteres",
                 }
               ]}>
-              <TextArea disabled={(!_props.entity?.id && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
+              <TextArea disabled={(!_props.entity && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
             </Form.Item>
           </Col>
 

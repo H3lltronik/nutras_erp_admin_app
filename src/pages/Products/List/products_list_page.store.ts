@@ -22,6 +22,10 @@ type ProductsListPageState = {
   setProductTypes: (value: string[]) => void;
   getProductTypes: () => string | undefined;
 
+  presentations: string[];
+  setPresentations: (value: string[]) => void;
+  getPresentations: () => string | undefined;
+
   loading: boolean;
   setLoading: (value: boolean) => void;
 
@@ -71,6 +75,14 @@ export const useProductsListPageStore = create<ProductsListPageState>(
       const productTypes = get().productTypes;
       if (productTypes.length === 0) return undefined;
       return JSON.stringify(productTypes ?? []);
+    },
+
+    presentations: [],
+    setPresentations: (value: string[]) => set({ presentations: value }),
+    getPresentations: () => {
+      const presentations = get().presentations;
+      if (presentations.length === 0) return undefined;
+      return JSON.stringify(presentations ?? []);
     },
 
     draftMode: undefined,
