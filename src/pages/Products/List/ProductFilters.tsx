@@ -16,6 +16,7 @@ export type AvailableProductFilters = {
   kosher?: boolean;
   allergen?: boolean;
   productTypes?: boolean;
+  presentations?: boolean;
 };
 type ProductFiltersProps = {
   disabledFilters?: AvailableProductFilters;
@@ -36,6 +37,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setKosher,
     setAllergen,
     setProductTypes,
+    setPresentations,
   } = useProductsListPageStore((state) => state);
 
   const {
@@ -115,6 +117,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setKosher,
     setAllergen,
     setProductTypes,
+    setPresentations,
     setProviderSearch,
     setPublished,
   ]);

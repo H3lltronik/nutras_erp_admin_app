@@ -28,6 +28,7 @@ type ProductsManageProps = {
   formType: "compras" | "produccion" | "admin";
   listPath: string;
   formMode?: FormMode;
+  hiddenFields?: string[];
 };
 
 export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
@@ -143,6 +144,7 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
                 <ProductFormCompras
                   formMode={props.formMode}
                   ref={productFormRef}
+                  hiddenFields={props.hiddenFields}
                   entity={entityData}
                 />
               </>
