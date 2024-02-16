@@ -1,11 +1,12 @@
 import { Input, Select } from "antd";
 import debounce from "lodash.debounce";
 import { useEffect, useMemo } from "react";
+import { ProductTypesAPI } from "../../../api";
 import { GetProductsParams } from "../../../api/product/product.api";
+import { GenericSelect } from "../../../components/Forms/Common/GenericSelect";
+import useSyncSearchParams from "../../../hooks/useSyncSearchParams";
 import { entityStatuses } from "../../../lib/entity.utils";
 import { useProductsListPageStore } from "./products_list_page.store";
-import { GenericSelect } from "../../../components/Forms/Common/GenericSelect";
-import { ProductTypesAPI } from "../../../api";
 
 export type AvailableProductFilters = {
   name?: boolean;
@@ -36,6 +37,70 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setAllergen,
     setProductTypes,
   } = useProductsListPageStore((state) => state);
+
+  const {
+    nameSearch,
+    codeSearch,
+    providerSearch,
+    draftMode,
+    deleted,
+    published,
+    kosher,
+    allergen,
+    productTypes,
+  } = useProductsListPageStore((state) => state);
+
+  useSyncSearchParams([
+    {
+      key: "name",
+      value: nameSearch,
+      updater: setNameSearch,
+      dataType: "string",
+    },
+    {
+      key: "code",
+      value: codeSearch,
+      updater: setCodeSearch,
+      dataType: "string",
+    },
+    {
+      key: "provider",
+      value: providerSearch,
+      updater: setProviderSearch,
+      dataType: "string",
+    },
+    {
+      key: "draftMode",
+      value: draftMode,
+      updater: setDraftMode,
+      dataType: "boolean",
+    },
+    {
+      key: "deleted",
+      value: deleted,
+      updater: setDeleted,
+      dataType: "boolean",
+    },
+    {
+      key: "published",
+      value: published,
+      updater: setPublished,
+      dataType: "boolean",
+    },
+    { key: "kosher", value: kosher, updater: setKosher, dataType: "boolean" },
+    {
+      key: "allergen",
+      value: allergen,
+      updater: setAllergen,
+      dataType: "boolean",
+    },
+    {
+      key: "productTypes",
+      value: productTypes,
+      updater: setProductTypes,
+      dataType: "stringArray",
+    },
+  ]);
 
   useEffect(() => {
     if (props.defaultFilters) {
@@ -70,22 +135,22 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
   );
 
   const handleKosherChange = (value: string | undefined) => {
-    let booleanValue: boolean | undefined = value === "true" ? true : value === "false" ? false : undefined;
+    let booleanValue: boolean | undefined =
+      value === "true" ? true : value === "false" ? false : undefined;
     setKosher(booleanValue);
   };
 
   const handleAllergenChange = (value: string | undefined) => {
-    let booleanValue: boolean | undefined = value === "true" ? true : value === "false" ? false : undefined;
+    let booleanValue: boolean | undefined =
+      value === "true" ? true : value === "false" ? false : undefined;
     setAllergen(booleanValue);
   };
 
   const handleProductTypesChange = (value: string | string[]) => {
-    if(Array.isArray(value)) setProductTypes(value);
-  }
-
+    if (Array.isArray(value)) setProductTypes(value);
+  };
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     debouncedSetNameSearch(e.target.value);
-
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     debouncedSetCodeSearch(e.target.value);
 
@@ -109,6 +174,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     }
   };
 
+  const status = draftMode
+    ? [entityStatuses.DRAFT]
+    : published
+    ? [entityStatuses.PUBLISHED]
+    : deleted
+    ? [entityStatuses.DELETED]
+    : undefined;
+
   return (
     <section className="flex flex-wrap items-center pb-2 gap-3">
       <>
@@ -120,17 +193,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             placeholder="Busqueda..."
             onChange={handleNameChange}
             allowClear
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <small>Busqueda por codigo</small>
-          <Input
-            disabled={disabledFilters.code}
-            className="w-40"
-            placeholder="Busqueda..."
-            onChange={handleCodeChange}
-            allowClear
+            value={nameSearch}
           />
         </div>
 
@@ -142,36 +205,22 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             placeholder="Busqueda..."
             onChange={handleProviderChange}
             allowClear
+            value={providerSearch}
           />
         </div>
 
-        <div className="flex flex-col" style={{flexBasis: '200px'}}>
+        <div className="flex flex-col" style={{ flexBasis: "200px" }}>
           <small>Busqueda por tipo</small>
           <GenericSelect
-                disabled={disabledFilters.productTypes}
-                fetcher={() =>
-                  ProductTypesAPI.getProductTypes()
-                }
-                multiple={true}
-                onChange={handleProductTypesChange}
-                placeholder="Busqueda..."
-                optionLabel="description"
-                optionKey={"id"}
-                queryKey={["productTypes"]}
-              />
-        </div>
-
-        <div className="flex flex-col">
-          <small>Busqueda por kosher</small>
-          <Select
-            disabled={disabledFilters.kosher}
-            className="w-40"
+            disabled={disabledFilters.productTypes}
+            fetcher={() => ProductTypesAPI.getProductTypes()}
+            multiple={true}
+            onChange={handleProductTypesChange}
             placeholder="Busqueda..."
-            onChange={handleKosherChange}
-            allowClear>
-            <Select.Option value="true">Sí</Select.Option>
-            <Select.Option value="false">No</Select.Option>
-          </Select>
+            optionLabel="description"
+            optionKey={"id"}
+            queryKey={["productTypes"]}
+          />
         </div>
 
         <div className="flex flex-col">
@@ -188,6 +237,20 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
         </div>
 
         <div className="flex flex-col">
+          <small>Busqueda por kosher</small>
+          <Select
+            disabled={disabledFilters.kosher}
+            className="w-40"
+            placeholder="Busqueda..."
+            onChange={handleKosherChange}
+            allowClear
+            value={kosher?.toString()}>
+            <Select.Option value="true">Sí</Select.Option>
+            <Select.Option value="false">No</Select.Option>
+          </Select>
+        </div>
+
+        <div className="flex flex-col">
           <small>Busqueda por status</small>
           <Select
             disabled={disabledFilters.status}
@@ -195,6 +258,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             placeholder="Busqueda..."
             onChange={handleStatusChange}
             mode="multiple"
+            value={status}
             allowClear>
             <Select.Option value={entityStatuses.DRAFT}>
               {entityStatuses.DRAFT}

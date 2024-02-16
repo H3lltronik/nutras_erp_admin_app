@@ -1,4 +1,5 @@
 import { Col, Form, Input, Row, Switch } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import {
   forwardRef,
@@ -8,14 +9,18 @@ import {
   useRef,
   useState,
 } from "react";
-import { MeasurementAPI, ProductPresentationAPI, ProductTypesAPI, ProvidersAPI } from "../../../api";
+import {
+  MeasurementAPI,
+  ProductPresentationAPI,
+  ProductTypesAPI,
+  ProvidersAPI,
+} from "../../../api";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { ProvidersManage } from "../../../pages/Providers";
 import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
-import TextArea from "antd/es/input/TextArea";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -43,16 +48,21 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
-    const [selectedProductType, setSelectedProductType] = useState<string | undefined>(undefined);
+    const [selectedProductType, setSelectedProductType] = useState<
+      string | undefined
+    >(undefined);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
 
     const disabled = _props.formMode === "view";
 
     const getCodeAddon = (): string => {
-      const productType = productTypes.find((type: ProductType) => type.id === (selectedProductType ?? _props.entity?.productTypeId));
-      return productType?.name ?? '';
-    }
+      const productType = productTypes.find(
+        (type: ProductType) =>
+          type.id === (selectedProductType ?? _props.entity?.productTypeId)
+      );
+      return productType?.name ?? "";
+    };
 
     useImperativeHandle(
       ref,
@@ -85,7 +95,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
         });
 
         setProductTypes(types.data);
-      }
+      };
 
       getProductTypes();
     }, [form, _props.entity]);
@@ -134,12 +144,15 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 }
                 onChange={(value) => {
                   setSelectedProductType(value);
-                  const type = productTypes.find((type: ProductType) => type.id === value);
-                  if(type?.name == 'MP') form.setFieldValue("code", _props.entity?.code ?? "");
+                  const type = productTypes.find(
+                    (type: ProductType) => type.id === value
+                  );
+                  if (type?.name == "MP")
+                    form.setFieldValue("code", _props.entity?.code ?? "");
                   else form.setFieldValue("code", null);
                 }}
                 placeholder="Selecciona un tipo de producto"
-                optionLabel="description"
+                optionLabel="name"
                 optionKey={"id"}
                 queryKey={["productTypes"]}
               />
@@ -156,7 +169,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={(!_props.entity?.id && !selectedProductType) || disabled} placeholder="Nombre común" />
+              <Input
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
+                placeholder="Nombre común"
+              />
             </Form.Item>
           </Col>
 
@@ -171,7 +189,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
                 placeholder="Descripción del producto"
               />
             </Form.Item>
@@ -187,7 +207,13 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={(!_props.entity?.id && !selectedProductType) || disabled} placeholder="Código" addonBefore={getCodeAddon()} />
+              <Input
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
+                placeholder="Código"
+                addonBefore={getCodeAddon()}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -201,7 +227,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
                 fetcher={() => MeasurementAPI.getMeasurements()}
                 placeholder="Selecciona una unidad de medida"
                 optionLabel="name"
@@ -222,10 +250,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
-                fetcher={() => 
-                  ProductPresentationAPI.getProductPresentations()
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
                 }
+                fetcher={() => ProductPresentationAPI.getProductPresentations()}
                 placeholder="Selecciona una presentación"
                 optionLabel="name"
                 optionKey={"name"}
@@ -245,7 +273,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
                 placeholder="Molde"
               />
             </Form.Item>
@@ -262,7 +292,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <Input
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
                 placeholder="Empaque"
               />
             </Form.Item>
@@ -279,13 +311,17 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 },
               ]}>
               <GenericSelect
-                disabled={(!_props.entity?.id && !selectedProductType) || disabled}
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
                 fetcher={() => ProvidersAPI.getProviders()}
                 placeholder="Selecciona un proveedor"
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["providers"]}
-                addForm={<ProvidersManage inModal={true} enableRedirect={false} />}
+                addForm={
+                  <ProvidersManage inModal={true} enableRedirect={false} />
+                }
                 addFormTitle="Agregar Proveedor"
               />
             </Form.Item>
@@ -300,7 +336,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={(!_props.entity?.id && !selectedProductType) || disabled} placeholder="Cantidad x unidad" />
+              <Input
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
+                placeholder="Cantidad x unidad"
+              />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -315,9 +356,16 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 {
                   max: 150,
                   message: "No puede exceder los 150 caracteres",
-                }
+                },
               ]}>
-              <TextArea disabled={(!_props.entity?.id && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={150} placeholder="Descripción del proveedor" rows={4}></TextArea>
+              <TextArea
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
+                style={{ resize: "none" }}
+                maxLength={150}
+                placeholder="Descripción del proveedor"
+                rows={4}></TextArea>
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -332,28 +380,33 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 {
                   max: 300,
                   message: "No puede exceder los 300 caracteres",
-                }
+                },
               ]}>
-              <TextArea disabled={(!_props.entity?.id && !selectedProductType) || disabled} style={{resize: 'none'}} maxLength={300} placeholder="Descripción del proveedor" rows={4}></TextArea>
+              <TextArea
+                disabled={
+                  (!_props.entity?.id && !selectedProductType) || disabled
+                }
+                style={{ resize: "none" }}
+                maxLength={300}
+                placeholder="Descripción del proveedor"
+                rows={4}></TextArea>
             </Form.Item>
           </Col>
 
-          {
-            (getCodeAddon() == 'MP') && (
-              <>
-                <Col span={"auto"}>
-                  <Form.Item<Product> label="Kosher" name="isKosher">
-                    <Switch disabled={disabled} />
-                  </Form.Item>
-                </Col>
-                <Col span={"auto"}>
-                  <Form.Item<Product> label="Alergeno" name="allergen">
-                    <Switch disabled={disabled} />
-                  </Form.Item>
-                </Col>
-              </>
-            )
-          }
+          {getCodeAddon() == "MP" && (
+            <>
+              <Col span={"auto"}>
+                <Form.Item<Product> label="Kosher" name="isKosher">
+                  <Switch disabled={disabled} checked={isKosher} />
+                </Form.Item>
+              </Col>
+              <Col span={"auto"}>
+                <Form.Item<Product> label="Alergeno" name="allergen">
+                  <Switch disabled={disabled} />
+                </Form.Item>
+              </Col>
+            </>
+          )}
 
           <Col span={24}>
             {isKosher && (
