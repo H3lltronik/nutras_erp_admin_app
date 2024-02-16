@@ -1,7 +1,7 @@
 import { Input, Select } from "antd";
 import debounce from "lodash.debounce";
 import { useEffect, useMemo } from "react";
-import { ProductTypesAPI } from "../../../api";
+import { ProductPresentationAPI, ProductTypesAPI } from "../../../api";
 import { GetProductsParams } from "../../../api/product/product.api";
 import { GenericSelect } from "../../../components/Forms/Common/GenericSelect";
 import useSyncSearchParams from "../../../hooks/useSyncSearchParams";
@@ -152,6 +152,11 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
   const handleProductTypesChange = (value: string | string[]) => {
     if (Array.isArray(value)) setProductTypes(value);
   };
+
+  const hanldeProductPresentationsChange = (value: string | string[]) => {
+    if (Array.isArray(value)) setPresentations(value);
+  };
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     debouncedSetNameSearch(e.target.value);
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -188,7 +193,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
   return (
     <section className="flex flex-wrap items-center pb-2 gap-3">
       <>
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${disabledFilters.name ? 'hidden' : ''}`}>
           <small>Busqueda por nombre</small>
           <Input
             disabled={disabledFilters.name}
@@ -200,7 +205,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           />
         </div>
 
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${disabledFilters.provider ? 'hidden' : ''}`}>
           <small>Busqueda por proveedor</small>
           <Input
             disabled={disabledFilters.provider}
@@ -212,7 +217,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           />
         </div>
 
-        <div className="flex flex-col" style={{ flexBasis: "200px" }}>
+        <div className={`flex flex-col ${disabledFilters.productTypes ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
           <small>Busqueda por tipo</small>
           <GenericSelect
             disabled={disabledFilters.productTypes}
@@ -226,7 +231,21 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           />
         </div>
 
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${disabledFilters.presentations ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
+          <small>Busqueda por presentación</small>
+          <GenericSelect
+            disabled={disabledFilters.presentations}
+            fetcher={() => ProductPresentationAPI.getProductPresentations()}
+            multiple={true}
+            onChange={hanldeProductPresentationsChange}
+            placeholder="Busqueda..."
+            optionLabel="name"
+            optionKey={"name"}
+            queryKey={["productPresentations"]}
+          />
+        </div>
+
+        <div className={`flex flex-col ${disabledFilters.allergen ? 'hidden' : ''}`}>
           <small>Busqueda por alergeno</small>
           <Select
             disabled={disabledFilters.allergen}
@@ -239,7 +258,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           </Select>
         </div>
 
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${disabledFilters.kosher ? 'hidden' : ''}`}>
           <small>Busqueda por kosher</small>
           <Select
             disabled={disabledFilters.kosher}
@@ -253,7 +272,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           </Select>
         </div>
 
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${disabledFilters.status ? 'hidden' : ''}`}>
           <small>Busqueda por status</small>
           <Select
             disabled={disabledFilters.status}
