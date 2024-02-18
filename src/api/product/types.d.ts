@@ -13,7 +13,10 @@ interface Product {
   code: string;
   commonName: string;
   providerId: string;
+  description: string;
   providerDescription: string;
+  packaging: string;
+  mold: string;
   notes: string;
   unitId: string;
   presentation: string;
