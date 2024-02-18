@@ -95,7 +95,9 @@ const router = createBrowserRouter([
     path: "/admin/products",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <ProductsList />
+        <ProductsList
+          productsRoute="products"
+        />
       </DefaultLayout>
     ),
   },
@@ -109,6 +111,11 @@ const router = createBrowserRouter([
           formMode="view"
           formType="compras"
           listPath="/admin/products/pp"
+          hiddenFields={{
+            providerId: true,
+            providerDescription: true,
+            notes: true,
+          }}
         />
       </DefaultLayout>
     ),
@@ -228,6 +235,7 @@ const router = createBrowserRouter([
           disabledFilters={{
             presentations: true,
           }}
+          productsRoute="insumo"
         />
       </DefaultLayout>
     ),
