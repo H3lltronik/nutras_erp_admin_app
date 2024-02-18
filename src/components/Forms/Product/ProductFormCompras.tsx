@@ -63,6 +63,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
     const disabled = _props.formMode === "view";
 
     const getCodeAddon = (): string => {
+      if(_props.formMode === "view") return "";
       const productType = productTypes.find(
         (type: ProductType) =>
           type.id === (selectedProductType ?? _props.entity?.productTypeId)
@@ -94,6 +95,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
 
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
+      if(_props.formMode === "view") {
+        form.setFieldValue('code', `${_props.entity?.productType?.name}-${_props.entity?.code}`);
+      }
 
       const getProductTypes = async () => {
         const types: any = await ProductTypesAPI.getProductTypes({
@@ -488,7 +492,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               </Col>
               <Col span={"auto"}>
                 <Form.Item<Product> label="Alergeno" name="allergen">
-                  <Switch disabled={disabled} />
+                  <Switch
+                    disabled={disabled}
+                    checked={String(_props.entity?.allergen ?? false) == "true"}
+                  />
                 </Form.Item>
               </Col>
             </>
