@@ -202,9 +202,18 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
+                {
+                  pattern: /^\d+$/,
+                  message: "El código debe ser numérico",
+                },
+                {
+                  min: 3,
+                  message: "El código debe tener 3 caracteres",
+                }
               ]}>
               <Input
                 disabled={disabled}
+                maxLength={3}
                 addonBefore={selectedPPCategory?.prefix}
                 addonAfter={selectedPPCategory?.suffix}
               />

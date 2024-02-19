@@ -50,7 +50,7 @@ export const ProfilesManage: React.FC = () => {
           console.error("Not valid entity", entity.data);
         }
       } else {
-        result = await mutateAsync(profileFormData);
+        result = await ProfileAPI.createProfile(profileFormData);
         message = "Perfil creado correctamente";
       }
 

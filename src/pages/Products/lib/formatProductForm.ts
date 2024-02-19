@@ -21,7 +21,7 @@ export interface ProductFormResult {
 
   // From PurchaseDataToPost
   purchaseDataId: string;
-  allergen: string;
+  allergen: boolean;
   purchaseDataProductId: string;
 
   // From ProductionDataToPost
@@ -78,7 +78,7 @@ export interface ProductToPost {
 
 export interface PurchaseDataToPost {
   id?: string;
-  allergen?: string;
+  allergen?: boolean;
   productId?: string;
 }
 
@@ -180,7 +180,7 @@ export const unformatProductForm = (
       productToUnformat.presentation ??
       "",
     // quantityPerUnit: productToUnformat ?? "",
-    allergen: productToUnformat.purchaseData?.allergen ?? "",
+    allergen: productToUnformat.allergen ?? false,
     kosherDetails: {
       ...productToUnformat.kosherDetails,
       certificateValidity: String(

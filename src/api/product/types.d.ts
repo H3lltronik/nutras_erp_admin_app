@@ -76,7 +76,7 @@ interface PurchaseData {
   deletedAt: string;
   id: string;
   partidaId: number;
-  allergen: string;
+  allergen: boolean;
   productId: string;
 }
 

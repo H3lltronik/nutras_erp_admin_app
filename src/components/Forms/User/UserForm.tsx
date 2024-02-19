@@ -101,7 +101,9 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
                 message: "Este campo es requerido",
               },
             ]}>
-            <Input />
+            <Input
+              placeholder="Nombre"
+            />
           </Form.Item>
         </Col>
         <Col xs={24} md={12} lg={8} xl={6}>
@@ -114,7 +116,10 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
                 message: "Este campo es requerido",
               },
             ]}>
-            <Input type="email" />
+            <Input
+              placeholder="Nombre de usuario"
+              type="email"
+            />
           </Form.Item>
         </Col>
         <Col xs={24} md={12} lg={8} xl={6}>
@@ -128,7 +133,9 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
                   message: "Este campo es requerido",
                 },
               ]}>
-              <Input.Password />
+              <Input.Password
+                placeholder="Contraseña"
+              />
             </Form.Item>
           )}
         </Col>
@@ -153,7 +160,9 @@ const UserForm = forwardRef<UserFormHandle, UserFormProps>((props, ref) => {
                   },
                 }),
               ]}>
-              <Input.Password />
+              <Input.Password
+                placeholder="Confirmar contraseña"
+              />
             </Form.Item>
           </Col>
         )}

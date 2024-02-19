@@ -59,6 +59,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
     >(undefined);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
+    const allergen = Form.useWatch("allergen", form);
 
     const disabled = _props.formMode === "view";
 
@@ -246,6 +247,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 {
                   pattern: /^\d+$/,
                   message: "El código debe ser numérico",
+                },
+                {
+                  min: 3,
+                  message: "El código debe tener 3 caracteres",
                 }
               ]}>
               <Input
@@ -493,8 +498,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <Col span={"auto"}>
                 <Form.Item<Product> label="Alergeno" name="allergen">
                   <Switch
-                    disabled={disabled}
-                    checked={String(_props.entity?.allergen ?? false) == "true"}
+                    disabled={disabled} checked={allergen}
                   />
                 </Form.Item>
               </Col>
