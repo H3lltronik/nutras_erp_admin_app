@@ -11,7 +11,7 @@ import {
 } from "react";
 import {
   MeasurementAPI,
-  PPProductTypesAPI,
+  ProductTypeCategoriesAPI,
   ProductPresentationAPI,
   ProductTypesAPI,
 } from "../../../api";
@@ -52,14 +52,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const isKosher = Form.useWatch("isKosher", form);
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
     const formProductType = Form.useWatch("productTypeId", form);
-    const ppCategoryId = Form.useWatch("ppCategoryId", form);
+    const productTypeCategoryId = Form.useWatch("productTypeCategoryId", form);
 
     const { data: ppCategoriesData, isLoading: loadingPPCategories } = useQuery<
-      GetPPProductTypesResponse | APIError
+      GetProductTypeCategoriesResponse | APIError
     >({
       queryKey: ["ppCategories"],
       queryFn: async () => {
-        const result = await PPProductTypesAPI.getProductTypes();
+        const result = await ProductTypeCategoriesAPI.getProductTypes();
         if ("data" in result) {
           return result.data;
         }
@@ -68,10 +68,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       refetchOnWindowFocus: false,
     });
 
-    let selectedPPCategory = null;
-    if (ppCategoryId && ppCategoriesData) {
-      selectedPPCategory = ppCategoriesData.find(
-        (category) => category.id === ppCategoryId
+    let selectedProductTypeCategory = null;
+    if (productTypeCategoryId && ppCategoriesData) {
+      selectedProductTypeCategory = ppCategoriesData.find(
+        (category) => category.id === productTypeCategoryId
       );
     }
 
@@ -162,7 +162,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             <Col xs={24} md={12} lg={8} xl={6}>
               <Form.Item<Product>
                 label="Categoria de PP"
-                name="ppCategoryId"
+                name="productTypeCategoryId"
                 rules={[
                   {
                     required: true,
@@ -171,7 +171,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 ]}>
                 <GenericSelect
                   disabled={disabled}
-                  fetcher={() => PPProductTypesAPI.getProductTypes()}
+                  fetcher={() => ProductTypeCategoriesAPI.getProductTypes()}
                   placeholder="Selecciona una categoria de PP"
                   optionLabel="mask"
                   optionKey={"id"}
@@ -218,8 +218,8 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 disabled={disabled}
                 placeholder="Código"
                 maxLength={3}
-                addonBefore={selectedPPCategory?.prefix}
-                addonAfter={selectedPPCategory?.suffix}
+                addonBefore={selectedProductTypeCategory?.prefix}
+                addonAfter={selectedProductTypeCategory?.suffix}
               />
             </Form.Item>
           </Col>

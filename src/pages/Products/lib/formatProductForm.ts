@@ -16,7 +16,7 @@ export interface ProductFormResult {
   quantityPerUnit: string;
   isKosher: boolean;
   departmentId: string;
-  ppCategoryId: string;
+  productTypeCategoryId: string;
   ppNotes: string;
 
   // From PurchaseDataToPost
@@ -40,7 +40,7 @@ export interface ProductFormResult {
   kidOrUkd: string;
   certificatePageNumber: number;
   certificateValidity: Date;
-  ppCategory?: PPProductType;
+  productTypeCategory?: ProductTypeCategory;
 }
 
 // Omit kosherDetailsId
@@ -122,8 +122,8 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     presentation: productToFormat.presentation,
     quantityPerUnit: productToFormat.quantityPerUnit,
     departmentId: productToFormat.departmentId,
-    ppCategoryId: productToFormat.ppCategoryId,
-    ppCategory: productToFormat.ppCategory,
+    productTypeCategoryId: productToFormat.productTypeCategoryId,
+    productTypeCategory: productToFormat.productTypeCategory,
     ppNotes: productToFormat.ppNotes,
     purchaseData: {
       allergen: productToFormat.allergen,
@@ -172,8 +172,8 @@ export const unformatProductForm = (
     quantityPerUnit: productToUnformat.quantityPerUnit ?? "",
     mold: productToUnformat.productionData?.mold ?? "",
     packaging: productToUnformat.productionData?.packaging ?? "",
-    ppCategoryId: productToUnformat.ppCategoryId ?? "",
-    ppCategory: productToUnformat.ppCategory,
+    productTypeCategoryId: productToUnformat.productTypeCategoryId ?? "",
+    productTypeCategory: productToUnformat.productTypeCategory,
     ppNotes: productToUnformat.ppNotes ?? "",
     presentation:
       productToUnformat.productionData?.ptPresentation ??
