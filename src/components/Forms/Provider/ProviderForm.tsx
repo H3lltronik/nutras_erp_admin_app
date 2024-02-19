@@ -80,7 +80,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
           <Input />
         </Form.Item>
 
-        <Row gutter={16}>
+        <Row gutter={16} className="justify-between">
           <Col
             {...(_props.inModal
               ? { span: 12 }
@@ -103,7 +103,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "Solo se aceptan letras y números",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Código de proveedor"
+                />
             </Form.Item>
           </Col>
           <Col
@@ -124,7 +127,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El nombre no puede exceder los 50 caracteres",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Nombre de proveedor"
+                />
             </Form.Item>
           </Col>
           <Col
@@ -132,7 +138,12 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               ? { span: 12 }
               : { xs: 24, md: 12, lg: 8, xl: 6 })}>
             <Form.Item<Provider> label="RFC" name="RFC">
-              <Input disabled={disabled} onKeyUp={writeOnlyUpperCase} />
+              <Input
+                disabled={disabled}
+                placeholder="RFC de proveedor"
+                maxLength={13}
+                onKeyUp={writeOnlyUpperCase}
+                />
             </Form.Item>
           </Col>
           <Col
@@ -152,7 +163,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "La razón social no puede exceder los 50 caracteres",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Razón social de proveedor"
+                />
             </Form.Item>
           </Col>
           <Col {...(_props.inModal ? { span: 12 } : { xs: 24, md: 12, lg: 8 })}>
@@ -170,7 +184,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El servicio no puede exceder los 50 caracteres",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Servicio que da el proveedor"
+                />
             </Form.Item>
           </Col>
           <Col {...(_props.inModal ? { span: 12 } : { xs: 24, md: 12, lg: 8 })}>
@@ -179,6 +196,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                 <Form.Item<Provider> label="Lada" name="lada">
                   <Select
                     disabled={disabled}
+                    placeholder="Lada"
                     style={{ minWidth: 90 }}
                     onChange={(value) => setSelectedCountry(value)}>
                     {countriesWithLada.map((country) => {
@@ -214,6 +232,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                       <Input
                         {...inputProps}
                         disabled={disabled}
+                        placeholder="Teléfono"
                         maxLength={14}
                         onKeyUp={writeOnlyNumbers}
                       />
@@ -236,7 +255,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El formato del correo no es válido",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Correo de proveedor"
+                />
             </Form.Item>
           </Col>
           <Col
@@ -252,7 +274,10 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
                   message: "El formato del correo no es válido",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Correo de pagos"
+                />
             </Form.Item>
           </Col>
           <Col
@@ -262,8 +287,8 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
             <Form.Item<Provider> label="Banco" name="bank">
               <Select
                 disabled={disabled}
-                style={{ width: "100%" }}
-                placeholder="Selecciona un banco">
+                placeholder="Selecciona un banco"
+                style={{ width: "100%" }}>
                 {banks.map((bank) => (
                   <Option key={bank} value={bank}>
                     {bank}
@@ -279,6 +304,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
             <Form.Item<Provider> label="Cuenta CLABE" name="clabeAccount">
               <Input
                 disabled={disabled}
+                placeholder="Cuenta CLABE"
                 maxLength={18}
                 onKeyUp={writeOnlyNumbers}
               />
@@ -305,6 +331,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               ]}>
               <Input
                 disabled={disabled}
+                placeholder="Número de cuenta"
                 maxLength={20}
                 onKeyPress={writeOnlyNumbers}
               />

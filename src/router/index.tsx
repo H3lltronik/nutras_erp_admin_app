@@ -250,6 +250,10 @@ const router = createBrowserRouter([
           formMode="view"
           formType="compras"
           listPath="/admin/products/pp"
+          hiddenFields={{
+            mold: true,
+            packaging: true,
+          }}
         />
       </DefaultLayout>
     ),

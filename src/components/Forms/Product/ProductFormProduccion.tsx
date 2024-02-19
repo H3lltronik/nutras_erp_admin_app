@@ -11,7 +11,7 @@ import {
 } from "react";
 import {
   MeasurementAPI,
-  PPProductTypesAPI,
+  ProductTypeCategoriesAPI,
   ProductPresentationAPI,
   ProductTypesAPI,
 } from "../../../api";
@@ -52,14 +52,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const isKosher = Form.useWatch("isKosher", form);
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
     const formProductType = Form.useWatch("productTypeId", form);
-    const ppCategoryId = Form.useWatch("ppCategoryId", form);
+    const productTypeCategoryId = Form.useWatch("productTypeCategoryId", form);
 
     const { data: ppCategoriesData, isLoading: loadingPPCategories } = useQuery<
-      GetPPProductTypesResponse | APIError
+      GetProductTypeCategoriesResponse | APIError
     >({
       queryKey: ["ppCategories"],
       queryFn: async () => {
-        const result = await PPProductTypesAPI.getProductTypes();
+        const result = await ProductTypeCategoriesAPI.getProductTypes();
         if ("data" in result) {
           return result.data;
         }
@@ -68,10 +68,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       refetchOnWindowFocus: false,
     });
 
-    let selectedPPCategory = null;
-    if (ppCategoryId && ppCategoriesData) {
-      selectedPPCategory = ppCategoriesData.find(
-        (category) => category.id === ppCategoryId
+    let selectedProductTypeCategory = null;
+    if (productTypeCategoryId && ppCategoriesData) {
+      selectedProductTypeCategory = ppCategoriesData.find(
+        (category) => category.id === productTypeCategoryId
       );
     }
 
@@ -133,7 +133,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col xs={24} md={12} lg={8} xl={3}>
+          <Col xs={24} md={12} lg={8} xl={4}>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
@@ -162,7 +162,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             <Col xs={24} md={12} lg={8} xl={6}>
               <Form.Item<Product>
                 label="Categoria de PP"
-                name="ppCategoryId"
+                name="productTypeCategoryId"
                 rules={[
                   {
                     required: true,
@@ -171,7 +171,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 ]}>
                 <GenericSelect
                   disabled={disabled}
-                  fetcher={() => PPProductTypesAPI.getProductTypes()}
+                  fetcher={() => ProductTypeCategoriesAPI.getProductTypes()}
                   placeholder="Selecciona una categoria de PP"
                   optionLabel="mask"
                   optionKey={"id"}
@@ -190,7 +190,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Nombre común del producto"
+                />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={5}>
@@ -202,11 +205,21 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   required: true && !isDraft,
                   message: "Este campo es obligatorio",
                 },
+                {
+                  pattern: /^\d+$/,
+                  message: "El código debe ser numérico",
+                },
+                {
+                  min: 3,
+                  message: "El código debe tener 3 caracteres",
+                }
               ]}>
               <Input
                 disabled={disabled}
-                addonBefore={selectedPPCategory?.prefix}
-                addonAfter={selectedPPCategory?.suffix}
+                placeholder="Código"
+                maxLength={3}
+                addonBefore={selectedProductTypeCategory?.prefix}
+                addonAfter={selectedProductTypeCategory?.suffix}
               />
             </Form.Item>
           </Col>
@@ -223,7 +236,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <GenericSelect
                 disabled={disabled}
                 fetcher={() => MeasurementAPI.getMeasurements()}
-                placeholder="Selecciona una unidad de medida"
+                placeholder="Selecciona una unidad"
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["measurements"]}
@@ -240,7 +253,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Descripción del producto"
+                />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -272,7 +288,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Empaque"
+                />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -285,7 +304,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Cantidad por unidad"
+                />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} lg={8} xl={6}>
@@ -298,7 +320,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input disabled={disabled} />
+              <Input
+                disabled={disabled}
+                placeholder="Molde"
+                />
             </Form.Item>
           </Col>
           {/* <Col xs={24} md={12} lg={8} xl={6}>
@@ -341,9 +366,9 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <TextArea
                 disabled={disabled}
+                placeholder="Notas de PP"
                 style={{ resize: "none" }}
                 maxLength={150}
-                placeholder="Descripción del proveedor"
                 rows={4}></TextArea>
             </Form.Item>
           </Col>

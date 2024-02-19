@@ -105,7 +105,8 @@ const PurchaseRequisitionForm = forwardRef<
           <Form.Item<PurchaseRequisition>
             label="Orden de trabajo"
             name="workOrderId"
-            rules={defaultRequiredRules(isDraft)}>
+            // rules={defaultRequiredRules(isDraft)}
+            >
             <GenericSelect
               fetcher={() => WorkOrderAPI.getWorkOrders()}
               placeholder="Selecciona orden de trabajo"

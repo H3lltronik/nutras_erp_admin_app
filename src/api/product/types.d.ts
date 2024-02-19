@@ -7,8 +7,8 @@ interface Product {
   id: string;
   partidaId: number;
   productTypeId: string;
-  ppCategoryId?: string;
-  ppCategory?: PPProductType;
+  productTypeCategoryId?: string;
+  productTypeCategory?: ProductTypeCategory;
   productType?: ProductType;
   code: string;
   commonName: string;
@@ -76,7 +76,7 @@ interface PurchaseData {
   deletedAt: string;
   id: string;
   partidaId: number;
-  allergen: string;
+  allergen: boolean;
   productId: string;
 }
 
@@ -126,7 +126,7 @@ type GetProductPresentationsResponse = {
   pagination: Pagination;
 };
 
-type PPProductType = {
+type ProductTypeCategory = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -137,7 +137,7 @@ type PPProductType = {
   suffix: string;
 };
 
-type GetPPProductTypesResponse = {
-  data: PPProductType[];
+type GetProductTypeCategoriesResponse = {
+  data: ProductTypeCategory[];
   pagination: Pagination;
 };

@@ -11,7 +11,7 @@ export type GetProductsParams = QueryParams &
     type?: string;
     department?: string;
     kosher?: string;
-    allergen?: string;
+    allergen?: boolean;
     productTypes?: string[];
   };
 
