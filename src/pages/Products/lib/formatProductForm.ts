@@ -5,6 +5,7 @@ export interface ProductFormResult {
   profileId: string;
   id: string;
   productTypeId: string;
+  productType: ProductType;
   code: string;
   commonName: string;
   providerId: string;
@@ -161,6 +162,7 @@ export const unformatProductForm = (
     code: productToUnformat.code,
     description: productToUnformat.productionData?.description ?? "",
     productTypeId: productToUnformat.productTypeId ?? "",
+    productType: productToUnformat.productType ?? null,
     commonName: productToUnformat.commonName ?? "",
     providerId: productToUnformat.providerId ?? "",
     providerDescription: productToUnformat.providerDescription ?? "",

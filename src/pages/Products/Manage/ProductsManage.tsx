@@ -28,7 +28,12 @@ type ProductsManageProps = {
   formType: "compras" | "produccion" | "admin";
   listPath: string;
   formMode?: FormMode;
-  hiddenFields?: string[];
+  hiddenFields?: {
+    [K in keyof Product]?: boolean;
+  };
+  requiredFields?: {
+    [K in keyof Product]?: boolean;
+  };
 };
 
 export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
@@ -145,6 +150,7 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
                   formMode={props.formMode}
                   ref={productFormRef}
                   hiddenFields={props.hiddenFields}
+                  requiredFields={props.requiredFields}
                   entity={entityData}
                 />
               </>

@@ -79,7 +79,7 @@ export const GenericSelect = <T,>({
             ))}
         </AntSelect>
 
-        {addForm && (
+        {addForm && !(restProps.disabled ?? false) && (
           <>
             <Button onClick={() => setIsModalOpen(true)}>+</Button>
             <Modal

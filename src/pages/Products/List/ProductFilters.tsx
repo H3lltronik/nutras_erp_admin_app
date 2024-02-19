@@ -159,6 +159,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     debouncedSetNameSearch(e.target.value);
+
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     debouncedSetCodeSearch(e.target.value);
 
@@ -202,6 +203,18 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             onChange={handleNameChange}
             allowClear
             value={nameSearch}
+          />
+        </div>
+
+        <div className={`flex flex-col ${disabledFilters.code ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
+          <small>Busqueda por código</small>
+          <Input
+            disabled={disabledFilters.code}
+            className="w-40"
+            placeholder="Busqueda..."
+            onChange={handleCodeChange}
+            allowClear
+            value={codeSearch}
           />
         </div>
 
