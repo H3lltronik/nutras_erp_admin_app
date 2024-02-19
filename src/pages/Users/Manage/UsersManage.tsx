@@ -56,7 +56,7 @@ export const UsersManage: React.FC = () => {
           console.error("Not valid entity", entity);
         }
       } else {
-        result = await mutateAsync(userFormData);
+        result = await UserAPI.createUser(userFormData);
         message = "Usuario creado correctamente";
       }
 

@@ -16,12 +16,12 @@ export interface ProductFormResult {
   quantityPerUnit: string;
   isKosher: boolean;
   departmentId: string;
-  ppCategoryId: string;
+  productTypeCategoryId: string;
   ppNotes: string;
 
   // From PurchaseDataToPost
   purchaseDataId: string;
-  allergen: string;
+  allergen: boolean;
   purchaseDataProductId: string;
 
   // From ProductionDataToPost
@@ -40,7 +40,7 @@ export interface ProductFormResult {
   kidOrUkd: string;
   certificatePageNumber: number;
   certificateValidity: Date;
-  ppCategory?: PPProductType;
+  productTypeCategory?: ProductTypeCategory;
 }
 
 // Omit kosherDetailsId
@@ -78,7 +78,7 @@ export interface ProductToPost {
 
 export interface PurchaseDataToPost {
   id?: string;
-  allergen?: string;
+  allergen?: boolean;
   productId?: string;
 }
 
@@ -122,8 +122,8 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     presentation: productToFormat.presentation,
     quantityPerUnit: productToFormat.quantityPerUnit,
     departmentId: productToFormat.departmentId,
-    ppCategoryId: productToFormat.ppCategoryId,
-    ppCategory: productToFormat.ppCategory,
+    productTypeCategoryId: productToFormat.productTypeCategoryId,
+    productTypeCategory: productToFormat.productTypeCategory,
     ppNotes: productToFormat.ppNotes,
     purchaseData: {
       allergen: productToFormat.allergen,
@@ -172,15 +172,15 @@ export const unformatProductForm = (
     quantityPerUnit: productToUnformat.quantityPerUnit ?? "",
     mold: productToUnformat.productionData?.mold ?? "",
     packaging: productToUnformat.productionData?.packaging ?? "",
-    ppCategoryId: productToUnformat.ppCategoryId ?? "",
-    ppCategory: productToUnformat.ppCategory,
+    productTypeCategoryId: productToUnformat.productTypeCategoryId ?? "",
+    productTypeCategory: productToUnformat.productTypeCategory,
     ppNotes: productToUnformat.ppNotes ?? "",
     presentation:
       productToUnformat.productionData?.ptPresentation ??
       productToUnformat.presentation ??
       "",
     // quantityPerUnit: productToUnformat ?? "",
-    allergen: productToUnformat.purchaseData?.allergen ?? "",
+    allergen: productToUnformat.allergen ?? false,
     kosherDetails: {
       ...productToUnformat.kosherDetails,
       certificateValidity: String(

@@ -1,14 +1,14 @@
 import BaseAPI from "../common/ApiBase";
 import { handleAPIError } from "../errorHandler";
 
-export type GetPPProductTypesParams = QueryParams;
+export type GetProductTypeCategoriesParams = QueryParams;
 
-class BasePPProductTypesAPI extends BaseAPI {
+class BaseProductTypeCategoriesAPI extends BaseAPI {
   async getProductTypes(
-    params?: GetPPProductTypesParams
-  ): Promise<GetPPProductTypesResponse | APIError> {
+    params?: GetProductTypeCategoriesParams
+  ): Promise<GetProductTypeCategoriesResponse | APIError> {
     try {
-      const result = await this.instance.get<GetPPProductTypesResponse>("", {
+      const result = await this.instance.get<GetProductTypeCategoriesResponse>("", {
         params,
       });
 
@@ -19,4 +19,4 @@ class BasePPProductTypesAPI extends BaseAPI {
   }
 }
 
-export default BasePPProductTypesAPI;
+export default BaseProductTypeCategoriesAPI;
