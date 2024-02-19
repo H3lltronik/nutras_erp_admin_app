@@ -95,7 +95,9 @@ const router = createBrowserRouter([
     path: "/admin/products",
     element: (
       <DefaultLayout navContent={<ProductsHeader />} headerTitle="Productos">
-        <ProductsList />
+        <ProductsList
+          productsRoute="products"
+        />
       </DefaultLayout>
     ),
   },
@@ -109,6 +111,11 @@ const router = createBrowserRouter([
           formMode="view"
           formType="compras"
           listPath="/admin/products/pp"
+          hiddenFields={{
+            providerId: true,
+            providerDescription: true,
+            notes: true,
+          }}
         />
       </DefaultLayout>
     ),
@@ -120,8 +127,8 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pp"
-          hiddenFields={[
-          ]}
+          hiddenFields={{
+          }}
           />
       </DefaultLayout>
     ),
@@ -133,8 +140,8 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pt"
-          hiddenFields={[
-          ]}
+          hiddenFields={{
+          }}
           />
       </DefaultLayout>
     ),
@@ -228,6 +235,7 @@ const router = createBrowserRouter([
           disabledFilters={{
             presentations: true,
           }}
+          productsRoute="insumo"
         />
       </DefaultLayout>
     ),
@@ -253,10 +261,18 @@ const router = createBrowserRouter([
         <ProductsManage
           listPath="/admin/products/insumos"
           formType="compras"
-          hiddenFields={[
-            "mold",
-            "packaging",
-          ]}
+          hiddenFields={{
+            mold: true,
+            packaging: true,
+          }}
+          requiredFields={{
+            productTypeId: true,
+            commonName: true,
+            code: true,
+            unitId: true,
+            providerId: true,
+            quantityPerUnit: true,
+          }}
           />
       </DefaultLayout>
     ),

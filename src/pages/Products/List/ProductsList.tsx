@@ -27,6 +27,7 @@ type ProductsListProps = {
   selectedRowIds?: string[];
   productFormType?: "PP" | "PT";
   columnsToHide?: string[];
+  productsRoute?: 'insumo' | 'product';
 };
 const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
 
@@ -139,11 +140,11 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                   onClick: (record) => {
                     if (isSelectionOnly(props.mode))
                       window.open(
-                        `/admin/products/inspect/product/${record.id}`,
+                        `/admin/products/inspect/${props.productsRoute ?? 'product'}/${record.id}`,
                         "_blank"
                       );
                     else
-                      navigate(`/admin/products/inspect/product/${record.id}`);
+                      navigate(`/admin/products/inspect/${props.productsRoute ?? 'product'}/${record.id}`);
                   },
                   conditionEval: (_record) => {
                     const record = _record as Product;
