@@ -198,7 +198,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           <small>Busqueda por nombre</small>
           <Input
             disabled={disabledFilters.name}
-            className="w-40"
             placeholder="Busqueda..."
             onChange={handleNameChange}
             allowClear
@@ -210,7 +209,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           <small>Busqueda por código</small>
           <Input
             disabled={disabledFilters.code}
-            className="w-40"
             placeholder="Busqueda..."
             onChange={handleCodeChange}
             allowClear
@@ -222,7 +220,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           <small>Busqueda por proveedor</small>
           <Input
             disabled={disabledFilters.provider}
-            className="w-40"
             placeholder="Busqueda..."
             onChange={handleProviderChange}
             allowClear
