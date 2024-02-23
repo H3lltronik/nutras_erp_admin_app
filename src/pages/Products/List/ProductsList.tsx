@@ -74,8 +74,6 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     navigate(url);
   };
 
-  console.log("props.mode", getKosher());
-
   return (
     <>
       <Content style={{ margin: "0 16px" }}>
