@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Input, Row, Switch } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import {
   forwardRef,
@@ -14,6 +14,7 @@ import {
   ProductTypeCategoriesAPI,
   ProductPresentationAPI,
   ProductTypesAPI,
+  ProvidersAPI,
 } from "../../../api";
 import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
@@ -22,6 +23,9 @@ import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
+import _ from "lodash";
+import { ProvidersManage } from "../../../pages/Providers";
+import dayjs from "dayjs";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -42,6 +46,12 @@ export type ProductFormHandle = {
 type ProductFormProps = {
   entity?: Product | null;
   formMode?: FormMode;
+  hiddenFields?: {
+    [K in keyof Product]?: boolean;
+  };
+  requiredFields?: {
+    [K in keyof Product]?: boolean;
+  };
 };
 
 const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
@@ -104,6 +114,16 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       ) as Product | null;
     }, [location]);
 
+    const kosherDetails = useMemo(() => {
+      const result = {
+        ..._props.entity?.kosherDetails,
+        certificateValidity: dayjs(
+          _props.entity?.kosherDetails?.certificateValidity
+        ),
+      };
+      return result;
+    }, [_props.entity]);
+
     useEffect(() => {
       if (_props.entity) form.setFieldsValue(_props.entity);
 
@@ -133,13 +153,18 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col xs={24} md={12} lg={8} xl={4}>
+          <Col xs={24} md={12} lg={8} xl={4} className={
+            _props.hiddenFields?.productTypeId ? "hidden" : ""
+          }>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
               rules={[
                 {
-                  required: true,
+                  required: 
+                  _props.requiredFields?.productTypeId &&
+                  !_props.hiddenFields?.productTypeId &&
+                  !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -159,13 +184,17 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
-            <Col xs={24} md={12} lg={8} xl={6}>
+            <Col xs={24} lg={12} xl={10} xxl={8} className={
+              _props.hiddenFields?.productTypeCategoryId ? "hidden" : ""
+            }>
               <Form.Item<Product>
                 label="Categoria de PP"
                 name="productTypeCategoryId"
                 rules={[
                   {
-                    required: true,
+                    required: 
+                    _props.requiredFields?.productTypeCategoryId &&
+                    !_props.hiddenFields?.productTypeCategoryId,
                     message: "Este campo es obligatorio",
                   },
                 ]}>
@@ -173,36 +202,25 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   disabled={disabled}
                   fetcher={() => ProductTypeCategoriesAPI.getProductTypes()}
                   placeholder="Selecciona una categoria de PP"
-                  optionLabel="mask"
+                  optionLabel="name"
                   optionKey={"id"}
                   queryKey={["ppCategories"]}
                 />
               </Form.Item>
             </Col>
           )}
-          <Col xs={24} md={12} lg={8} xl={6}>
-            <Form.Item<Product>
-              label="Nombre Común"
-              name="commonName"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Nombre común del producto"
-                />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={5}>
+          <Col xs={24} md={12} lg={8} xl={5} className={
+            _props.hiddenFields?.code ? "hidden" : ""
+          }>
             <Form.Item<Product>
               label="Codigo"
               name="code"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required:
+                  _props.requiredFields?.code &&
+                  !_props.hiddenFields?.code &&
+                  !isDraft,
                   message: "Este campo es obligatorio",
                 },
                 {
@@ -223,13 +241,64 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6} className={
+            _props.hiddenFields?.commonName ? "hidden" : ""
+          }>
+            <Form.Item<Product>
+              label="Nombre Común"
+              name="commonName"
+              rules={[
+                {
+                  required:
+                  _props.requiredFields?.commonName &&
+                  !_props.hiddenFields?.commonName &&
+                  !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Input
+                disabled={disabled}
+                placeholder="Nombre común del producto"
+                />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.description ? "hidden" : ""
+            }>
+            <Form.Item<Product>
+              label="Descripción del producto"
+              name="description"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.description &&
+                    !_props.hiddenFields?.description &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <TextArea
+                disabled={disabled}
+                placeholder="Descripción del producto"
+                style={{ resize: "none" }}
+                maxLength={150}
+                rows={4}
+              ></TextArea>
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6} className={
+            _props.hiddenFields?.unitId ? "hidden" : ""
+          }>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required:
+                  _props.requiredFields?.unitId &&
+                  !_props.hiddenFields?.unitId &&
+                  !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -243,33 +312,24 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
-            <Form.Item<Product>
-              label="Descripción del producto"
-              name="description"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Descripción del producto"
-                />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.presentation ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Presentación"
               name="presentation"
               rules={[
                 {
-                  required: true,
+                  required:
+                    _props.requiredFields?.presentation &&
+                    !_props.hiddenFields?.presentation &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
               <GenericSelect
+                disabled={disabled}
                 fetcher={() => ProductPresentationAPI.getProductPresentations()}
                 placeholder="Selecciona una presentación"
                 optionLabel="name"
@@ -278,61 +338,117 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
-            <Form.Item<Product>
-              label="Empaque"
-              name="packaging"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Empaque"
-                />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
-            <Form.Item<Product>
-              label="Cantidad x unidad"
-              name="quantityPerUnit"
-              rules={[
-                {
-                  required: false && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Cantidad por unidad"
-                />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={6}>
+
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.mold ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Molde"
               name="mold"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required:
+                    _props.requiredFields?.mold &&
+                    !_props.hiddenFields?.mold &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
               <Input
                 disabled={disabled}
                 placeholder="Molde"
-                />
+              />
             </Form.Item>
           </Col>
-          {/* <Col xs={24} md={12} lg={8} xl={6}>
+
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.packaging ? "hidden" : ""
+            }>
+            <Form.Item<Product>
+              label="Empaque"
+              name="packaging"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.packaging &&
+                    !_props.hiddenFields?.packaging &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Input
+                disabled={disabled}
+                placeholder="Empaque"
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.providerId ? "hidden" : ""
+            }>
+            <Form.Item<Product>
+              label="Proveedor"
+              name="providerId"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.providerId &&
+                    !_props.hiddenFields?.providerId &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <GenericSelect
+                disabled={disabled}
+                fetcher={() => ProvidersAPI.getProviders()}
+                placeholder="Selecciona un proveedor"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["providers"]}
+                addForm={
+                  <ProvidersManage inModal={true} enableRedirect={false} />
+                }
+                addFormTitle="Agregar Proveedor"
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.quantityPerUnit ? "hidden" : ""
+            }>
+            <Form.Item<Product>
+              label="Cantidad x unidad"
+              name="quantityPerUnit"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.quantityPerUnit &&
+                    !_props.hiddenFields?.quantityPerUnit &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Input
+                disabled={disabled}
+                placeholder="Cantidad x unidad"
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.notes ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Notas"
               name="notes"
               rules={[
                 {
-                  required: true && !isDraft,
+                  required:
+                    _props.requiredFields?.notes &&
+                    !_props.hiddenFields?.notes &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
                 {
@@ -347,49 +463,30 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 placeholder="Notas"
                 rows={4}></TextArea>
             </Form.Item>
-          </Col> */}
-        </Row>
-        {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
-          <Col xs={24} md={12} lg={8} xl={6}>
-            <Form.Item<Product>
-              label="Notas de PP"
-              name="ppNotes"
-              rules={[
-                {
-                  required: true && !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-                {
-                  max: 300,
-                  message: "No puede exceder los 300 caracteres",
-                },
-              ]}>
-              <TextArea
-                disabled={disabled}
-                placeholder="Notas de PP"
-                style={{ resize: "none" }}
-                maxLength={150}
-                rows={4}></TextArea>
+          </Col>
+
+          <Col span={"auto"}>
+            <Form.Item<Product> label="Kosher" name="isKosher">
+              <Switch disabled={disabled} checked={isKosher} />
             </Form.Item>
           </Col>
-        )}
 
-        {isKosher ||
-          (_props.entity?.isKosher && (
-            <Row
-              gutter={16}
-              className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
-              <Col span={24}>
-                <ProductKosherForm
-                  ref={productKosherFormRef}
-                  entity={
-                    _props.entity?.isKosher ? _props.entity.kosherDetails : null
-                  }
-                  mode={_props.formMode}
-                />
-              </Col>
-            </Row>
-          ))}
+          <Col span={24}>
+            {isKosher && (
+              <Row
+                gutter={16}
+                className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
+                <Col span={24}>
+                  <ProductKosherForm
+                    ref={productKosherFormRef}
+                    mode={_props.formMode}
+                    entity={kosherDetails}
+                  />
+                </Col>
+              </Row>
+            )}
+          </Col>
+        </Row>
       </Form>
     );
   }

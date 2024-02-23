@@ -127,7 +127,15 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pp"
-          hiddenFields={{
+          formTitle="Catálogo de PP"
+          requiredFields={{
+            productTypeId: true,
+            code: true,
+            commonName: true,
+            unitId: true,
+            productTypeCategoryId: true,
+            providerId: true,
+            quantityPerUnit: true,
           }}
           />
       </DefaultLayout>
@@ -140,6 +148,7 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pt"
+          formTitle="Catálogo de PT"
           hiddenFields={{
           }}
           />

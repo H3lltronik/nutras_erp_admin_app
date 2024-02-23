@@ -28,6 +28,7 @@ type ProductsManageProps = {
   formType: "compras" | "produccion" | "admin";
   listPath: string;
   formMode?: FormMode;
+  formTitle?: string;
   hiddenFields?: {
     [K in keyof Product]?: boolean;
   };
@@ -159,11 +160,15 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
                 roles.Product.entity
               ) ? (
               <>
-                <h2 className="text-2xl">Formulario de producción</h2>
+                <h2 className="text-2xl">
+                  {props.formTitle ?? "Catálogo de productos"}
+                </h2>
                 <hr className="mt-2 mb-5" />
                 <ProductFormProduccion
                   formMode={props.formMode}
                   ref={productFormRef}
+                  hiddenFields={props.hiddenFields}
+                  requiredFields={props.requiredFields}
                   entity={entityData}
                 />
               </>
