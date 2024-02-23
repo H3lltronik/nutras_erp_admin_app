@@ -30,7 +30,6 @@ export interface ProductFormResult {
   description: string;
   packaging: string;
   mold: string;
-  ptPresentation: string;
 
   // From KosherDetailsToPost
   kosherDetailsId: string;
@@ -88,7 +87,6 @@ export interface ProductionDataToPost {
   description?: string;
   packaging?: string;
   mold?: string;
-  ptPresentation?: string;
 }
 
 export interface KosherDetailsToPost {
@@ -132,7 +130,6 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
       description: productToFormat.description,
       packaging: productToFormat.packaging,
       mold: productToFormat.mold,
-      ptPresentation: productToFormat.ptPresentation,
     },
     kosherDetails: {
       id: productToFormat.id,
@@ -175,10 +172,7 @@ export const unformatProductForm = (
     productTypeCategoryId: productToUnformat.productTypeCategoryId ?? "",
     productTypeCategory: productToUnformat.productTypeCategory,
     ppNotes: productToUnformat.ppNotes ?? "",
-    presentation:
-      productToUnformat.productionData?.ptPresentation ??
-      productToUnformat.presentation ??
-      "",
+    presentation: productToUnformat.presentation ?? "",
     // quantityPerUnit: productToUnformat ?? "",
     allergen: productToUnformat.allergen ?? false,
     kosherDetails: {
@@ -189,7 +183,6 @@ export const unformatProductForm = (
     },
     // packaging: ,
     // mold: ,
-    // ptPresentation: ,
     // id: ,
     // agency: ,
     // certifiedCompany: ,

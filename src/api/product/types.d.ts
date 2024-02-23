@@ -90,7 +90,6 @@ interface ProductionData {
   description: string;
   packaging: string;
   mold: string;
-  ptPresentation: string;
 }
 
 //
