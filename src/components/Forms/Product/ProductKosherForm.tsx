@@ -1,5 +1,5 @@
 import { Col, DatePicker, Form, Input, Row } from "antd";
-import moment from "moment-timezone";
+import dayjs from "dayjs";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 const onFinish = (values: unknown) => {
@@ -53,7 +53,12 @@ const ProductKosherForm = forwardRef<
 
   useEffect(() => {
     if (_props.entity) {
-      form.setFieldsValue({..._props.entity, certificateValidity: _props.entity.certificateValidity ? moment(_props.entity.certificateValidity) : null});
+      form.setFieldsValue({
+        ..._props.entity,
+        certificateValidity: _props.entity.certificateValidity
+          ? dayjs(_props.entity.certificateValidity)
+          : null,
+      });
     }
   }, [form, _props.entity]);
 
@@ -66,7 +71,7 @@ const ProductKosherForm = forwardRef<
       onFinishFailed={onFinishFailed}
       autoComplete="off">
       <Form.Item<KosherDetails> name="id" style={{ display: "none" }}>
-        <Input disabled={_props.mode === 'view'}/>
+        <Input disabled={_props.mode === "view"} />
       </Form.Item>
 
       <Row gutter={16}>
@@ -80,7 +85,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input disabled={_props.mode === 'view'}/>
+            <Input disabled={_props.mode === "view"} />
           </Form.Item>
         </Col>
         <Col xs={24} lg={12} xl={8} className="mb-5">
@@ -93,7 +98,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input disabled={_props.mode === 'view'}/>
+            <Input disabled={_props.mode === "view"} />
           </Form.Item>
         </Col>
 
@@ -107,7 +112,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input disabled={_props.mode === 'view'}/>
+            <Input disabled={_props.mode === "view"} />
           </Form.Item>
         </Col>
         <Col xs={24} lg={12} xl={8} className="mb-5">
@@ -122,9 +127,9 @@ const ProductKosherForm = forwardRef<
               {
                 pattern: /^[0-9]*$/,
                 message: "Este campo solo admite números",
-              }
+              },
             ]}>
-            <Input disabled={_props.mode === 'view'}/>
+            <Input disabled={_props.mode === "view"} />
           </Form.Item>
         </Col>
 
@@ -138,7 +143,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <Input disabled={_props.mode === 'view'}/>
+            <Input disabled={_props.mode === "view"} />
           </Form.Item>
         </Col>
         <Col xs={24} lg={12} xl={8} className="mb-5">
@@ -151,7 +156,7 @@ const ProductKosherForm = forwardRef<
                 message: "Este campo es obligatorio",
               },
             ]}>
-            <DatePicker disabled={_props.mode === 'view'} />
+            <DatePicker disabled={_props.mode === "view"} />
           </Form.Item>
         </Col>
       </Row>
