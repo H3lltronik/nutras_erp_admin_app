@@ -116,6 +116,7 @@ const ProviderForm = forwardRef<ProviderFormHandle, ProviderFormProps>(
               ]}>
               <Input
                 disabled={disabled}
+                maxLength={4}
                 placeholder="Código de proveedor"
                 />
             </Form.Item>
