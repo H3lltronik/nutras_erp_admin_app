@@ -131,6 +131,7 @@ type ProductTypeCategory = {
   deletedAt: string;
   id: string;
   partidaId: number;
+  name: string;
   mask: string;
   prefix: string;
   suffix: string;

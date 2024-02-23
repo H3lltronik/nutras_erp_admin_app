@@ -181,12 +181,45 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.commonName ? "hidden" : ""}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.code ? "hidden" : ""
+            }>
+            <Form.Item<Product>
+              label="Código"
+              name="code"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.code &&
+                    !_props.hiddenFields?.code &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  pattern: /^\d+$/,
+                  message: "El código debe ser numérico",
+                },
+                {
+                  min: 3,
+                  message: "El código debe tener 3 caracteres",
+                }
+              ]}>
+              <Input
+                disabled={
+                  (!_props.entity && !selectedProductType) || disabled
+                }
+                placeholder="Código"
+                maxLength={3}
+                addonBefore={getCodeAddon()}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.commonName ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
@@ -233,46 +266,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.code ? "hidden" : ""}>
-            <Form.Item<Product>
-              label="Código"
-              name="code"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.code &&
-                    !_props.hiddenFields?.code &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-                {
-                  pattern: /^\d+$/,
-                  message: "El código debe ser numérico",
-                },
-                {
-                  min: 3,
-                  message: "El código debe tener 3 caracteres",
-                },
-              ]}>
-              <Input
-                disabled={(!_props.entity && !selectedProductType) || disabled}
-                placeholder="Código"
-                maxLength={3}
-                addonBefore={getCodeAddon()}
-              />
-            </Form.Item>
-          </Col>
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.unitId ? "hidden" : ""}>
+          <Col xs={24} md={12} lg={8} xl={6}
+            className={
+              _props.hiddenFields?.unitId ? "hidden" : ""
+            }>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
