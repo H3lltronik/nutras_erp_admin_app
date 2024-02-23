@@ -13,7 +13,7 @@ const { Content } = Layout;
 
 export const ProvidersList: React.FC = () => {
   const navigate = useNavigate();
-  const { nameSearch, codeSearch, rfcSearch, getDraftMode, getPublished } =
+  const { nameSearch, codeSearch, rfcSearch, getDraftMode, getPublished, getDeleted } =
     useProvidersListPageStore();
 
   const fetchData = (params: object) => ProvidersAPI.getProviders(params);
@@ -69,6 +69,7 @@ export const ProvidersList: React.FC = () => {
                 rfcSearch,
                 draftMode: getDraftMode(),
                 published: getPublished(),
+                deleted: getDeleted(),
               }}
               additionalActions={[
                 {
