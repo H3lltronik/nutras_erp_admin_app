@@ -194,14 +194,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setLocalProviderSearch(e.target.value);
   };
 
-  const handleStatusChange = (value: string[]) => {
-    if (value.includes(entityStatuses.DRAFT)) setDraftMode(true);
+  const handleStatusChange = (value: string) => {
+    if (value?.includes(entityStatuses.DRAFT)) setDraftMode(true);
     else setDraftMode(undefined);
 
-    if (value.includes(entityStatuses.PUBLISHED)) setPublished(true);
+    if (value?.includes(entityStatuses.PUBLISHED)) setPublished(true);
     else setPublished(undefined);
 
-    if (value.includes(entityStatuses.DELETED)) setDeleted(true);
+    if (value?.includes(entityStatuses.DELETED)) setDeleted(true);
     else setDeleted(undefined);
 
     if (!value || value.length === 0) {
@@ -345,7 +345,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleStatusChange}
-            mode="multiple"
             value={status}
             allowClear>
             <Select.Option value={entityStatuses.DRAFT}>

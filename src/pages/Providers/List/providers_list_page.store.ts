@@ -20,6 +20,10 @@ type ProvidersListPageState = {
   published: boolean | undefined;
   setPublished: (value: boolean | undefined) => void;
   getPublished: () => string | undefined;
+
+  deleted: boolean | undefined;
+  setDeleted: (value: boolean | undefined) => void;
+  getDeleted: () => string | undefined;
 };
 
 export const useProvidersListPageStore = create<ProvidersListPageState>(
@@ -47,6 +51,14 @@ export const useProvidersListPageStore = create<ProvidersListPageState>(
       const published = get().published;
       if (published === undefined) return undefined;
       return published ? "true" : "false";
+    },
+
+    deleted: undefined,
+    setDeleted: (value: boolean | undefined) => set({ deleted: value }),
+    getDeleted: () => {
+      const deleted = get().deleted;
+      if (deleted === undefined) return undefined;
+      return deleted ? "true" : "false";
     },
 
     loading: false,
