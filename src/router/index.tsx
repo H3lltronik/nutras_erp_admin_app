@@ -127,7 +127,18 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pp"
+          formTitle="Catálogo de PP"
           hiddenFields={{
+            isKosher: true,
+          }}
+          requiredFields={{
+            productTypeId: true,
+            code: true,
+            commonName: true,
+            unitId: true,
+            productTypeCategoryId: true,
+            providerId: true,
+            quantityPerUnit: true,
           }}
           />
       </DefaultLayout>
@@ -140,6 +151,7 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pt"
+          formTitle="Catálogo de PT"
           hiddenFields={{
           }}
           />
@@ -193,7 +205,6 @@ const router = createBrowserRouter([
             'partidaId',
             'type',
             'provider',
-            'isKosher',
             'allergen'
           ]}
           buildNewProductPath={({ id }) =>
@@ -209,7 +220,6 @@ const router = createBrowserRouter([
             type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
           }}
           disabledFilters={{
-            kosher: true,
             allergen: true,
             provider: true,
             productTypes: true,
