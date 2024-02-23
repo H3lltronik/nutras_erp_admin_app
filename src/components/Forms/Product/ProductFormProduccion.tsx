@@ -58,6 +58,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
+    const [productTypes, setProductTypes] = useState<ProductType[]>([]);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
@@ -137,7 +138,24 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           // form.setFieldsValue({ isKosher: true });
         }
       }
+
+      const getProductsTypes = async () => {
+        const result = await ProductTypesAPI.getProductTypes({
+          department: import.meta.env.VITE_DBVAL_DEPARTMENT_PRODUCTION_ID,
+        });
+        setProductTypes(result.data);
+      }
+
+      getProductsTypes();
     }, [form, _props.entity, defaultValuesFromUrl]);
+
+    const getCodeAddon = () => {
+      const productTypeId = form.getFieldValue("productTypeId");
+      const productType = productTypes.find(
+        (type) => type.id === productTypeId
+      );
+      return productType?.name ?? "";
+    }
 
     return (
       <Form
@@ -236,7 +254,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 disabled={disabled}
                 placeholder="Código"
                 maxLength={3}
-                addonBefore={selectedProductTypeCategory?.prefix}
+                addonBefore={getCodeAddon()}
                 addonAfter={selectedProductTypeCategory?.suffix}
               />
             </Form.Item>
@@ -465,7 +483,9 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col span={"auto"}>
+          <Col span={"auto"} className={
+            _props.hiddenFields?.isKosher ? "hidden" : ""
+          }>
             <Form.Item<Product> label="Kosher" name="isKosher">
               <Switch disabled={disabled} checked={isKosher} />
             </Form.Item>
