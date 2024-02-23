@@ -46,6 +46,10 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
     onSuccess: () => {
       showToast("Producto creado correctamente", "success");
     },
+    onError: (error) => {
+      showToast("Error al crear el producto", "error");
+      console.error("error", error);
+    },
   });
   const navigate = useNavigate();
   const { id } = useParams();
@@ -78,12 +82,10 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
     setPageLoading(true);
     try {
       let result = null;
-      let message = "";
 
       if (entity) {
         if ("id" in entity) {
           result = await ProductAPI.updateProduct(entity.id, parsedFormData);
-          message = "Producto actualizado correctamente";
         } else {
           alert("No se puede actualizar el producto");
           console.error("Not valid entity", entity);
@@ -91,12 +93,10 @@ export const ProductsManage: React.FC<ProductsManageProps> = (props) => {
       } else {
         console.log("parsedFormData", parsedFormData);
         result = await mutateAsync(parsedFormData);
-        message = "Producto creado correctamente";
       }
 
       if (result) {
         if ("id" in result) {
-          showToast(message, "success");
           navigate(props.listPath);
         }
       }
