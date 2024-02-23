@@ -21,6 +21,12 @@ type ProvidersManageProps = {
   enableRedirect?: boolean;
   inModal?: boolean;
   formMode?: FormMode;
+  hiddenFields?: {
+    [K in keyof Provider]?: boolean;
+  };
+  requiredFields?: {
+    [K in keyof Provider]?: boolean;
+  };
 };
 
 export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
@@ -123,6 +129,8 @@ export const ProvidersManage: React.FC<ProvidersManageProps> = (props) => {
             <ProviderForm
               formMode={props.formMode}
               inModal={props.inModal ?? false}
+              hiddenFields={props.hiddenFields}
+              requiredFields={props.requiredFields}
               ref={providerFormRef}
               entity={entityData}
             />

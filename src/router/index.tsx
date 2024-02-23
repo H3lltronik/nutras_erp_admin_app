@@ -306,7 +306,15 @@ const router = createBrowserRouter([
     path: "/admin/providers/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
-        <ProvidersManage enableRedirect={true} />
+        <ProvidersManage
+          enableRedirect={true}
+          hiddenFields={{}}
+          requiredFields={{
+            code: true,
+            name: true,
+            service: true,
+          }}
+          />
       </DefaultLayout>
     ),
   },
@@ -345,14 +353,6 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
         <ProvidersList />
-      </DefaultLayout>
-    ),
-  },
-  {
-    path: "/admin/providers/manage/:id?",
-    element: (
-      <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
-        <ProvidersManage enableRedirect={true} />
       </DefaultLayout>
     ),
   },

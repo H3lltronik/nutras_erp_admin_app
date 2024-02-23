@@ -397,9 +397,9 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["providers"]}
-                addForm={
-                  <ProvidersManage inModal={true} enableRedirect={false} />
-                }
+                // addForm={
+                //   <ProvidersManage inModal={true} enableRedirect={false} />
+                // }
                 addFormTitle="Agregar Proveedor"
               />
             </Form.Item>
@@ -421,6 +421,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                     !isDraft,
                   message: "Este campo es obligatorio",
                 },
+                {
+                  pattern: /^\d+$/,
+                  message: "La cantidad debe ser numérica",
+                }
               ]}>
               <Input
                 disabled={(!_props.entity && !selectedProductType) || disabled}
