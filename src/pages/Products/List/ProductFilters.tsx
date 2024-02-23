@@ -1,7 +1,7 @@
 import { Input, Select } from "antd";
 import debounce from "lodash.debounce";
 import { useEffect, useMemo } from "react";
-import { ProductPresentationAPI, ProductTypesAPI } from "../../../api";
+import { ProductPresentationAPI, ProductTypeCategoriesAPI, ProductTypesAPI } from "../../../api";
 import { GetProductsParams } from "../../../api/product/product.api";
 import { GenericSelect } from "../../../components/Forms/Common/GenericSelect";
 import useSyncSearchParams from "../../../hooks/useSyncSearchParams";
@@ -16,6 +16,7 @@ export type AvailableProductFilters = {
   kosher?: boolean;
   allergen?: boolean;
   productTypes?: boolean;
+  productTypesCategories?: boolean;
   presentations?: boolean;
 };
 type ProductFiltersProps = {
@@ -37,6 +38,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setKosher,
     setAllergen,
     setProductTypes,
+    setProductTypesCategories,
     setPresentations,
   } = useProductsListPageStore((state) => state);
 
@@ -50,6 +52,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     kosher,
     allergen,
     productTypes,
+    productTypesCategories,
   } = useProductsListPageStore((state) => state);
 
   useSyncSearchParams([
@@ -102,6 +105,12 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
       updater: setProductTypes,
       dataType: "stringArray",
     },
+    {
+      key: "productTypesCategories",
+      value: productTypesCategories,
+      updater: setProductTypesCategories,
+      dataType: "stringArray",
+    },
   ]);
 
   useEffect(() => {
@@ -117,6 +126,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
     setKosher,
     setAllergen,
     setProductTypes,
+    setProductTypesCategories,
     setPresentations,
     setProviderSearch,
     setPublished,
@@ -152,6 +162,10 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
   const handleProductTypesChange = (value: string | string[]) => {
     if (Array.isArray(value)) setProductTypes(value);
   };
+
+  const handleProductTypesCategoriesChange = (value: string | string[]) => {
+    if (Array.isArray(value)) setProductTypesCategories(value);
+  }
 
   const hanldeProductPresentationsChange = (value: string | string[]) => {
     if (Array.isArray(value)) setPresentations(value);
@@ -197,7 +211,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
         <div className={`flex flex-col ${disabledFilters.name ? 'hidden' : ''}`}>
           <small>Busqueda por nombre</small>
           <Input
-            disabled={disabledFilters.name}
             placeholder="Busqueda..."
             onChange={handleNameChange}
             allowClear
@@ -208,7 +221,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
         <div className={`flex flex-col ${disabledFilters.code ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
           <small>Busqueda por código</small>
           <Input
-            disabled={disabledFilters.code}
             placeholder="Busqueda..."
             onChange={handleCodeChange}
             allowClear
@@ -219,7 +231,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
         <div className={`flex flex-col ${disabledFilters.provider ? 'hidden' : ''}`}>
           <small>Busqueda por proveedor</small>
           <Input
-            disabled={disabledFilters.provider}
             placeholder="Busqueda..."
             onChange={handleProviderChange}
             allowClear
@@ -227,24 +238,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           />
         </div>
 
-        <div className={`flex flex-col ${disabledFilters.productTypes ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
-          <small>Busqueda por tipo</small>
-          <GenericSelect
-            disabled={disabledFilters.productTypes}
-            fetcher={() => ProductTypesAPI.getProductTypes()}
-            multiple={true}
-            onChange={handleProductTypesChange}
-            placeholder="Busqueda..."
-            optionLabel="description"
-            optionKey={"id"}
-            queryKey={["productTypes"]}
-          />
-        </div>
-
         <div className={`flex flex-col ${disabledFilters.presentations ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
           <small>Busqueda por presentación</small>
           <GenericSelect
-            disabled={disabledFilters.presentations}
             fetcher={() => ProductPresentationAPI.getProductPresentations()}
             multiple={true}
             onChange={hanldeProductPresentationsChange}
@@ -255,10 +251,35 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
           />
         </div>
 
+        <div className={`flex flex-col ${disabledFilters.productTypes ? 'hidden' : ''}`} style={{ flexBasis: "200px" }}>
+          <small>Busqueda por tipo</small>
+          <GenericSelect
+            fetcher={() => ProductTypesAPI.getProductTypes()}
+            multiple={true}
+            onChange={handleProductTypesChange}
+            placeholder="Busqueda..."
+            optionLabel="description"
+            optionKey={"id"}
+            queryKey={["productTypes"]}
+          />
+        </div>
+
+        <div className={`flex flex-col ${disabledFilters.productTypesCategories ? 'hidden' : ''}`} style={{ flexBasis: "400px" }}>
+          <small>Busqueda por categoría</small>
+          <GenericSelect
+            fetcher={() => ProductTypeCategoriesAPI.getProductTypes()}
+            multiple={true}
+            onChange={handleProductTypesCategoriesChange}
+            placeholder="Busqueda..."
+            optionLabel="name"
+            optionKey={"id"}
+            queryKey={["productTypesCategories"]}
+          />
+        </div>
+
         <div className={`flex flex-col ${disabledFilters.allergen ? 'hidden' : ''}`}>
           <small>Busqueda por alergeno</small>
           <Select
-            disabled={disabledFilters.allergen}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleAllergenChange}
@@ -271,7 +292,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
         <div className={`flex flex-col ${disabledFilters.kosher ? 'hidden' : ''}`}>
           <small>Busqueda por kosher</small>
           <Select
-            disabled={disabledFilters.kosher}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleKosherChange}
@@ -285,7 +305,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = (
         <div className={`flex flex-col ${disabledFilters.status ? 'hidden' : ''}`}>
           <small>Busqueda por status</small>
           <Select
-            disabled={disabledFilters.status}
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleStatusChange}

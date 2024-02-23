@@ -109,12 +109,10 @@ const router = createBrowserRouter([
         headerTitle={`Inspeccion de producto`}>
         <ProductsManage
           formMode="view"
-          formType="compras"
+          formType="produccion"
           listPath="/admin/products/pp"
           hiddenFields={{
-            providerId: true,
             providerDescription: true,
-            notes: true,
           }}
         />
       </DefaultLayout>
@@ -127,7 +125,18 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pp"
+          formTitle="Catálogo de PP"
           hiddenFields={{
+            isKosher: true,
+          }}
+          requiredFields={{
+            productTypeId: true,
+            code: true,
+            commonName: true,
+            unitId: true,
+            productTypeCategoryId: true,
+            providerId: true,
+            quantityPerUnit: true,
           }}
           />
       </DefaultLayout>
@@ -140,6 +149,7 @@ const router = createBrowserRouter([
         <ProductsManage
           formType="produccion"
           listPath="/admin/products/pt"
+          formTitle="Catálogo de PT"
           hiddenFields={{
           }}
           />
@@ -193,7 +203,6 @@ const router = createBrowserRouter([
             'partidaId',
             'type',
             'provider',
-            'isKosher',
             'allergen'
           ]}
           buildNewProductPath={({ id }) =>
@@ -209,10 +218,10 @@ const router = createBrowserRouter([
             type: import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID,
           }}
           disabledFilters={{
-            kosher: true,
             allergen: true,
             provider: true,
             productTypes: true,
+            productTypesCategories: true,
           }}
         />
       </DefaultLayout>
@@ -234,6 +243,7 @@ const router = createBrowserRouter([
           }}
           disabledFilters={{
             presentations: true,
+            productTypesCategories: true,
           }}
           productsRoute="insumo"
         />
@@ -296,7 +306,15 @@ const router = createBrowserRouter([
     path: "/admin/providers/manage/:id?",
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
-        <ProvidersManage enableRedirect={true} />
+        <ProvidersManage
+          enableRedirect={true}
+          hiddenFields={{}}
+          requiredFields={{
+            code: true,
+            name: true,
+            service: true,
+          }}
+          />
       </DefaultLayout>
     ),
   },
@@ -335,14 +353,6 @@ const router = createBrowserRouter([
     element: (
       <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
         <ProvidersList />
-      </DefaultLayout>
-    ),
-  },
-  {
-    path: "/admin/providers/manage/:id?",
-    element: (
-      <DefaultLayout navContent={<ProvidersHeader />} headerTitle="Proveedores">
-        <ProvidersManage enableRedirect={true} />
       </DefaultLayout>
     ),
   },

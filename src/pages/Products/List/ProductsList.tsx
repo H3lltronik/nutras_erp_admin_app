@@ -39,6 +39,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     codeSearch,
     providerSearch,
     getProductTypes,
+    getProductTypesCategories,
     getPresentations,
     getKosher,
     getAllergen,
@@ -72,8 +73,6 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     }
     navigate(url);
   };
-
-  console.log("props.mode", getKosher());
 
   return (
     <>
@@ -158,6 +157,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                 codeSearch,
                 providerSearch,
                 productTypes: getProductTypes(),
+                productTypesCategories: getProductTypesCategories(),
                 presentations: getPresentations(),
                 kosher: getKosher(),
                 allergen: getAllergen(),
