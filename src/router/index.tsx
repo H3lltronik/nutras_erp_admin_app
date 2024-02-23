@@ -109,12 +109,10 @@ const router = createBrowserRouter([
         headerTitle={`Inspeccion de producto`}>
         <ProductsManage
           formMode="view"
-          formType="compras"
+          formType="produccion"
           listPath="/admin/products/pp"
           hiddenFields={{
-            providerId: true,
             providerDescription: true,
-            notes: true,
           }}
         />
       </DefaultLayout>
@@ -223,6 +221,7 @@ const router = createBrowserRouter([
             allergen: true,
             provider: true,
             productTypes: true,
+            productTypesCategories: true,
           }}
         />
       </DefaultLayout>
@@ -244,6 +243,7 @@ const router = createBrowserRouter([
           }}
           disabledFilters={{
             presentations: true,
+            productTypesCategories: true,
           }}
           productsRoute="insumo"
         />
