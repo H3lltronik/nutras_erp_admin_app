@@ -5,7 +5,7 @@ import { entityStatuses } from "../../../lib/entity.utils";
 import { useProvidersListPageStore } from "./providers_list_page.store";
 
 export default function ProviderFilters() {
-  const { setNameSearch, setCodeSearch, setRFCSearch, setDraftMode, setPublished } =
+  const { setNameSearch, setCodeSearch, setRFCSearch, setDraftMode, setPublished, setDeleted } =
     useProvidersListPageStore((state) => state);
 
   const debouncedSetNameSearch = useMemo(
@@ -24,15 +24,19 @@ export default function ProviderFilters() {
   );
 
   const handleStatusChange = (value: string[]) => {
-    if (value.includes(entityStatuses.DRAFT)) setDraftMode(true);
+    if (value?.includes(entityStatuses.DRAFT)) setDraftMode(true);
     else setDraftMode(undefined);
 
-    if (value.includes(entityStatuses.PUBLISHED)) setPublished(true);
+    if (value?.includes(entityStatuses.PUBLISHED)) setPublished(true);
     else setPublished(undefined);
+
+    if (value?.includes(entityStatuses.DELETED)) setDeleted(true);
+    else setDeleted(undefined);
 
     if (!value || value.length === 0) {
       setDraftMode(undefined);
       setPublished(undefined);
+      setDeleted(undefined);
     }
   };
 
@@ -78,19 +82,21 @@ export default function ProviderFilters() {
           />
         </div>
 
-        <div className="flex flex-col">
+        <div className={`flex flex-col`}>
           <small>Busqueda por status</small>
           <Select
             className="w-40"
             placeholder="Busqueda..."
             onChange={handleStatusChange}
-            mode="multiple"
             allowClear>
             <Select.Option value={entityStatuses.DRAFT}>
               {entityStatuses.DRAFT}
             </Select.Option>
             <Select.Option value={entityStatuses.PUBLISHED}>
               {entityStatuses.PUBLISHED}
+            </Select.Option>
+            <Select.Option value={entityStatuses.DELETED}>
+              {entityStatuses.DELETED}
             </Select.Option>
           </Select>
         </div>
