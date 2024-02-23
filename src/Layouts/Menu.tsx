@@ -105,22 +105,22 @@ const items: MenuItem[] = [
       [],
       roles.Profile.roles.read.role
     ),
-    getItem(
-      "Notificaciones",
-      "/admin/notifications",
-      <ProfileOutlined />,
-      [],
-      roles.Notification.roles.read.role
-    ),
+    // getItem(
+    //   "Notificaciones",
+    //   "/admin/notifications",
+    //   <ProfileOutlined />,
+    //   [],
+    //   roles.Notification.roles.read.role
+    // ),
   ]),
   getItem("Compras", "3", null, [
-    getItem(
-      "Ordenes de compra",
-      "/admin/purchase-orders",
-      <OrderedListOutlined />,
-      [],
-      roles.PurchaseOrders.roles.read.role
-    ),
+    // getItem(
+    //   "Ordenes de compra",
+    //   "/admin/purchase-orders",
+    //   <OrderedListOutlined />,
+    //   [],
+    //   roles.PurchaseOrders.roles.read.role
+    // ),
     getItem(
       "Proveedores",
       "/admin/providers",

@@ -484,7 +484,9 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col span={"auto"} className={
-            _props.hiddenFields?.isKosher ? "hidden" : ""
+            _props.hiddenFields?.isKosher ||
+            import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID != formProductType
+            ? "hidden" : ""
           }>
             <Form.Item<Product> label="Kosher" name="isKosher">
               <Switch disabled={disabled} checked={isKosher} />
