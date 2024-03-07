@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Col, Form, Input, Row, Switch } from "antd";
+import { Col, Form, Input, Row, Select, Switch } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
 import {
   forwardRef,
   useEffect,
@@ -11,8 +12,8 @@ import {
 } from "react";
 import {
   MeasurementAPI,
-  ProductTypeCategoriesAPI,
   ProductPresentationAPI,
+  ProductTypeCategoriesAPI,
   ProductTypesAPI,
   ProvidersAPI,
 } from "../../../api";
@@ -23,9 +24,6 @@ import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
-import _ from "lodash";
-import { ProvidersManage } from "../../../pages/Providers";
-import dayjs from "dayjs";
 
 const onFinish = (values: unknown) => {
   console.log("Success:", values);
@@ -144,7 +142,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           department: import.meta.env.VITE_DBVAL_DEPARTMENT_PRODUCTION_ID,
         });
         setProductTypes(result.data);
-      }
+      };
 
       getProductsTypes();
     }, [form, _props.entity, defaultValuesFromUrl]);
@@ -155,7 +153,12 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         (type) => type.id === productTypeId
       );
       return productType?.name ?? "";
-    }
+    };
+
+    const isPP =
+      formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID;
+    const isPT =
+      formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID;
 
     return (
       <Form
@@ -171,18 +174,21 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         </Form.Item>
 
         <Row gutter={16}>
-          <Col xs={24} md={12} lg={8} xl={4} className={
-            _props.hiddenFields?.productTypeId ? "hidden" : ""
-          }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={4}
+            className={_props.hiddenFields?.productTypeId ? "hidden" : ""}>
             <Form.Item<Product>
               label="Tipo de producto"
               name="productTypeId"
               rules={[
                 {
-                  required: 
-                  _props.requiredFields?.productTypeId &&
-                  !_props.hiddenFields?.productTypeId &&
-                  !isDraft,
+                  required:
+                    _props.requiredFields?.productTypeId &&
+                    !_props.hiddenFields?.productTypeId &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -201,18 +207,23 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          {formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID && (
-            <Col xs={24} lg={12} xl={10} xxl={8} className={
-              _props.hiddenFields?.productTypeCategoryId ? "hidden" : ""
-            }>
+          {isPP && (
+            <Col
+              xs={24}
+              lg={12}
+              xl={10}
+              xxl={8}
+              className={
+                _props.hiddenFields?.productTypeCategoryId ? "hidden" : ""
+              }>
               <Form.Item<Product>
                 label="Categoria de PP"
                 name="productTypeCategoryId"
                 rules={[
                   {
-                    required: 
-                    _props.requiredFields?.productTypeCategoryId &&
-                    !_props.hiddenFields?.productTypeCategoryId,
+                    required:
+                      _props.requiredFields?.productTypeCategoryId &&
+                      !_props.hiddenFields?.productTypeCategoryId,
                     message: "Este campo es obligatorio",
                   },
                 ]}>
@@ -227,18 +238,21 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               </Form.Item>
             </Col>
           )}
-          <Col xs={24} md={12} lg={8} xl={5} className={
-            _props.hiddenFields?.code ? "hidden" : ""
-          }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={5}
+            className={_props.hiddenFields?.code ? "hidden" : ""}>
             <Form.Item<Product>
               label="Codigo"
               name="code"
               rules={[
                 {
                   required:
-                  _props.requiredFields?.code &&
-                  !_props.hiddenFields?.code &&
-                  !isDraft,
+                    _props.requiredFields?.code &&
+                    !_props.hiddenFields?.code &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
                 {
@@ -248,7 +262,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 {
                   min: 3,
                   message: "El código debe tener 3 caracteres",
-                }
+                },
               ]}>
               <Input
                 disabled={disabled}
@@ -259,31 +273,36 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6} className={
-            _props.hiddenFields?.commonName ? "hidden" : ""
-          }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.commonName ? "hidden" : ""}>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
               rules={[
                 {
                   required:
-                  _props.requiredFields?.commonName &&
-                  !_props.hiddenFields?.commonName &&
-                  !isDraft,
+                    _props.requiredFields?.commonName &&
+                    !_props.hiddenFields?.commonName &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
               <Input
                 disabled={disabled}
                 placeholder="Nombre común del producto"
-                />
+              />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.description ? "hidden" : ""
-            }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.description ? "hidden" : ""}>
             <Form.Item<Product>
               label="Descripción del producto"
               name="description"
@@ -301,22 +320,49 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 placeholder="Descripción del producto"
                 style={{ resize: "none" }}
                 maxLength={150}
-                rows={4}
-              ></TextArea>
+                rows={4}></TextArea>
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6} className={
-            _props.hiddenFields?.unitId ? "hidden" : ""
-          }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
+            <Form.Item<Product>
+              label="Cantidad x unidad"
+              name="quantityPerUnit"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.quantityPerUnit &&
+                    !_props.hiddenFields?.quantityPerUnit &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  pattern: /^\d+$/,
+                  message: "La cantidad debe ser numérica",
+                },
+              ]}>
+              <Input disabled={disabled} placeholder="Cantidad x unidad" />
+            </Form.Item>
+          </Col>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.unitId ? "hidden" : ""}>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
               rules={[
                 {
                   required:
-                  _props.requiredFields?.unitId &&
-                  !_props.hiddenFields?.unitId &&
-                  !isDraft,
+                    _props.requiredFields?.unitId &&
+                    !_props.hiddenFields?.unitId &&
+                    !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
@@ -330,37 +376,74 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.presentation ? "hidden" : ""
-            }>
+
+          {!isPP && (
+            <Col
+              xs={24}
+              md={12}
+              lg={8}
+              xl={6}
+              className={_props.hiddenFields?.presentation ? "hidden" : ""}>
+              <Form.Item<Product>
+                label="Presentación"
+                name="presentation"
+                rules={[
+                  {
+                    required:
+                      _props.requiredFields?.presentation &&
+                      !_props.hiddenFields?.presentation &&
+                      !isDraft,
+                    message: "Este campo es obligatorio",
+                  },
+                ]}>
+                <GenericSelect
+                  disabled={disabled}
+                  fetcher={() =>
+                    ProductPresentationAPI.getProductPresentations()
+                  }
+                  placeholder="Selecciona una presentación"
+                  optionLabel="name"
+                  optionKey={"name"}
+                  queryKey={["productPresentation"]}
+                />
+              </Form.Item>
+            </Col>
+          )}
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.packaging ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Presentación"
-              name="presentation"
+              label={isPP ? "Empaque PP" : "Empaque"}
+              name="packaging"
               rules={[
                 {
                   required:
-                    _props.requiredFields?.presentation &&
-                    !_props.hiddenFields?.presentation &&
+                    _props.requiredFields?.packaging &&
+                    !_props.hiddenFields?.packaging &&
                     !isDraft,
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <GenericSelect
-                disabled={disabled}
-                fetcher={() => ProductPresentationAPI.getProductPresentations()}
-                placeholder="Selecciona una presentación"
-                optionLabel="name"
-                optionKey={"name"}
-                queryKey={["productPresentation"]}
-              />
+              {/* <Input disabled={disabled} placeholder="Empaque" /> */}
+              {/* items: Bolsa, Caja, Cubeta */}
+              <Select disabled={disabled} placeholder="Empaque" allowClear>
+                <Select.Option value="Bolsa">Bolsa</Select.Option>
+                <Select.Option value="Caja">Caja</Select.Option>
+                <Select.Option value="Cubeta">Cubeta</Select.Option>
+              </Select>
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.mold ? "hidden" : ""
-            }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.mold ? "hidden" : ""}>
             <Form.Item<Product>
               label="Molde"
               name="mold"
@@ -373,39 +456,31 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Molde"
-              />
+              <Select disabled={disabled} placeholder="Molde" allowClear>
+                <Select.Option value="N/A">N/A</Select.Option>
+                <Select.Option value="Dona">Dona</Select.Option>
+                <Select.Option value="Puff">Puff</Select.Option>
+                <Select.Option value="Mini puff">Mini puff</Select.Option>
+                <Select.Option value="Balin">Balin</Select.Option>
+                <Select.Option value="Munición">Munición</Select.Option>
+                <Select.Option value="Arroz">Arroz</Select.Option>
+                <Select.Option value="Arroz chico">Arroz chico</Select.Option>
+                <Select.Option value="Arroz grande">Arroz grande</Select.Option>
+                <Select.Option value="Esfera">Esfera</Select.Option>
+                <Select.Option value="Concha">Concha</Select.Option>
+                <Select.Option value="Hojuela">Hojuela</Select.Option>
+                <Select.Option value="Bite chico">Bite chico</Select.Option>
+                <Select.Option value="Bite grande">Bite grande</Select.Option>
+              </Select>
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.packaging ? "hidden" : ""
-            }>
-            <Form.Item<Product>
-              label="Empaque"
-              name="packaging"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.packaging &&
-                    !_props.hiddenFields?.packaging &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Empaque"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.providerId ? "hidden" : ""
-            }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.providerId ? "hidden" : ""}>
             <Form.Item<Product>
               label="Proveedor"
               name="providerId"
@@ -432,36 +507,13 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.quantityPerUnit ? "hidden" : ""
-            }>
-            <Form.Item<Product>
-              label="Cantidad x unidad"
-              name="quantityPerUnit"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.quantityPerUnit &&
-                    !_props.hiddenFields?.quantityPerUnit &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-                {
-                  pattern: /^\d+$/,
-                  message: "La cantidad debe ser numérica",
-                }
-              ]}>
-              <Input
-                disabled={disabled}
-                placeholder="Cantidad x unidad"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.notes ? "hidden" : ""
-            }>
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.notes ? "hidden" : ""}>
             <Form.Item<Product>
               label="Notas"
               name="notes"
@@ -487,11 +539,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col span={"auto"} className={
-            _props.hiddenFields?.isKosher ||
-            import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID != formProductType
-            ? "hidden" : ""
-          }>
+          <Col
+            span={"auto"}
+            className={
+              _props.hiddenFields?.isKosher ||
+              import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID != formProductType
+                ? "hidden"
+                : ""
+            }>
             <Form.Item<Product> label="Kosher" name="isKosher">
               <Switch disabled={disabled} checked={isKosher} />
             </Form.Item>
