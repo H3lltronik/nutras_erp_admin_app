@@ -29,6 +29,7 @@ export interface ProductFormResult {
   productionDataProductId: string;
   description: string;
   packaging: string;
+  packagingSecondary: string;
   mold: string;
 
   // From KosherDetailsToPost
@@ -86,6 +87,7 @@ export interface ProductionDataToPost {
   productId?: string;
   description?: string;
   packaging?: string;
+  packagingSecondary?: string;
   mold?: string;
 }
 
@@ -129,6 +131,7 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     productionData: {
       description: productToFormat.description,
       packaging: productToFormat.packaging,
+      packagingSecondary: productToFormat.packagingSecondary,
       mold: productToFormat.mold,
     },
     kosherDetails: {
@@ -169,6 +172,8 @@ export const unformatProductForm = (
     quantityPerUnit: productToUnformat.quantityPerUnit ?? "",
     mold: productToUnformat.productionData?.mold ?? "",
     packaging: productToUnformat.productionData?.packaging ?? "",
+    packagingSecondary:
+      productToUnformat.productionData?.packagingSecondary ?? "",
     productTypeCategoryId: productToUnformat.productTypeCategoryId ?? "",
     productTypeCategory: productToUnformat.productTypeCategory,
     ppNotes: productToUnformat.ppNotes ?? "",
