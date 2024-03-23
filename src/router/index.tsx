@@ -152,6 +152,15 @@ const router = createBrowserRouter([
           formTitle="Catálogo de PT"
           hiddenFields={{
           }}
+          requiredFields={{
+            productTypeId: true,
+            code: true,
+            commonName: true,
+            unitId: true,
+            productTypeCategoryId: true,
+            providerId: true,
+            quantityPerUnit: true,
+          }}
           />
       </DefaultLayout>
     ),
