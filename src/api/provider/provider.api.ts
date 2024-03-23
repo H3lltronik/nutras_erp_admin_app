@@ -26,11 +26,13 @@ class BaseProviderAPI extends BaseAPI {
   }
 
   async getProviders(
-    params?: GetProvidersParams
+    params?: GetProvidersParams,
+    showHidden: boolean = false
   ): Promise<GetProvidersResponseWithStatus | APIError> {
     try {
-      const products = await this.get<GetProvidersResponse>("", params);
-      const productsWithStatus = products.data.map((product) =>
+      const providers = await this.get<GetProvidersResponse>("", params);
+      const productsWithStatus = providers.data.filter(provider => showHidden || !provider.hidden)
+      .map((product) =>
         Object.assign({}, product, {
           status: statusParser(product),
         })
@@ -38,7 +40,7 @@ class BaseProviderAPI extends BaseAPI {
 
       return {
         data: productsWithStatus,
-        pagination: products.pagination,
+        pagination: providers.pagination,
       };
     } catch (error) {
       return handleAPIError(error);
