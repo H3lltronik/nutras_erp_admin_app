@@ -373,93 +373,6 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 rows={4}></TextArea>
             </Form.Item>
           </Col>
-          {
-            canQuantityPerUnitBeVariable() &&
-            <Col
-              xs={24}
-              md={12}
-              lg={6}
-              xl={4}
-              className={_props.hiddenFields?.variableQuantityPerUnit ? "hidden" : ""}>
-              <Form.Item<Product>
-                label="Cantidad variable"
-                name="variableQuantityPerUnit"
-                rules={[
-                  // {
-                  //   required:
-                  //     _props.requiredFields?.variableQuantityPerUnit &&
-                  //     !_props.hiddenFields?.variableQuantityPerUnit &&
-                  //     !isDraft,
-                  //   message: "Este campo es obligatorio",
-                  // },
-                ]}>
-                <Switch disabled={disabled} checked={isVariableQuantityPerUnit} onChange={onvariableQuantityPerUnitChange} />
-              </Form.Item>
-            </Col>
-          }
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
-            <Form.Item<Product>
-              label="Cantidad x unidad"
-              name="quantityPerUnit"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.quantityPerUnit &&
-                    !_props.hiddenFields?.quantityPerUnit &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-                {
-                  pattern: isVariableQuantityPerUnit ? undefined : /^\d+(\.\d{1,2})?$/,
-                  message: "La cantidad debe ser numérica, y puede tener hasta 2 decimales",
-                },
-              ]}>
-              <Input
-              disabled={disabled || isVariableQuantityPerUnit}
-              placeholder="Cantidad x unidad"
-              addonAfter={measurement?.name ?? ""}/>
-            </Form.Item>
-          </Col>
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.unitId ? "hidden" : ""}>
-            <Form.Item<Product>
-              label="Unidad de medida"
-              name="unitId"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.unitId &&
-                    !_props.hiddenFields?.unitId &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <GenericSelect
-                disabled={disabled}
-                fetcher={() => MeasurementAPI.getMeasurements()}
-                onChange={(value) => {
-                  const selectedMeasurement = measurements.find(
-                    (m) => m.id === value
-                  );
-                  setMeasurement(selectedMeasurement);
-                }}
-                placeholder="Selecciona una unidad"
-                optionLabel="name"
-                optionKey={"id"}
-                queryKey={["measurements"]}
-              />
-            </Form.Item>
-          </Col>
-
           {!isPP && (
             <Col
               xs={24}
@@ -498,9 +411,44 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             md={12}
             lg={8}
             xl={6}
+            className={_props.hiddenFields?.unitId ? "hidden" : ""}>
+            <Form.Item<Product>
+              label="Unidad de medida"
+              name="unitId"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.unitId &&
+                    !_props.hiddenFields?.unitId &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <GenericSelect
+                disabled={disabled}
+                fetcher={() => MeasurementAPI.getMeasurements()}
+                onChange={(value) => {
+                  const selectedMeasurement = measurements.find(
+                    (m) => m.id === value
+                  );
+                  setMeasurement(selectedMeasurement);
+                }}
+                placeholder="Selecciona una unidad"
+                optionLabel="name"
+                optionKey={"id"}
+                queryKey={["measurements"]}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
             className={_props.hiddenFields?.packaging ? "hidden" : ""}>
             <Form.Item<Product>
-              label={isPP ? "Empaque PP" : "Empaque"}
+              label={isPP ? "Empaque PP" : "Empaque primario"}
               name="packaging"
               rules={[
                 {
@@ -518,6 +466,91 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 <Select.Option value="Caja">Caja</Select.Option>
                 <Select.Option value="Cubeta">Cubeta</Select.Option>
               </Select>
+            </Form.Item>
+          </Col>
+
+          {
+            isPT && (
+              <Col
+                xs={24}
+                md={12}
+                lg={8}
+                xl={6}
+                className={_props.hiddenFields?.secondaryPackaging ? "hidden" : ""}>
+                <Form.Item<Product>
+                  label={"Empaque secundario"}
+                  name="secondaryPackaging"
+                  rules={[
+                    {
+                      required:
+                        _props.requiredFields?.secondaryPackaging &&
+                        !_props.hiddenFields?.secondaryPackaging &&
+                        !isDraft,
+                      message: "Este campo es obligatorio",
+                    },
+                  ]}>
+                  {/* <Input disabled={disabled} placeholder="Empaque" /> */}
+                  {/* items: Bolsa, Caja, Cubeta */}
+                  <Select disabled={disabled} placeholder="Empaque" allowClear>
+                    <Select.Option value="Bolsa">Bolsa</Select.Option>
+                    <Select.Option value="Caja">Caja</Select.Option>
+                    <Select.Option value="Cubeta">Cubeta</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            )
+          }
+
+          {
+            isPP && canQuantityPerUnitBeVariable() &&
+            <Col
+              xs={24}
+              md={12}
+              lg={6}
+              xl={4}
+              className={_props.hiddenFields?.variableQuantityPerUnit ? "hidden" : ""}>
+              <Form.Item<Product>
+                label="Cantidad variable"
+                name="variableQuantityPerUnit"
+                rules={[
+                  // {
+                  //   required:
+                  //     _props.requiredFields?.variableQuantityPerUnit &&
+                  //     !_props.hiddenFields?.variableQuantityPerUnit &&
+                  //     !isDraft,
+                  //   message: "Este campo es obligatorio",
+                  // },
+                ]}>
+                <Switch disabled={disabled} checked={isVariableQuantityPerUnit} onChange={onvariableQuantityPerUnitChange} />
+              </Form.Item>
+            </Col>
+          }
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
+            <Form.Item<Product>
+              label={isPP ? "Cantidad x unidad" : "Cantidad por empaque"}
+              name="quantityPerUnit"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.quantityPerUnit &&
+                    !_props.hiddenFields?.quantityPerUnit &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+                {
+                  pattern: isVariableQuantityPerUnit ? undefined : /^\d+(\.\d{1,2})?$/,
+                  message: "La cantidad debe ser numérica, y puede tener hasta 2 decimales",
+                },
+              ]}>
+              <Input
+              disabled={disabled || isVariableQuantityPerUnit}
+              placeholder="Cantidad x unidad"
+              addonAfter={measurement?.name ?? ""}/>
             </Form.Item>
           </Col>
 
@@ -556,6 +589,35 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 <Select.Option value="Bite grande">Bite grande</Select.Option>
               </Select>
             </Form.Item>
+          </Col>
+
+          <Col
+            span={"auto"}
+            className={
+              _props.hiddenFields?.isKosher ||
+              import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID != formProductType
+                ? "hidden"
+                : ""
+            }>
+            <Form.Item<Product> label="Kosher" name="isKosher">
+              <Switch disabled={disabled} checked={isKosher} />
+            </Form.Item>
+          </Col>
+
+          <Col span={24}>
+            {isKosher && (
+              <Row
+                gutter={16}
+                className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
+                <Col span={24}>
+                  <ProductKosherForm
+                    ref={productKosherFormRef}
+                    mode={_props.formMode}
+                    entity={kosherDetails}
+                  />
+                </Col>
+              </Row>
+            )}
           </Col>
 
           <Col
@@ -620,35 +682,6 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 placeholder="Notas"
                 rows={4}></TextArea>
             </Form.Item>
-          </Col>
-
-          <Col
-            span={"auto"}
-            className={
-              _props.hiddenFields?.isKosher ||
-              import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PT_ID != formProductType
-                ? "hidden"
-                : ""
-            }>
-            <Form.Item<Product> label="Kosher" name="isKosher">
-              <Switch disabled={disabled} checked={isKosher} />
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            {isKosher && (
-              <Row
-                gutter={16}
-                className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
-                <Col span={24}>
-                  <ProductKosherForm
-                    ref={productKosherFormRef}
-                    mode={_props.formMode}
-                    entity={kosherDetails}
-                  />
-                </Col>
-              </Row>
-            )}
           </Col>
         </Row>
       </Form>

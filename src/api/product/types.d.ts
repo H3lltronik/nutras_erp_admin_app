@@ -91,6 +91,7 @@ interface ProductionData {
   productId: string;
   description: string;
   packaging: string;
+  secondaryPackaging: string;
   mold: string;
 }
 
