@@ -180,10 +180,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.code ? "hidden" : ""
-            }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.code ? "hidden" : ""}>
             <Form.Item<Product>
               label="Código"
               name="code"
@@ -202,12 +204,10 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 {
                   min: 3,
                   message: "El código debe tener 3 caracteres",
-                }
+                },
               ]}>
               <Input
-                disabled={
-                  (!_props.entity && !selectedProductType) || disabled
-                }
+                disabled={(!_props.entity && !selectedProductType) || disabled}
                 placeholder="Código"
                 maxLength={3}
                 addonBefore={getCodeAddon()}
@@ -215,10 +215,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.commonName ? "hidden" : ""
-            }>
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.commonName ? "hidden" : ""}>
             <Form.Item<Product>
               label="Nombre Común"
               name="commonName"
@@ -243,32 +245,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             md={12}
             lg={8}
             xl={6}
-            className={_props.hiddenFields?.description ? "hidden" : ""}>
-            <Form.Item<Product>
-              label="Descripción del producto"
-              name="description"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.description &&
-                    !_props.hiddenFields?.description &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <TextArea
-                disabled={(!_props.entity && !selectedProductType) || disabled}
-                placeholder="Descripción del producto"
-                style={{ resize: "none" }}
-                maxLength={150}
-                rows={4}></TextArea>
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} md={12} lg={8} xl={6}
-            className={
-              _props.hiddenFields?.unitId ? "hidden" : ""
-            }>
+            className={_props.hiddenFields?.unitId ? "hidden" : ""}>
             <Form.Item<Product>
               label="Unidad de medida"
               name="unitId"
@@ -423,7 +400,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 {
                   pattern: /^\d+$/,
                   message: "La cantidad debe ser numérica",
-                }
+                },
               ]}>
               <Input
                 disabled={(!_props.entity && !selectedProductType) || disabled}

@@ -12,7 +12,6 @@ import {
 } from "react";
 import {
   MeasurementAPI,
-  ProductPresentationAPI,
   ProductTypeCategoriesAPI,
   ProductTypesAPI,
   ProvidersAPI,
@@ -21,6 +20,7 @@ import { urlWithGetKeyToJson } from "../../../lib/entity.utils";
 import { useFormModeChecker } from "../../../lib/form/disabledChecked";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
 import { GenericSelect } from "../Common/GenericSelect";
+import { PresentationInput } from "./PresentationInput";
 import ProductKosherForm, {
   ProductKosherFormHandle,
 } from "./ProductKosherForm";
@@ -459,12 +459,57 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
               ]}>
-              {/* <Input disabled={disabled} placeholder="Empaque" /> */}
-              {/* items: Bolsa, Caja, Cubeta */}
+              {isPT ? (
+                <>
+                  <Select disabled={disabled} placeholder="Empaque" allowClear>
+                    <Select.Option value="Bolsa">Bolsa</Select.Option>
+                    <Select.Option value="Bobina impresa">
+                      Bobina impresa
+                    </Select.Option>
+                    <Select.Option value="Bobina transparente">
+                      Bobina transparente
+                    </Select.Option>
+                    <Select.Option value="Bolsa pouch">
+                      Bolsa pouch
+                    </Select.Option>
+                  </Select>
+                </>
+              ) : (
+                <>
+                  <Select disabled={disabled} placeholder="Empaque" allowClear>
+                    <Select.Option value="Bolsa">Bolsa</Select.Option>
+                    <Select.Option value="Caja">Caja</Select.Option>
+                    <Select.Option value="Cubeta">Cubeta</Select.Option>
+                  </Select>
+                </>
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.packagingSecondary ? "hidden" : ""}>
+            <Form.Item<Product>
+              label={isPT ? "Empaque Secundario" : "Empaque"}
+              name="packagingSecondary"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.packaging &&
+                    !_props.hiddenFields?.packaging &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
               <Select disabled={disabled} placeholder="Empaque" allowClear>
-                <Select.Option value="Bolsa">Bolsa</Select.Option>
+                <Select.Option value="N/A">N/A</Select.Option>
                 <Select.Option value="Caja">Caja</Select.Option>
-                <Select.Option value="Cubeta">Cubeta</Select.Option>
+                <Select.Option value="Bolsa">Bolsa</Select.Option>
+                <Select.Option value="Bulto">Bulto</Select.Option>
+                <Select.Option value="Super Saco">Super Saco</Select.Option>
               </Select>
             </Form.Item>
           </Col>
