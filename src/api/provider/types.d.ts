@@ -18,6 +18,7 @@ interface Provider {
   bank: string | null;
   clabeAccount: string | null;
   accountNumber: string | null;
+  hidden: boolean;
 }
 
 type CreateProviderRequest = Omit<Provider, "id">;

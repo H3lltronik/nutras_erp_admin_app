@@ -1,4 +1,5 @@
 interface Product {
+  [key: string]: any; // Allows to add any other key to the object and access it with bracket notation
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -20,6 +21,7 @@ interface Product {
   notes: string;
   unitId: string;
   presentation: string;
+  variableQuantityPerUnit: boolean;
   quantityPerUnit: string;
   isKosher: boolean;
   allergen: boolean;

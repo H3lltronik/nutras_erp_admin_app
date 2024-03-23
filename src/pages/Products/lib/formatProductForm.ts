@@ -13,6 +13,7 @@ export interface ProductFormResult {
   notes: string;
   unitId: string;
   presentation: string;
+  variableQuantityPerUnit: boolean;
   quantityPerUnit: string;
   isKosher: boolean;
   departmentId: string;
@@ -120,6 +121,7 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     isKosher: productToFormat.isKosher,
     allergen: productToFormat.allergen,
     presentation: productToFormat.presentation,
+    variableQuantityPerUnit: productToFormat.variableQuantityPerUnit,
     quantityPerUnit: productToFormat.quantityPerUnit,
     departmentId: productToFormat.departmentId,
     productTypeCategoryId: productToFormat.productTypeCategoryId,
@@ -169,6 +171,7 @@ export const unformatProductForm = (
     notes: productToUnformat.notes ?? "",
     unitId: productToUnformat.unitId ?? "",
     isKosher: productToUnformat.isKosher ?? false,
+    variableQuantityPerUnit: productToUnformat.variableQuantityPerUnit ?? false,
     quantityPerUnit: productToUnformat.quantityPerUnit ?? "",
     mold: productToUnformat.productionData?.mold ?? "",
     packaging: productToUnformat.productionData?.packaging ?? "",
