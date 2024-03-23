@@ -532,7 +532,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             xl={6}
             className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Cantidad x unidad"
+              label={isPP ? "Cantidad x unidad" : "Cantidad por empaque"}
               name="quantityPerUnit"
               rules={[
                 {
