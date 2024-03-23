@@ -57,8 +57,10 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
+    const [productTypeCategories, setProductTypeCategories] = useState<ProductTypeCategory[]>([]);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
+    const isVariableQuantityPerUnit = Form.useWatch("variableQuantityPerUnit", form);
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
     const formProductType = Form.useWatch("productTypeId", form);
     const productTypeCategoryId = Form.useWatch("productTypeCategoryId", form);
@@ -144,7 +146,13 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
         setProductTypes(result.data);
       };
 
+      const getProductTypeCategories = async () => {
+        const result = await ProductTypeCategoriesAPI.getProductTypes();
+        setProductTypeCategories(result.data);
+      }
+
       getProductsTypes();
+      getProductTypeCategories();
     }, [form, _props.entity, defaultValuesFromUrl]);
 
     const getCodeAddon = () => {
@@ -154,6 +162,28 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       );
       return productType?.name ?? "";
     };
+
+    const canQuantityPerUnitBeVariable = () => {
+      const suffixesThatForbidvariableQuantityPerUnit = ["", "A"];
+      const productTypeCategoryId = form.getFieldValue("productTypeCategoryId");
+      const productTypeCategory = productTypeCategories.find(
+        (category) => category.id === productTypeCategoryId
+      );
+      const canBeVariable = !suffixesThatForbidvariableQuantityPerUnit.includes(
+        productTypeCategory?.suffix ?? ""
+      );
+
+      return canBeVariable;
+    }
+
+    const onvariableQuantityPerUnitChange = (value: boolean) => {
+      if (value === true) {
+        form.setFieldsValue({ quantityPerUnit: "Variable" });
+      }
+      else {
+        form.setFieldsValue({ quantityPerUnit: "" });
+      }
+    }
 
     const isPP =
       formProductType == import.meta.env.VITE_DBVAL_PRODUCT_TYPE_PP_ID;
@@ -231,6 +261,12 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   disabled={disabled}
                   fetcher={() => ProductTypeCategoriesAPI.getProductTypes()}
                   placeholder="Selecciona una categoria de PP"
+                  onChange={() => {
+                    form.setFieldsValue({
+                      variableQuantityPerUnit: false,
+                      quantityPerUnit: "",
+                    });
+                  }}
                   optionLabel="name"
                   optionKey={"id"}
                   queryKey={["ppCategories"]}
@@ -323,6 +359,30 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 rows={4}></TextArea>
             </Form.Item>
           </Col>
+          {
+            canQuantityPerUnitBeVariable() &&
+            <Col
+              xs={24}
+              md={12}
+              lg={6}
+              xl={4}
+              className={_props.hiddenFields?.variableQuantityPerUnit ? "hidden" : ""}>
+              <Form.Item<Product>
+                label="Cantidad variable"
+                name="variableQuantityPerUnit"
+                rules={[
+                  // {
+                  //   required:
+                  //     _props.requiredFields?.variableQuantityPerUnit &&
+                  //     !_props.hiddenFields?.variableQuantityPerUnit &&
+                  //     !isDraft,
+                  //   message: "Este campo es obligatorio",
+                  // },
+                ]}>
+                <Switch disabled={disabled} checked={isVariableQuantityPerUnit} onChange={onvariableQuantityPerUnitChange} />
+              </Form.Item>
+            </Col>
+          }
           <Col
             xs={24}
             md={12}
@@ -341,11 +401,11 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   message: "Este campo es obligatorio",
                 },
                 {
-                  pattern: /^\d+$/,
-                  message: "La cantidad debe ser numérica",
+                  pattern: isVariableQuantityPerUnit ? undefined : /^\d+(\.\d{1,2})?$/,
+                  message: "La cantidad debe ser numérica, y puede tener hasta 2 decimales",
                 },
               ]}>
-              <Input disabled={disabled} placeholder="Cantidad x unidad" />
+              <Input disabled={disabled || isVariableQuantityPerUnit} placeholder="Cantidad x unidad" />
             </Form.Item>
           </Col>
           <Col

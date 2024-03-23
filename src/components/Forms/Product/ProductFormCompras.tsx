@@ -16,7 +16,6 @@ import {
   ProvidersAPI,
 } from "../../../api";
 import { ProductFormResult } from "../../../pages/Products/lib/formatProductForm";
-import { ProvidersManage } from "../../../pages/Providers";
 import { GenericSelect } from "../Common/GenericSelect";
 import ProductKosherForm, {
   ProductKosherFormHandle,
