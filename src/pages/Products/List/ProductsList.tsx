@@ -2,10 +2,15 @@ import { EyeOutlined } from "@ant-design/icons";
 import { Button, Layout } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ProductAPI } from "../../../api";
+import { BASE_URL, ProductAPI } from "../../../api";
+import { ENTITIES_ENDPOINTS } from "../../../api/constants";
 import { GetProductsParams } from "../../../api/product/product.api";
-import { AdminDataTable } from "../../../components/Common/AdminDataTable";
+import {
+  AdminDataTable,
+  AdminDataTableHandle,
+} from "../../../components/Common/AdminDataTable";
 import { ProductsListBreadcrumb } from "../Common/Breadcrums";
+import { ExportButton } from "./ExportButton";
 import { AvailableProductFilters, ProductFilters } from "./ProductFilters";
 import { productListColumns } from "./productsTableColumns";
 import { useProductsListPageStore } from "./products_list_page.store";
@@ -27,7 +32,7 @@ type ProductsListProps = {
   selectedRowIds?: string[];
   productFormType?: "PP" | "PT";
   columnsToHide?: string[];
-  productsRoute?: 'insumo' | 'product';
+  productsRoute?: "insumo" | "product";
 };
 const isSelectionOnly = (mode: string | undefined) => mode === "selection-only";
 
@@ -47,6 +52,8 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
     getPublished,
     getDeleted,
   } = useProductsListPageStore();
+
+  const adminTableRef = React.useRef<AdminDataTableHandle>(null);
 
   const fetchData = (params: object) =>
     ProductAPI.getProducts({
@@ -80,12 +87,21 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
         {props.mode !== "selection-only" ? (
           <div className="flex justify-between items-center">
             <ProductsListBreadcrumb />
-            <Button
-              onClick={handleNewProductClick}
-              className="bg-green-600 text-white hover:bg-green-50"
-              type="default">
-              Nuevo {props.productFormType ?? "insumo"}
-            </Button>
+            <div className="flex items-center gap-5">
+              <ExportButton
+                exportPath={`${BASE_URL}/${ENTITIES_ENDPOINTS.products}/export`}
+                adminTableRef={adminTableRef}
+                queryParams={{
+                  ...props.defaultFilters,
+                }}
+              />
+              <Button
+                onClick={handleNewProductClick}
+                className="bg-green-600 text-white hover:bg-green-50"
+                type="default">
+                Nuevo {props.productFormType ?? "insumo"}
+              </Button>
+            </div>
           </div>
         ) : null}
         <div className="p-[24px] bg-white">
@@ -95,6 +111,7 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
           />
           <section className="mx-auto">
             <AdminDataTable
+              ref={adminTableRef}
               enableSelection={props.enableSelection}
               selectionLimit={
                 props.selectionLimit ? props.selectionLimit : 1004
@@ -139,11 +156,17 @@ export const ProductsList: React.FC<ProductsListProps> = (props) => {
                   onClick: (record) => {
                     if (isSelectionOnly(props.mode))
                       window.open(
-                        `/admin/products/inspect/${props.productsRoute ?? 'product'}/${record.id}`,
+                        `/admin/products/inspect/${
+                          props.productsRoute ?? "product"
+                        }/${record.id}`,
                         "_blank"
                       );
                     else
-                      navigate(`/admin/products/inspect/${props.productsRoute ?? 'product'}/${record.id}`);
+                      navigate(
+                        `/admin/products/inspect/${
+                          props.productsRoute ?? "product"
+                        }/${record.id}`
+                      );
                   },
                   conditionEval: (_record) => {
                     const record = _record as Product;

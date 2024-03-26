@@ -8,7 +8,13 @@ import { Button, Modal, Space, Table, TablePaginationConfig } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import { TableRowSelection } from "antd/es/table/interface";
-import { memo, useEffect, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocationQuery } from "../../hooks/useLocationQuery";
 import { showToast } from "../../lib/notify";
@@ -49,33 +55,45 @@ export interface IDataWithID {
   id: string | number;
 }
 
+export type AdminDataTableHandle = {
+  getRequestParams: () => Record<string, string | number | undefined>;
+};
+
 const _AdminDataTable = <
   TData extends IDataWithID,
   TResponse extends { data: TData[]; pagination: Pagination },
->({
-  enableSelection = false,
-  selectionLimit = 1,
-  onSelectionChange = () => {},
-  queryKey,
-  fetchData,
-  columns,
-  additionalActions = [],
-  deleteAction,
-  deleteActionConditionEval,
-  editAction,
-  editActionConditionEval,
-  queryParameters = {},
-  rowClassName,
-  editDisabled = false,
-  deleteDisabled = false,
-  perPage = 5,
-  selectedRowIds = [],
-}: AdminDataTableProps<TData, TResponse>) => {
+>(
+  props: AdminDataTableProps<TData, TResponse>,
+  ref: React.Ref<AdminDataTableHandle>
+) => {
+  const {
+    enableSelection = false,
+    selectionLimit = 1,
+    onSelectionChange = () => {},
+    queryKey,
+    fetchData,
+    columns,
+    additionalActions = [],
+    deleteAction,
+    deleteActionConditionEval,
+    editAction,
+    editActionConditionEval,
+    queryParameters = {},
+    rowClassName,
+    editDisabled = false,
+    deleteDisabled = false,
+    perPage = 5,
+    selectedRowIds = [],
+  } = props;
   const navigate = useNavigate();
   const locationQuery = useLocationQuery();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageLoading, setPageLoading] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TData[]>([]);
+
+  useImperativeHandle(ref, () => ({
+    getRequestParams: () => getRequestParams(),
+  }));
 
   // implement a way to let the table know what rows is selected by default
   useEffect(() => {
@@ -107,6 +125,14 @@ const _AdminDataTable = <
         ...queryParameters,
       }),
   });
+
+  const getRequestParams = () => {
+    return {
+      offset: (currentPage - 1) * perPage,
+      limit: perPage,
+      ...queryParameters,
+    };
+  };
 
   const loading = useMemo(
     () => pageLoading || isFetching,
@@ -271,4 +297,4 @@ const _AdminDataTable = <
   );
 };
 
-export const AdminDataTable = memo(_AdminDataTable);
+export const AdminDataTable = forwardRef(_AdminDataTable);

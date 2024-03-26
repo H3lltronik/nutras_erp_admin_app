@@ -23,7 +23,7 @@ import BaseWorkRequestAPI from "./workRequest/workRequest.api";
 import BaseProductPresentationsAPI from "./product/product-presentation.api";
 import BaseProductTypeCategoriesAPI from "./product/pp_product_types.api";
 
-const BASE_URL = import.meta.env.VITE_API_PATH;
+export const BASE_URL = import.meta.env.VITE_API_PATH;
 
 export const ProductAPI = new BaseProductAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.products}`);
 export const ProductTypesAPI = new BaseProductTypesAPI(`${BASE_URL}/${ENTITIES_ENDPOINTS.product_types}`);
