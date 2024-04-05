@@ -160,7 +160,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           const selectedMeasurement = result.data.find(
             (m) => m.id === _props.entity?.unitId
           );
-          setMeasurement(selectedMeasurement);
+          setMeasurement(selectedMeasurement ?? null);
         }
       };
 
@@ -190,7 +190,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
       return canBeVariable;
     }
 
-    const onvariableQuantityPerUnitChange = (value: boolean) => {
+    const onVariableQuantityPerUnitChange = (value: boolean) => {
       if (value === true) {
         form.setFieldsValue({ quantityPerUnit: "Variable" });
       }
@@ -381,7 +381,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               xl={6}
               className={_props.hiddenFields?.presentation ? "hidden" : ""}>
               <Form.Item<Product>
-                label="Presentación"
+                label={ isPT ? "Presentación PT" : (isPP ? "Presentación PP" : "Presentación") }
                 name="presentation"
                 rules={[
                   {
@@ -431,7 +431,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   const selectedMeasurement = measurements.find(
                     (m) => m.id === value
                   );
-                  setMeasurement(selectedMeasurement);
+                  setMeasurement(selectedMeasurement ?? null);
                 }}
                 placeholder="Selecciona una unidad"
                 optionLabel="name"
@@ -441,135 +441,6 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.packaging ? "hidden" : ""}>
-            <Form.Item<Product>
-              label={isPP ? "Empaque PP" : "Empaque primario"}
-              name="packaging"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.packaging &&
-                    !_props.hiddenFields?.packaging &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              {isPT ? (
-                <>
-                  <Select disabled={disabled} placeholder="Empaque" allowClear>
-                    <Select.Option value="Bolsa">Bolsa</Select.Option>
-                    <Select.Option value="Bobina impresa">
-                      Bobina impresa
-                    </Select.Option>
-                    <Select.Option value="Bobina transparente">
-                      Bobina transparente
-                    </Select.Option>
-                    <Select.Option value="Bolsa pouch">
-                      Bolsa pouch
-                    </Select.Option>
-                  </Select>
-                </>
-              ) : (
-                <>
-                  <Select disabled={disabled} placeholder="Empaque" allowClear>
-                    <Select.Option value="Bolsa">Bolsa</Select.Option>
-                    <Select.Option value="Caja">Caja</Select.Option>
-                    <Select.Option value="Cubeta">Cubeta</Select.Option>
-                  </Select>
-                </>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.packagingSecondary ? "hidden" : ""}>
-            <Form.Item<Product>
-              label={isPT ? "Empaque Secundario" : "Empaque"}
-              name="packagingSecondary"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.packaging &&
-                    !_props.hiddenFields?.packaging &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Select disabled={disabled} placeholder="Empaque" allowClear>
-                <Select.Option value="N/A">N/A</Select.Option>
-                <Select.Option value="Caja">Caja</Select.Option>
-                <Select.Option value="Bolsa">Bolsa</Select.Option>
-                <Select.Option value="Bulto">Bulto</Select.Option>
-                <Select.Option value="Super Saco">Super Saco</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          {
-            isPT && (
-              <Col
-                xs={24}
-                md={12}
-                lg={8}
-                xl={6}
-                className={_props.hiddenFields?.secondaryPackaging ? "hidden" : ""}>
-                <Form.Item<Product>
-                  label={"Empaque secundario"}
-                  name="secondaryPackaging"
-                  rules={[
-                    {
-                      required:
-                        _props.requiredFields?.secondaryPackaging &&
-                        !_props.hiddenFields?.secondaryPackaging &&
-                        !isDraft,
-                      message: "Este campo es obligatorio",
-                    },
-                  ]}>
-                  {/* <Input disabled={disabled} placeholder="Empaque" /> */}
-                  {/* items: Bolsa, Caja, Cubeta */}
-                  <Select disabled={disabled} placeholder="Empaque" allowClear>
-                    <Select.Option value="Bolsa">Bolsa</Select.Option>
-                    <Select.Option value="Caja">Caja</Select.Option>
-                    <Select.Option value="Cubeta">Cubeta</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-            )
-          }
-
-          {
-            isPP && canQuantityPerUnitBeVariable() &&
-            <Col
-              xs={24}
-              md={12}
-              lg={6}
-              xl={4}
-              className={_props.hiddenFields?.variableQuantityPerUnit ? "hidden" : ""}>
-              <Form.Item<Product>
-                label="Cantidad variable"
-                name="variableQuantityPerUnit"
-                rules={[
-                  // {
-                  //   required:
-                  //     _props.requiredFields?.variableQuantityPerUnit &&
-                  //     !_props.hiddenFields?.variableQuantityPerUnit &&
-                  //     !isDraft,
-                  //   message: "Este campo es obligatorio",
-                  // },
-                ]}>
-                <Switch disabled={disabled} checked={isVariableQuantityPerUnit} onChange={onvariableQuantityPerUnitChange} />
-              </Form.Item>
-            </Col>
-          }
           <Col
             xs={24}
             md={12}
@@ -598,6 +469,109 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               addonAfter={measurement?.name ?? ""}/>
             </Form.Item>
           </Col>
+
+          {
+            isPT && (
+              <>
+                <Col
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  className={_props.hiddenFields?.packaging ? "hidden" : ""}>
+                  <Form.Item<Product>
+                    label="Empaque primario"
+                    name="packaging"
+                    rules={[
+                      {
+                        required:
+                          _props.requiredFields?.packaging &&
+                          !_props.hiddenFields?.packaging &&
+                          !isDraft,
+                        message: "Este campo es obligatorio",
+                      },
+                    ]}>
+                    {isPT ? (
+                      <>
+                        <Select disabled={disabled} placeholder="Empaque" allowClear>
+                          <Select.Option value="Bolsa">Bolsa</Select.Option>
+                          <Select.Option value="Bobina impresa">
+                            Bobina impresa
+                          </Select.Option>
+                          <Select.Option value="Bobina transparente">
+                            Bobina transparente
+                          </Select.Option>
+                          <Select.Option value="Bolsa pouch">
+                            Bolsa pouch
+                          </Select.Option>
+                        </Select>
+                      </>
+                    ) : (
+                      <>
+                        <Select disabled={disabled} placeholder="Empaque" allowClear>
+                          <Select.Option value="Bolsa">Bolsa</Select.Option>
+                          <Select.Option value="Caja">Caja</Select.Option>
+                          <Select.Option value="Cubeta">Cubeta</Select.Option>
+                        </Select>
+                      </>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  className={_props.hiddenFields?.packagingSecondary ? "hidden" : ""}>
+                  <Form.Item<Product>
+                    label="Empaque secundario"
+                    name="packagingSecondary"
+                    rules={[
+                      {
+                        required:
+                          _props.requiredFields?.packaging &&
+                          !_props.hiddenFields?.packaging &&
+                          !isDraft,
+                        message: "Este campo es obligatorio",
+                      },
+                    ]}>
+                    <Select disabled={disabled} placeholder="Empaque" allowClear>
+                      <Select.Option value="N/A">N/A</Select.Option>
+                      <Select.Option value="Caja">Caja</Select.Option>
+                      <Select.Option value="Bolsa">Bolsa</Select.Option>
+                      <Select.Option value="Bulto">Bulto</Select.Option>
+                      <Select.Option value="Super Saco">Super Saco</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </>
+            )
+          }
+
+          {
+            isPP && canQuantityPerUnitBeVariable() &&
+            <Col
+              xs={24}
+              md={12}
+              lg={6}
+              xl={4}
+              className={_props.hiddenFields?.variableQuantityPerUnit ? "hidden" : ""}>
+              <Form.Item<Product>
+                label="Cantidad variable"
+                name="variableQuantityPerUnit"
+                rules={[
+                  // {
+                  //   required:
+                  //     _props.requiredFields?.variableQuantityPerUnit &&
+                  //     !_props.hiddenFields?.variableQuantityPerUnit &&
+                  //     !isDraft,
+                  //   message: "Este campo es obligatorio",
+                  // },
+                ]}>
+                <Switch disabled={disabled} checked={isVariableQuantityPerUnit} onChange={onVariableQuantityPerUnitChange} />
+              </Form.Item>
+            </Col>
+          }
 
           <Col
             xs={24}

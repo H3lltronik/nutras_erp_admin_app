@@ -52,6 +52,8 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
   (_props, ref) => {
     const [form] = Form.useForm();
     const [isDraft, setIsDraft] = useState<boolean>(false);
+    const [measurements, setMeasurements] = useState<Measurement[]>([]);
+    const [measurement, setMeasurement] = useState<Measurement | null>(null);
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
     const [selectedProductType, setSelectedProductType] = useState<
       string | undefined
@@ -110,6 +112,18 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
         setProductTypes(types.data);
       };
 
+      const getMeasurements = async () => {
+        const result = await MeasurementAPI.getMeasurements();
+        setMeasurements(result.data);
+        if(_props.entity?.unitId) {
+          const selectedMeasurement = result.data.find(
+            (m) => m.id === _props.entity?.unitId
+          );
+          setMeasurement(selectedMeasurement ?? null);
+        }
+      };
+
+      getMeasurements();
       getProductTypes();
     }, [form, _props.entity]);
 
@@ -265,6 +279,12 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["measurements"]}
+                onChange={(value) => {
+                  const selectedMeasurement = measurements.find(
+                    (m) => m.id === value
+                  );
+                  setMeasurement(selectedMeasurement ?? null);
+                }}
               />
             </Form.Item>
           </Col>
@@ -405,6 +425,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <Input
                 disabled={(!_props.entity && !selectedProductType) || disabled}
                 placeholder="Cantidad x unidad"
+                addonAfter={measurement?.name ?? ""}
               />
             </Form.Item>
           </Col>
