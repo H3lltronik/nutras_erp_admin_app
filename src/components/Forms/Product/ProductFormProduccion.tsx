@@ -486,34 +486,6 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col
-            xs={24}
-            md={12}
-            lg={8}
-            xl={6}
-            className={_props.hiddenFields?.packagingSecondary ? "hidden" : ""}>
-            <Form.Item<Product>
-              label={isPT ? "Empaque Secundario" : "Empaque"}
-              name="packagingSecondary"
-              rules={[
-                {
-                  required:
-                    _props.requiredFields?.packaging &&
-                    !_props.hiddenFields?.packaging &&
-                    !isDraft,
-                  message: "Este campo es obligatorio",
-                },
-              ]}>
-              <Select disabled={disabled} placeholder="Empaque" allowClear>
-                <Select.Option value="N/A">N/A</Select.Option>
-                <Select.Option value="Caja">Caja</Select.Option>
-                <Select.Option value="Bolsa">Bolsa</Select.Option>
-                <Select.Option value="Bulto">Bulto</Select.Option>
-                <Select.Option value="Super Saco">Super Saco</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
           {
             isPT && (
               <Col
@@ -521,25 +493,25 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 md={12}
                 lg={8}
                 xl={6}
-                className={_props.hiddenFields?.secondaryPackaging ? "hidden" : ""}>
+                className={_props.hiddenFields?.packagingSecondary ? "hidden" : ""}>
                 <Form.Item<Product>
-                  label={"Empaque secundario"}
-                  name="secondaryPackaging"
+                  label={isPT ? "Empaque Secundario" : "Empaque"}
+                  name="packagingSecondary"
                   rules={[
                     {
                       required:
-                        _props.requiredFields?.secondaryPackaging &&
-                        !_props.hiddenFields?.secondaryPackaging &&
+                        _props.requiredFields?.packaging &&
+                        !_props.hiddenFields?.packaging &&
                         !isDraft,
                       message: "Este campo es obligatorio",
                     },
                   ]}>
-                  {/* <Input disabled={disabled} placeholder="Empaque" /> */}
-                  {/* items: Bolsa, Caja, Cubeta */}
                   <Select disabled={disabled} placeholder="Empaque" allowClear>
-                    <Select.Option value="Bolsa">Bolsa</Select.Option>
+                    <Select.Option value="N/A">N/A</Select.Option>
                     <Select.Option value="Caja">Caja</Select.Option>
-                    <Select.Option value="Cubeta">Cubeta</Select.Option>
+                    <Select.Option value="Bolsa">Bolsa</Select.Option>
+                    <Select.Option value="Bulto">Bulto</Select.Option>
+                    <Select.Option value="Super Saco">Super Saco</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
