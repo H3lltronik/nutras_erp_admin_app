@@ -154,6 +154,7 @@ const router = createBrowserRouter([
           formTitle="Catálogo de PT"
           hiddenFields={{
             isActive: true,
+            presentation: true,
           }}
           requiredFields={{
             productTypeId: true,

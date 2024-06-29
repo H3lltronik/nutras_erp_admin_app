@@ -17,20 +17,28 @@ interface Product {
   description: string;
   providerDescription: string;
   packaging: string;
+  packagingPrimary: string;
+  packagingSecondary: string;
   mold: string;
   notes: string;
   coil: string;
   client: string;
   isActive: boolean;
   unitId: string;
+  primaryUnitId: string;
+  secondaryUnitId: string;
   presentation: string;
   variableQuantityPerUnit: boolean;
   quantityPerUnit: string;
+  quantityPerUnitPrimary: string;
+  quantityPerUnitSecondary: string;
   isKosher: boolean;
   allergen: boolean;
   departmentId: string;
   ppNotes: string;
   unit: Unit;
+  unitPrimary: Unit;
+  unitSecondary: Unit;
   kosherDetails: KosherDetails;
   purchaseData: PurchaseData;
   productionData: ProductionData;
@@ -94,6 +102,7 @@ interface ProductionData {
   productId: string;
   description: string;
   packaging: string;
+  packagingPrimary: string;
   packagingSecondary: string;
   mold: string;
 }

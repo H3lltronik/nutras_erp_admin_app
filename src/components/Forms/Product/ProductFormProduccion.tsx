@@ -220,6 +220,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -254,6 +255,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           {isPP && (
             <Col
+              order={isPT ? 1 : 1}
               xs={24}
               lg={12}
               xl={10}
@@ -290,6 +292,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Col>
           )}
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -325,6 +328,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -349,6 +353,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -376,6 +381,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           {!isPP && (
             <Col
+              order={isPT ? 1 : 1}
               xs={24}
               md={12}
               lg={8}
@@ -408,6 +414,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           )}
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -443,6 +450,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -469,13 +477,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
             xl={6}
             className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
             <Form.Item<Product>
-              label={isPP ? "Cantidad x unidad master" : "Cantidad por empaque"}
+              label="Cantidad x unidad master"
               name="quantityPerUnit"
               rules={[
                 {
@@ -501,27 +510,30 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             isPT && (
               <>
                 <Col
+                  order={isPT ? 5 : 1}
                   xs={24}
                   md={12}
                   lg={8}
                   xl={6}
-                  className={_props.hiddenFields?.packaging ? "hidden" : ""}>
+                  className={_props.hiddenFields?.packagingPrimary ? "hidden" : ""}>
                   <Form.Item<Product>
                     label="Empaque primario"
-                    name="packaging"
+                    name="packagingPrimary"
                     rules={[
                       {
                         required:
-                          _props.requiredFields?.packaging &&
-                          !_props.hiddenFields?.packaging &&
+                          _props.requiredFields?.packagingPrimary &&
+                          !_props.hiddenFields?.packagingPrimary &&
                           !isDraft,
                         message: "Este campo es obligatorio",
                       },
                     ]}>
                     <>
                       <Select disabled={disabled} placeholder="Empaque" allowClear>
+                        <Select.Option value="N/A">N/A</Select.Option>
                         <Select.Option value="Bolsa">Bolsa</Select.Option>
-                        <Select.Option value="Bobina impresa">
+                        <Select.Option value="Lata">Lata</Select.Option>
+                        {/* <Select.Option value="Bobina impresa">
                           Bobina impresa
                         </Select.Option>
                         <Select.Option value="Bobina transparente">
@@ -529,12 +541,13 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                         </Select.Option>
                         <Select.Option value="Bolsa pouch">
                           Bolsa pouch
-                        </Select.Option>
+                        </Select.Option> */}
                       </Select>
                     </>
                   </Form.Item>
                 </Col>
                 <Col
+                  order={isPT ? 5 : 1}
                   xs={24}
                   md={12}
                   lg={8}
@@ -568,6 +581,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           {
             isPP && canQuantityPerUnitBeVariable() &&
             <Col
+              order={isPT ? 5 : 1}
               xs={24}
               md={12}
               lg={6}
@@ -591,6 +605,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           }
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -628,6 +643,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             span={"auto"}
             className={
               _props.hiddenFields?.isKosher ||
@@ -641,11 +657,13 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col span={24}>
+            order={isPT ? 5 : 1}
             {isKosher && (
               <Row
                 gutter={16}
                 className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
                 <Col span={24}>
+                  order={isPT ? 5 : 1}
                   <ProductKosherForm
                     ref={productKosherFormRef}
                     mode={_props.formMode}
@@ -657,6 +675,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -690,6 +709,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -721,6 +741,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -741,12 +762,13 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               <Select disabled={disabled} placeholder="Seleccione un embobinado" allowClear>
                 <Select.Option value="Transparente">Transparente</Select.Option>
                 <Select.Option value="Impresa">Impresa</Select.Option>
-                <Select.Option value="N.A.">N.A.</Select.Option>
+                <Select.Option value="N/A">N/A</Select.Option>
               </Select>
             </Form.Item>
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -771,6 +793,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col span={"auto"} className={_props.hiddenFields?.isActive ? "hidden" : ""}>
+            order={isPT ? 5 : 1}
             <Form.Item<Product> label="Activo" name="isActive">
               <Switch disabled={disabled} checked={isActive} />
             </Form.Item>
