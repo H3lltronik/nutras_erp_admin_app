@@ -11,6 +11,9 @@ export interface ProductFormResult {
   providerId: string;
   providerDescription: string;
   notes: string;
+  coil: string;
+  client: string;
+  isActive: boolean;
   unitId: string;
   presentation: string;
   variableQuantityPerUnit: boolean;
@@ -117,6 +120,9 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     providerId: productToFormat.providerId,
     providerDescription: productToFormat.providerDescription,
     notes: productToFormat.notes,
+    coil: productToFormat.coil,
+    client: productToFormat.client,
+    isActive: productToFormat.isActive,
     unitId: productToFormat.unitId,
     isKosher: productToFormat.isKosher,
     allergen: productToFormat.allergen,
@@ -169,6 +175,9 @@ export const unformatProductForm = (
     providerId: productToUnformat.providerId ?? "",
     providerDescription: productToUnformat.providerDescription ?? "",
     notes: productToUnformat.notes ?? "",
+    coil: productToUnformat.coil ?? "",
+    client: productToUnformat.client ?? "",
+    isActive: productToUnformat.isActive ?? false,
     unitId: productToUnformat.unitId ?? "",
     isKosher: productToUnformat.isKosher ?? false,
     variableQuantityPerUnit: productToUnformat.variableQuantityPerUnit ?? false,

@@ -19,6 +19,9 @@ interface Product {
   packaging: string;
   mold: string;
   notes: string;
+  coil: string;
+  client: string;
+  isActive: boolean;
   unitId: string;
   presentation: string;
   variableQuantityPerUnit: boolean;

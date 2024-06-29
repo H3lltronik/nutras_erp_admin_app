@@ -261,7 +261,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             xl={6}
             className={_props.hiddenFields?.unitId ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Unidad de medida"
+              label="Unidad de medida master"
               name="unitId"
               rules={[
                 {
@@ -296,7 +296,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             xl={6}
             className={_props.hiddenFields?.presentation ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Presentación"
+              label="Empaque master"
               name="presentation"
               rules={[
                 {
@@ -310,7 +310,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               <GenericSelect
                 disabled={(!_props.entity && !selectedProductType) || disabled}
                 fetcher={() => ProductPresentationAPI.getProductPresentations()}
-                placeholder="Selecciona una presentación"
+                placeholder="Selecciona un empaque master"
                 optionLabel="name"
                 optionKey={"name"}
                 queryKey={["productPresentation"]}
@@ -407,7 +407,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
             xl={6}
             className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Cantidad x unidad"
+              label="Cantidad x unidad master"
               name="quantityPerUnit"
               rules={[
                 {
@@ -424,7 +424,7 @@ const ProductFormCompras = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
                 disabled={(!_props.entity && !selectedProductType) || disabled}
-                placeholder="Cantidad x unidad"
+                placeholder="Cantidad x unidad master"
                 addonAfter={measurement?.name ?? ""}
               />
             </Form.Item>

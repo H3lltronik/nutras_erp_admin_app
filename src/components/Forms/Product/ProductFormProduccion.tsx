@@ -66,6 +66,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
     const formProductType = Form.useWatch("productTypeId", form);
     const productTypeCategoryId = Form.useWatch("productTypeCategoryId", form);
+    const isActive = Form.useWatch("isActive", form);
 
     const { data: ppCategoriesData, isLoading: loadingPPCategories } = useQuery<
       GetProductTypeCategoriesResponse | APIError
@@ -330,7 +331,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             xl={6}
             className={_props.hiddenFields?.commonName ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Nombre Común"
+              label="Nombre común"
               name="commonName"
               rules={[
                 {
@@ -413,7 +414,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             xl={6}
             className={_props.hiddenFields?.unitId ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Unidad de medida"
+              label="Unidad de medida master"
               name="unitId"
               rules={[
                 {
@@ -433,7 +434,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   );
                   setMeasurement(selectedMeasurement ?? null);
                 }}
-                placeholder="Selecciona una unidad"
+                placeholder="Selecciona una unidad de medida master"
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["measurements"]}
@@ -446,9 +447,35 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             md={12}
             lg={8}
             xl={6}
+            className={_props.hiddenFields?.packaging ? "hidden" : ""}>
+              <Form.Item<Product>
+              label="Empaque master"
+              name="packaging"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.packaging &&
+                    !_props.hiddenFields?.packaging &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Select disabled={disabled} placeholder="Seleccione un empaque master" allowClear>
+                <Select.Option value="Bolsa">Bolsa</Select.Option>
+                <Select.Option value="Caja">Caja</Select.Option>
+                <Select.Option value="Cubeta">Cubeta</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
             className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
             <Form.Item<Product>
-              label={isPP ? "Cantidad x unidad" : "Cantidad por empaque"}
+              label={isPP ? "Cantidad x unidad master" : "Cantidad por empaque"}
               name="quantityPerUnit"
               rules={[
                 {
@@ -491,30 +518,20 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                         message: "Este campo es obligatorio",
                       },
                     ]}>
-                    {isPT ? (
-                      <>
-                        <Select disabled={disabled} placeholder="Empaque" allowClear>
-                          <Select.Option value="Bolsa">Bolsa</Select.Option>
-                          <Select.Option value="Bobina impresa">
-                            Bobina impresa
-                          </Select.Option>
-                          <Select.Option value="Bobina transparente">
-                            Bobina transparente
-                          </Select.Option>
-                          <Select.Option value="Bolsa pouch">
-                            Bolsa pouch
-                          </Select.Option>
-                        </Select>
-                      </>
-                    ) : (
-                      <>
-                        <Select disabled={disabled} placeholder="Empaque" allowClear>
-                          <Select.Option value="Bolsa">Bolsa</Select.Option>
-                          <Select.Option value="Caja">Caja</Select.Option>
-                          <Select.Option value="Cubeta">Cubeta</Select.Option>
-                        </Select>
-                      </>
-                    )}
+                    <>
+                      <Select disabled={disabled} placeholder="Empaque" allowClear>
+                        <Select.Option value="Bolsa">Bolsa</Select.Option>
+                        <Select.Option value="Bobina impresa">
+                          Bobina impresa
+                        </Select.Option>
+                        <Select.Option value="Bobina transparente">
+                          Bobina transparente
+                        </Select.Option>
+                        <Select.Option value="Bolsa pouch">
+                          Bolsa pouch
+                        </Select.Option>
+                      </Select>
+                    </>
                   </Form.Item>
                 </Col>
                 <Col
@@ -700,6 +717,62 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 maxLength={300}
                 placeholder="Notas"
                 rows={4}></TextArea>
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.coil ? "hidden" : ""}>
+              <Form.Item<Product>
+              label="Bobina"
+              name="coil"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.coil &&
+                    !_props.hiddenFields?.coil &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Select disabled={disabled} placeholder="Seleccione un embobinado" allowClear>
+                <Select.Option value="Transparente">Transparente</Select.Option>
+                <Select.Option value="Impresa">Impresa</Select.Option>
+                <Select.Option value="N.A.">N.A.</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.client ? "hidden" : ""}>
+              <Form.Item<Product>
+              label="Cliente (Estado)"
+              name="client"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.client &&
+                    !_props.hiddenFields?.client &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+                <Input
+                  disabled={disabled}
+                  placeholder="Cliente (Estado)"/>
+            </Form.Item>
+          </Col>
+
+          <Col span={"auto"} className={_props.hiddenFields?.isActive ? "hidden" : ""}>
+            <Form.Item<Product> label="Activo" name="isActive">
+              <Switch disabled={disabled} checked={isActive} />
             </Form.Item>
           </Col>
         </Row>

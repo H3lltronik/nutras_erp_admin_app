@@ -113,6 +113,7 @@ const router = createBrowserRouter([
           listPath="/admin/products/pp"
           hiddenFields={{
             providerDescription: true,
+            isActive: true,
           }}
         />
       </DefaultLayout>
@@ -128,6 +129,7 @@ const router = createBrowserRouter([
           formTitle="Catálogo de PP"
           hiddenFields={{
             isKosher: true,
+            isActive: true,
           }}
           requiredFields={{
             productTypeId: true,
@@ -151,6 +153,7 @@ const router = createBrowserRouter([
           listPath="/admin/products/pt"
           formTitle="Catálogo de PT"
           hiddenFields={{
+            isActive: true,
           }}
           requiredFields={{
             productTypeId: true,
