@@ -60,12 +60,15 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
     const [productTypeCategories, setProductTypeCategories] = useState<ProductTypeCategory[]>([]);
     const [measurements, setMeasurements] = useState<Measurement[]>([]);
     const [measurement, setMeasurement] = useState<Measurement | null>(null);
+    const [measurementPrimary, setMeasurementPrimary] = useState<Measurement | null>(null);
+    const [measurementSecondary, setMeasurementSecondary] = useState<Measurement | null>(null);
     const productKosherFormRef = useRef<ProductKosherFormHandle | null>(null);
     const isKosher = Form.useWatch("isKosher", form);
     const isVariableQuantityPerUnit = Form.useWatch("variableQuantityPerUnit", form);
     const { disabled } = useFormModeChecker({ formMode: _props.formMode });
     const formProductType = Form.useWatch("productTypeId", form);
     const productTypeCategoryId = Form.useWatch("productTypeCategoryId", form);
+    const isActive = Form.useWatch("isActive", form);
 
     const { data: ppCategoriesData, isLoading: loadingPPCategories } = useQuery<
       GetProductTypeCategoriesResponse | APIError
@@ -219,6 +222,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
 
         <Row gutter={16}>
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -253,6 +257,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           {isPP && (
             <Col
+              order={isPT ? 1 : 1}
               xs={24}
               lg={12}
               xl={10}
@@ -289,6 +294,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Col>
           )}
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -324,13 +330,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
             xl={6}
             className={_props.hiddenFields?.commonName ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Nombre Común"
+              label="Nombre común"
               name="commonName"
               rules={[
                 {
@@ -348,6 +355,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
           <Col
+            order={isPT ? 1 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -375,6 +383,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
           {!isPP && (
             <Col
+              order={isPT ? 1 : 1}
               xs={24}
               md={12}
               lg={8}
@@ -407,13 +416,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           )}
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
             xl={6}
             className={_props.hiddenFields?.unitId ? "hidden" : ""}>
             <Form.Item<Product>
-              label="Unidad de medida"
+              label="Unidad de medida master"
               name="unitId"
               rules={[
                 {
@@ -433,7 +443,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                   );
                   setMeasurement(selectedMeasurement ?? null);
                 }}
-                placeholder="Selecciona una unidad"
+                placeholder="Selecciona una unidad de medida master"
                 optionLabel="name"
                 optionKey={"id"}
                 queryKey={["measurements"]}
@@ -442,13 +452,41 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
+            xs={24}
+            md={12}
+            lg={8}
+            xl={6}
+            className={_props.hiddenFields?.packaging ? "hidden" : ""}>
+              <Form.Item<Product>
+              label="Empaque master"
+              name="packaging"
+              rules={[
+                {
+                  required:
+                    _props.requiredFields?.packaging &&
+                    !_props.hiddenFields?.packaging &&
+                    !isDraft,
+                  message: "Este campo es obligatorio",
+                },
+              ]}>
+              <Select disabled={disabled} placeholder="Seleccione un empaque master" allowClear>
+                <Select.Option value="Bolsa">Bolsa</Select.Option>
+                <Select.Option value="Caja">Caja</Select.Option>
+                <Select.Option value="Cubeta">Cubeta</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col
+            order={isPT ? 4 : 1}
             xs={24}
             md={12}
             lg={8}
             xl={6}
             className={_props.hiddenFields?.quantityPerUnit ? "hidden" : ""}>
             <Form.Item<Product>
-              label={isPP ? "Cantidad x unidad" : "Cantidad por empaque"}
+              label="Cantidad x unidad master"
               name="quantityPerUnit"
               rules={[
                 {
@@ -465,7 +503,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
               ]}>
               <Input
               disabled={disabled || isVariableQuantityPerUnit}
-              placeholder="Cantidad x unidad"
+              placeholder="Cantidad x unidad master"
               addonAfter={measurement?.name ?? ""}/>
             </Form.Item>
           </Col>
@@ -474,50 +512,172 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             isPT && (
               <>
                 <Col
+                  order={isPT ? 2 : 1}
                   xs={24}
                   md={12}
                   lg={8}
                   xl={6}
-                  className={_props.hiddenFields?.packaging ? "hidden" : ""}>
+                  className={_props.hiddenFields?.quantityPerUnitPrimary ? "hidden" : ""}>
                   <Form.Item<Product>
-                    label="Empaque primario"
-                    name="packaging"
+                    label="Cantidad x unidad primario"
+                    name="quantityPerUnitPrimary"
                     rules={[
                       {
                         required:
-                          _props.requiredFields?.packaging &&
-                          !_props.hiddenFields?.packaging &&
+                          _props.requiredFields?.quantityPerUnitPrimary &&
+                          !_props.hiddenFields?.quantityPerUnitPrimary &&
+                          !isDraft,
+                        message: "Este campo es obligatorio",
+                      },
+                      {
+                        pattern: isVariableQuantityPerUnit ? undefined : /^\d+(\.\d{1,2})?$/,
+                        message: "La cantidad debe ser numérica, y puede tener hasta 2 decimales",
+                      },
+                    ]}>
+                    <Input
+                    disabled={disabled}
+                    placeholder="Cantidad x unidad primario"
+                    addonAfter={measurementPrimary?.name ?? ""}/>
+                  </Form.Item>
+                </Col>
+                <Col
+                  order={isPT ? 2 : 1}
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  className={_props.hiddenFields?.primaryUnitId ? "hidden" : ""}>
+                  <Form.Item<Product>
+                    label="Unidad de medida primario"
+                    name="primaryUnitId"
+                    rules={[
+                      {
+                        required:
+                          _props.requiredFields?.primaryUnitId &&
+                          !_props.hiddenFields?.primaryUnitId &&
                           !isDraft,
                         message: "Este campo es obligatorio",
                       },
                     ]}>
-                    {isPT ? (
-                      <>
-                        <Select disabled={disabled} placeholder="Empaque" allowClear>
-                          <Select.Option value="Bolsa">Bolsa</Select.Option>
-                          <Select.Option value="Bobina impresa">
-                            Bobina impresa
-                          </Select.Option>
-                          <Select.Option value="Bobina transparente">
-                            Bobina transparente
-                          </Select.Option>
-                          <Select.Option value="Bolsa pouch">
-                            Bolsa pouch
-                          </Select.Option>
-                        </Select>
-                      </>
-                    ) : (
-                      <>
-                        <Select disabled={disabled} placeholder="Empaque" allowClear>
-                          <Select.Option value="Bolsa">Bolsa</Select.Option>
-                          <Select.Option value="Caja">Caja</Select.Option>
-                          <Select.Option value="Cubeta">Cubeta</Select.Option>
-                        </Select>
-                      </>
-                    )}
+                    <GenericSelect
+                      disabled={disabled}
+                      fetcher={() => MeasurementAPI.getMeasurements()}
+                      onChange={(value) => {
+                        const selectedMeasurement = measurements.find(
+                          (m) => m.id === value
+                        );
+                        setMeasurementPrimary(selectedMeasurement ?? null);
+                      }}
+                      placeholder="Selecciona una unidad de medida primario"
+                      optionLabel="name"
+                      optionKey={"id"}
+                      queryKey={["measurements"]}
+                    />
                   </Form.Item>
                 </Col>
                 <Col
+                  order={isPT ? 2 : 1}
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  className={_props.hiddenFields?.packagingPrimary ? "hidden" : ""}>
+                  <Form.Item<Product>
+                    label="Empaque primario"
+                    name="packagingPrimary"
+                    rules={[
+                      {
+                        required:
+                          _props.requiredFields?.packagingPrimary &&
+                          !_props.hiddenFields?.packagingPrimary &&
+                          !isDraft,
+                        message: "Este campo es obligatorio",
+                      },
+                    ]}>
+                    <>
+                      <Select disabled={disabled} placeholder="Empaque" allowClear>
+                        <Select.Option value="N/A">N/A</Select.Option>
+                        <Select.Option value="Bolsa">Bolsa</Select.Option>
+                        <Select.Option value="Lata">Lata</Select.Option>
+                        {/* <Select.Option value="Bobina impresa">
+                          Bobina impresa
+                        </Select.Option>
+                        <Select.Option value="Bobina transparente">
+                          Bobina transparente
+                        </Select.Option>
+                        <Select.Option value="Bolsa pouch">
+                          Bolsa pouch
+                        </Select.Option> */}
+                      </Select>
+                    </>
+                  </Form.Item>
+                </Col>
+                <Col
+                  order={isPT ? 3 : 1}
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  className={_props.hiddenFields?.quantityPerUnitSecondary ? "hidden" : ""}>
+                  <Form.Item<Product>
+                    label="Cantidad x unidad secundario"
+                    name="quantityPerUnitSecondary"
+                    rules={[
+                      {
+                        required:
+                          _props.requiredFields?.quantityPerUnitSecondary &&
+                          !_props.hiddenFields?.quantityPerUnitSecondary &&
+                          !isDraft,
+                        message: "Este campo es obligatorio",
+                      },
+                      {
+                        pattern: isVariableQuantityPerUnit ? undefined : /^\d+(\.\d{1,2})?$/,
+                        message: "La cantidad debe ser numérica, y puede tener hasta 2 decimales",
+                      },
+                    ]}>
+                    <Input
+                    disabled={disabled}
+                    placeholder="Cantidad x unidad secundario"
+                    addonAfter={measurementSecondary?.name ?? ""}/>
+                  </Form.Item>
+                </Col>
+                <Col
+                  order={isPT ? 3 : 1}
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xl={6}
+                  className={_props.hiddenFields?.secondaryUnitId ? "hidden" : ""}>
+                  <Form.Item<Product>
+                    label="Unidad de medida secundario"
+                    name="secondaryUnitId"
+                    rules={[
+                      {
+                        required:
+                          _props.requiredFields?.secondaryUnitId &&
+                          !_props.hiddenFields?.secondaryUnitId &&
+                          !isDraft,
+                        message: "Este campo es obligatorio",
+                      },
+                    ]}>
+                    <GenericSelect
+                      disabled={disabled}
+                      fetcher={() => MeasurementAPI.getMeasurements()}
+                      onChange={(value) => {
+                        const selectedMeasurement = measurements.find(
+                          (m) => m.id === value
+                        );
+                        setMeasurementSecondary(selectedMeasurement ?? null);
+                      }}
+                      placeholder="Selecciona una unidad de medida secundario"
+                      optionLabel="name"
+                      optionKey={"id"}
+                      queryKey={["measurements"]}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col
+                  order={isPT ? 3 : 1}
                   xs={24}
                   md={12}
                   lg={8}
@@ -551,6 +711,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           {
             isPP && canQuantityPerUnitBeVariable() &&
             <Col
+              order={isPT ? 5 : 1}
               xs={24}
               md={12}
               lg={6}
@@ -574,6 +735,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           }
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -611,6 +773,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             span={"auto"}
             className={
               _props.hiddenFields?.isKosher ||
@@ -623,12 +786,14 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
             </Form.Item>
           </Col>
 
-          <Col span={24}>
+          <Col
+            order={isPT ? 5 : 1}
+            span={24}>
             {isKosher && (
               <Row
                 gutter={16}
                 className="bg-gray-100 p-5 shadow-md rounded-md mb-5">
-                <Col span={24}>
+                <Col order={isPT ? 5 : 1} span={24}>
                   <ProductKosherForm
                     ref={productKosherFormRef}
                     mode={_props.formMode}
@@ -640,6 +805,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -673,6 +839,7 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
           </Col>
 
           <Col
+            order={isPT ? 5 : 1}
             xs={24}
             md={12}
             lg={8}
@@ -702,6 +869,66 @@ const ProductFormProduccion = forwardRef<ProductFormHandle, ProductFormProps>(
                 rows={4}></TextArea>
             </Form.Item>
           </Col>
+
+          {isPP && (
+            <>
+              <Col
+                order={isPT ? 5 : 1}
+                xs={24}
+                md={12}
+                lg={8}
+                xl={6}
+                className={_props.hiddenFields?.coil ? "hidden" : ""}>
+                  <Form.Item<Product>
+                  label="Bobina"
+                  name="coil"
+                  rules={[
+                    {
+                      required:
+                        _props.requiredFields?.coil &&
+                        !_props.hiddenFields?.coil &&
+                        !isDraft,
+                      message: "Este campo es obligatorio",
+                    },
+                  ]}>
+                  <Select disabled={disabled} placeholder="Seleccione un embobinado" allowClear>
+                    <Select.Option value="Transparente">Transparente</Select.Option>
+                    <Select.Option value="Impresa">Impresa</Select.Option>
+                    <Select.Option value="N/A">N/A</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col
+                order={isPT ? 5 : 1}
+                xs={24}
+                md={12}
+                lg={8}
+                xl={6}
+                className={_props.hiddenFields?.client ? "hidden" : ""}>
+                  <Form.Item<Product>
+                  label="Cliente (Estado)"
+                  name="client"
+                  rules={[
+                    {
+                      required:
+                        _props.requiredFields?.client &&
+                        !_props.hiddenFields?.client &&
+                        !isDraft,
+                      message: "Este campo es obligatorio",
+                    },
+                  ]}>
+                    <Input
+                      disabled={disabled}
+                      placeholder="Cliente (Estado)"/>
+                </Form.Item>
+              </Col>
+              <Col order={isPT ? 5 : 1} span={"auto"} className={_props.hiddenFields?.isActive ? "hidden" : ""}>
+                <Form.Item<Product> label="Activo" name="isActive">
+                  <Switch disabled={disabled} checked={isActive} />
+                </Form.Item>
+              </Col>
+            </>
+          )}
         </Row>
       </Form>
     );

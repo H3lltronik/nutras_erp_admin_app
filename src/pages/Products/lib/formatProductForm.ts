@@ -11,10 +11,17 @@ export interface ProductFormResult {
   providerId: string;
   providerDescription: string;
   notes: string;
+  coil: string;
+  client: string;
+  isActive: boolean;
   unitId: string;
+  primaryUnitId: string;
+  secondaryUnitId: string;
   presentation: string;
   variableQuantityPerUnit: boolean;
   quantityPerUnit: string;
+  quantityPerUnitPrimary: string;
+  quantityPerUnitSecondary: string;
   isKosher: boolean;
   departmentId: string;
   productTypeCategoryId: string;
@@ -30,6 +37,7 @@ export interface ProductFormResult {
   productionDataProductId: string;
   description: string;
   packaging: string;
+  packagingPrimary: string;
   packagingSecondary: string;
   mold: string;
 
@@ -88,6 +96,7 @@ export interface ProductionDataToPost {
   productId?: string;
   description?: string;
   packaging?: string;
+  packagingPrimary?: string;
   packagingSecondary?: string;
   mold?: string;
 }
@@ -117,12 +126,19 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     providerId: productToFormat.providerId,
     providerDescription: productToFormat.providerDescription,
     notes: productToFormat.notes,
+    coil: productToFormat.coil,
+    client: productToFormat.client,
+    isActive: productToFormat.isActive,
     unitId: productToFormat.unitId,
+    primaryUnitId: productToFormat.primaryUnitId,
+    secondaryUnitId: productToFormat.secondaryUnitId,
     isKosher: productToFormat.isKosher,
     allergen: productToFormat.allergen,
     presentation: productToFormat.presentation,
     variableQuantityPerUnit: productToFormat.variableQuantityPerUnit,
     quantityPerUnit: productToFormat.quantityPerUnit,
+    quantityPerUnitPrimary: productToFormat.quantityPerUnitPrimary,
+    quantityPerUnitSecondary: productToFormat.quantityPerUnitSecondary,
     departmentId: productToFormat.departmentId,
     productTypeCategoryId: productToFormat.productTypeCategoryId,
     productTypeCategory: productToFormat.productTypeCategory,
@@ -133,6 +149,7 @@ export const formatProductForm = (productToFormat: ProductFormResult) => {
     productionData: {
       description: productToFormat.description,
       packaging: productToFormat.packaging,
+      packagingPrimary: productToFormat.packagingPrimary,
       packagingSecondary: productToFormat.packagingSecondary,
       mold: productToFormat.mold,
     },
@@ -169,14 +186,21 @@ export const unformatProductForm = (
     providerId: productToUnformat.providerId ?? "",
     providerDescription: productToUnformat.providerDescription ?? "",
     notes: productToUnformat.notes ?? "",
+    coil: productToUnformat.coil ?? "",
+    client: productToUnformat.client ?? "",
+    isActive: productToUnformat.isActive ?? false,
     unitId: productToUnformat.unitId ?? "",
+    primaryUnitId: productToUnformat.primaryUnitId ?? "",
+    secondaryUnitId: productToUnformat.secondaryUnitId ?? "",
     isKosher: productToUnformat.isKosher ?? false,
     variableQuantityPerUnit: productToUnformat.variableQuantityPerUnit ?? false,
     quantityPerUnit: productToUnformat.quantityPerUnit ?? "",
+    quantityPerUnitPrimary: productToUnformat.quantityPerUnitPrimary ?? "",
+    quantityPerUnitSecondary: productToUnformat.quantityPerUnitSecondary ?? "",
     mold: productToUnformat.productionData?.mold ?? "",
     packaging: productToUnformat.productionData?.packaging ?? "",
-    packagingSecondary:
-      productToUnformat.productionData?.packagingSecondary ?? "",
+    packagingPrimary: productToUnformat.productionData?.packagingPrimary ?? "",
+    packagingSecondary: productToUnformat.productionData?.packagingSecondary ?? "",
     productTypeCategoryId: productToUnformat.productTypeCategoryId ?? "",
     productTypeCategory: productToUnformat.productTypeCategory,
     ppNotes: productToUnformat.ppNotes ?? "",
